@@ -5,6 +5,7 @@
 // se elige un recinto y su uso (el pasillo, «Pasillo»); el grafo de adyacencias se prende y se apaga. A la derecha, la
 // unidad en 3D. Cada cambio es un paso de deshacer de GIM (actions.guardarPlan).
 import './unidad.css'
+import { cuenta, rotuloRecinto } from './rotulos.ts'
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { useRef, useState, type PointerEvent as RPointerEvent } from 'react'
@@ -139,11 +140,12 @@ function Planta({ plan, modo, verGrafo, verMuebles, sel, setSel }: { plan: PlanC
       {vista.rooms.map((r, k) => {
         const xs = r.shape.map((q) => q[0]), ys = r.shape.map((q) => q[1])
         const x = (Math.min(...xs) + Math.max(...xs)) / 2, y = (Math.min(...ys) + Math.max(...ys)) / 2
-        const fs = Math.min(0.32, (Math.max(...xs) - Math.min(...xs)) / 8)
+        // el nombre cabe en su recinto; muy chico, el área se calla
+        const { fs, conArea } = rotuloRecinto(r.name, Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys))
         return (
           <g key={'t' + k} className="pu-rotulo">
-            <text x={x} y={-y - fs * 0.2} fontSize={fs} textAnchor="middle">{r.name}</text>
-            <text x={x} y={-y + fs * 1.1} fontSize={fs * 0.85} textAnchor="middle" className="pu-area">{areaDe(r.shape).toFixed(1)} m²</text>
+            <text x={x} y={conArea ? -y - fs * 0.2 : -y + fs * 0.35} fontSize={fs} textAnchor="middle">{r.name}</text>
+            {conArea && <text x={x} y={-y + fs * 1.1} fontSize={fs * 0.85} textAnchor="middle" className="pu-area">{areaDe(r.shape).toFixed(1)} m²</text>}
           </g>
         )
       })}
@@ -214,7 +216,7 @@ export function VentanaUnidad() {
           key={plan.id}
           onBlur={(e) => { const n = e.target.value.trim(); if (n && n !== plan.name) guardar({ ...plan, name: n }) }}
         />
-        <span className="text-caption tabular-nums text-ink-secondary">{plan.w.toFixed(2)} × {plan.d.toFixed(2)} m · {total.toFixed(1)} m² · {plan.rooms.length} recintos · {(plan.puertas ?? []).length} puertas · {(plan.ventanas ?? []).length} ventanas</span>
+        <span className="text-caption tabular-nums text-ink-secondary">{plan.w.toFixed(2)} × {plan.d.toFixed(2)} m · {total.toFixed(1)} m² · {cuenta(plan.rooms.length, 'recinto', 'recintos')} · {cuenta((plan.puertas ?? []).length, 'puerta', 'puertas')} · {cuenta((plan.ventanas ?? []).length, 'ventana', 'ventanas')}</span>
         <div className="ml-auto flex items-center gap-1" role="group" aria-label="Herramienta">
           {MODOS.map((m) => (
             <button key={m.k} type="button" title={m.ayuda} aria-pressed={modo === m.k} className={`pressable rounded-control px-2 py-0.5 text-label ${modo === m.k ? 'bg-ink text-on-ink' : 'text-ink hover:bg-hover'}`} onClick={() => { setModo(m.k); setSel(null) }}>

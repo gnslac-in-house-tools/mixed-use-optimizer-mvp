@@ -1,6 +1,7 @@
 // La pestaña «Departamentos» del panel derecho (pieza 3): Mi biblioteca (los planos del proyecto, que se editan) y la
 // Biblioteca GFit (los tipos en tres anchos, que se copian para editarlos). El lápiz abre la ventana «Departamento».
 import './unidad.css'
+import { cuenta } from './rotulos.ts'
 import { useApp } from '../../../state/store.ts'
 import { actions } from '../../../state/actions/index.ts'
 import { useUi } from '../../../views/layout/ui.ts'
@@ -16,15 +17,19 @@ function Tarjeta({ p, accion, onAccion, onBorrar }: { p: PlanCatalogo; accion: s
   return (
     <li className="flex flex-col gap-1 rounded-control bg-fill p-2" data-plan={p.id}>
       <PlanMini p={p} h={64} />
-      <div className="flex items-center gap-2">
-        <span className="h-2 w-2 shrink-0 rounded-pill" style={{ background: UNIT_COLORS[p.typeId] ?? '#ccc' }} />
-        <span className="min-w-0 flex-1 truncate text-label text-ink">{p.name}</span>
+      <div className="flex items-start gap-2">
+        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-pill" style={{ background: UNIT_COLORS[p.typeId] ?? '#ccc' }} />
+        {/* el nombre entero: hasta dos renglones, completo al pasar el mouse */}
+        <span data-nombre title={p.name} className="line-clamp-2 min-w-0 flex-1 break-words text-label text-ink">{p.name}</span>
         {onBorrar && (
           <button type="button" className="pressable text-caption text-ink-secondary hover:text-ink" aria-label={`Borrar ${p.name}`} onClick={onBorrar}>✕</button>
         )}
         <button type="button" className="pressable rounded-control px-1.5 text-label text-ink hover:bg-hover" aria-label={`${accion} ${p.name}`} title={accion} onClick={onAccion}>✎</button>
       </div>
-      <span className="text-caption tabular-nums text-ink-secondary">{p.w.toFixed(2)} × {p.d.toFixed(2)} m · {area(p).toFixed(1)} m² · {p.rooms.length} recintos</span>
+      <span data-medidas className="flex flex-col text-caption tabular-nums text-ink-secondary">
+        <span className="whitespace-nowrap">{p.w.toFixed(2)} × {p.d.toFixed(2)} m</span>
+        <span className="whitespace-nowrap">{area(p).toFixed(1)} m² · {cuenta(p.rooms.length, 'recinto', 'recintos')}</span>
+      </span>
     </li>
   )
 }

@@ -43,6 +43,18 @@ describe('la pestaña Departamentos', () => {
 describe('la ventana Departamento', () => {
   beforeEach(() => { abre([TRES]); useEditorUnidad.getState().abrir('C1') })
 
+  it('cada tarjeta muestra el nombre completo (hasta dos renglones, entero al pasar el mouse) y sus medidas sin partir', () => {
+    const { container } = render(<Catalogo />)
+    const tarjeta = container.querySelector('[data-plan]')!
+    const nombre = tarjeta.querySelector('[data-nombre]')!
+    expect(nombre.getAttribute('title')).toBe(nombre.textContent)
+    expect(nombre.className).not.toMatch(/\btruncate\b/)
+    const medidas = [...tarjeta.querySelectorAll('[data-medidas] > span')].map((e) => e.textContent)
+    expect(medidas).toHaveLength(2)
+    expect(medidas[0]).toMatch(/^\d+\.\d{2} × \d+\.\d{2} m$/)
+    expect(medidas[1]).toMatch(/^\d+\.\d m² · \d+ recintos?$/)
+  })
+
   it('teclear una cota mueve su muro', () => {
     render(<VentanaUnidad />)
     const c = screen.getByRole('textbox', { name: 'Cota Frente 1' })
