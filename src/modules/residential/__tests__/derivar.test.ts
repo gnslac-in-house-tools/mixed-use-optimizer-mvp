@@ -3,7 +3,7 @@ import type { Grid, Mass, Point, Project } from '../../../model/schema.ts'
 import { toGrid, toPlan } from '../../../engine/grid/index.ts'
 import { addBuilding } from '../../../state/actions/buildings.ts'
 import { newProject } from '../../../typologies/index.ts'
-import { area, difference, toShape } from '../engine/gfit/src/model/geom.ts'
+import { area, difference, intersection, toShape } from '../engine/gfit/src/model/geom.ts'
 import type { Pt, Shape } from '../engine/gfit/src/model/geom.ts'
 import { derivar, type Derivado } from '../engine/derivar.ts'
 
@@ -153,6 +153,15 @@ describe('derivar', () => {
     expect(d.totals.prov).toBe(e.cajones)
     expect(e.plano.cajones.length).toBe(e.porSotano)
     expect(e.costo).toBeGreaterThan(0)
+  })
+
+  it('(l2) el sótano lleva una rampa de doble sentido y ningún cajón se le encima', () => {
+    const e = derivar(caso(), 'b1')!.estacionamiento
+    // la rampa y sus bocas
+    expect(e.plano.rampas.length).toBeGreaterThan(0)
+    const rampa = toShape(e.plano.rampas)
+    expect(area(rampa)).toBeGreaterThan(6 * 10)
+    for (const c of e.plano.cajones) expect(area(intersection(toShape([c]), rampa))).toBeLessThan(0.01)
   })
 
   it('(m) los sótanos fijados en el edificio mandan', () => {

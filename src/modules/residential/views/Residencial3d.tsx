@@ -16,6 +16,8 @@ const LOSA = 0.2
 const COLUMNA = '#6b6e72'
 const SOTANO = '#9EA2A8'
 const CAJON = '#F2F2F2'
+const RAMPA = '#E8B04B'
+const NUCLEO = '#8C8C8C'
 /** m que cada departamento se mete de su contorno, para que sus muros se lean */
 const MURO = 0.08
 
@@ -64,6 +66,12 @@ export function Residencial3d() {
       const z0s = d.niveles.length ? Math.min(...d.niveles.map((l) => l.z)) : 0
       for (let k = 0; k < e.sotanos; k++) {
         piezas(e.plano.contorno).forEach((pz, j) => out.push({ key: `${buildingId}-s${k}-${j}`, geometry: extrude(pz.outer, z0s - 3.3 * (k + 1), 2.9, pz.holes), color: SOTANO, opacity: 0.35 }))
+      }
+      if (e.sotanos > 0) {
+        // la rampa en el primer sótano y los núcleos dibujados bajando hasta el último
+        e.plano.rampas.forEach((r, j) => out.push({ key: `${buildingId}-rp${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.02, 0.06), color: RAMPA }))
+        const fondo = z0s - 3.3 * e.sotanos
+        e.plano.nucleos.forEach((r, j) => out.push({ key: `${buildingId}-ns${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), fondo, z0s - fondo), color: NUCLEO }))
       }
       if (e.sotanos > 0 && (piso === 'sotano' || piso === null)) {
         e.plano.cajones.forEach((r, j) => out.push({ key: `${buildingId}-cj${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.01, 0.05), color: CAJON }))

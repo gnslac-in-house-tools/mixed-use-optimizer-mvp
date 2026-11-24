@@ -43,11 +43,13 @@ export interface Estacionamiento {
   requeridos: number
   /** excavación más cajones (sin indirectos) */
   costo: number
-  /** el acomodo de un sótano tipo: su contorno, sus cajones y sus pasillos */
-  plano: { contorno: Shape; cajones: Ring[]; pasillos: Ring[] }
+  /** el acomodo de un sótano tipo: su contorno, sus cajones, sus pasillos, su rampa y los núcleos que lo atraviesan */
+  plano: { contorno: Shape; cajones: Ring[]; pasillos: Ring[]; rampas: Ring[]; nucleos: Ring[] }
 }
 /** Sótanos como máximo cuando el edificio no fija los suyos. */
 export const SOTANOS_MAX = 5
+/** m: el ancho de la rampa de cada edificio (doble sentido) */
+export const RAMPA = 6
 
 type Uso = 'vivienda' | 'comercio' | 'nucleo'
 const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
@@ -157,16 +159,18 @@ function calcular(
     const a = (g.angle * Math.PI) / 180
     setUnitModule({ origin: [g.origin.x, g.origin.y], u: [Math.cos(a), Math.sin(a)], step: g.x / g.modules, bay: [g.x, g.y] })
   }
-  let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [] }
+  let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], nucleos: [] }
   let porSotano = 0, sotanos = 0
   try {
     // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
     const uno = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: 1 }] }, s, { geom, sections, siteArea: null })
     const bas = uno.bs[0].mass.basements[0]
     if (uno.bs[0].ok && bas) {
-      const lay = layoutBasement(bas.shape, nucleos.map((m) => ring(m.polygon)), { angle: 90, aisle: 6 })
+      // una rampa de doble sentido (6 m) que arranca en el primer vértice del contorno; los núcleos dibujados bajan
+      const cores = nucleos.map((m) => ring(m.polygon))
+      const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: 6, ramps: [{ t: 0.02, ancho: RAMPA }] })
       porSotano = lay.count
-      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles }
+      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas: lay.ramps ?? [], nucleos: cores }
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
     totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {

@@ -18,6 +18,7 @@ const COLUMNA = '#2B2D2F'
 const SOTANO = '#D9DADC'
 const CAJON = '#FFFFFF'
 const PASILLO_AUTOS = '#C4C6C9'
+const RAMPA = '#E8B04B'
 
 /** Un Shape de GFit ([x, y], y hacia arriba) como trazo SVG del plano (y hacia abajo). */
 const trazo = (s: Shape) => s.filter((r) => r.length >= 3).map((r) => `M${r.map(([x, y]) => `${x},${-y}`).join('L')}Z`).join('')
@@ -50,6 +51,8 @@ export function CapaResidencial() {
           <path d={trazo(sotano.contorno)} fill={SOTANO} stroke="none" />
           {sotano.pasillos.map((r, i) => <path key={'p' + i} d={trazo([r])} fill={PASILLO_AUTOS} stroke="none" />)}
           {sotano.cajones.map((r, i) => <path key={'c' + i} data-cajon d={trazo([r])} fill={CAJON} stroke="#7A7D82" strokeWidth={0.75} vectorEffect="non-scaling-stroke" />)}
+          {sotano.rampas.map((r, i) => <path key={'r' + i} data-rampa d={trazo([r])} fill={RAMPA} stroke="none" />)}
+          {sotano.nucleos.map((r, i) => <path key={'n' + i} data-nucleo-sotano d={trazo([r])} fill={NUCLEO} stroke="none" />)}
         </g>
       )}
       {tipo && <path d={trazo(tipo.shape)} fill={PASILLO} stroke="none" />}

@@ -49,6 +49,8 @@ describe('pisos y estacionamiento de uso mixto', () => {
     const { container } = render(<svg><CapaResidencial /></svg>)
     expect(container.querySelectorAll('[data-sotano] path[data-cajon]').length).toBe(d.estacionamiento.porSotano)
     expect(container.querySelectorAll('path[data-tipo]').length).toBe(0)
+    expect(container.querySelectorAll('[data-sotano] path[data-rampa]').length).toBe(d.estacionamiento.plano.rampas.length)
+    expect(container.querySelectorAll('[data-sotano] path[data-nucleo-sotano]').length).toBe(1)
   })
 
   it('el Resumen trae los sótanos, los cajones y su costo', () => {

@@ -18,6 +18,8 @@ export interface BasementLayout {
   arrows: Ring[]
   count: number
   warnings: string[]
+  /** mixed-use-mvp patch: the ramps the engine placed (their outline) */
+  ramps?: Ring[]
   used: 'grid' | 'circuit'
   /** with Auto, the stalls each layout gives (the panel says why it chose) */
   compare?: { grid: number; circuit: number }
@@ -36,7 +38,7 @@ export function emptyLayout(): BasementLayout {
 }
 
 /** Stalls on one basement: the outline's largest outer, with its holes and the cores as obstacles. */
-export function layoutBasement(outline: Shape, cores: Shape, o: { angle: 90 | 60 | 45; aisle: number; layout?: ParkingLayout; flow?: ParkingFlow }): BasementLayout {
+export function layoutBasement(outline: Shape, cores: Shape, o: { angle: 90 | 60 | 45; aisle: number; layout?: ParkingLayout; flow?: ParkingFlow; ramps?: { t: number; ancho: number }[] }): BasementLayout {
   const outers = outline.filter((r) => signedArea(r) > 0).sort((a, b) => signedArea(b) - signedArea(a))
   if (!outers.length) return emptyLayout()
   const layout = o.layout ?? 'auto', one = o.flow === 'one'
@@ -51,7 +53,8 @@ export function layoutBasement(outline: Shape, cores: Shape, o: { angle: 90 | 60
     cruceCada: 5,
     cabeceras: true,
     exigirAcceso: false,
-    rampas: [],
+    // mixed-use-mvp patch: ramps at a place on the outline's perimeter (0..1), the engine's length for one storey
+    rampas: (o.ramps ?? []).map((r) => ({ t: r.t, ancho: r.ancho, largo: null, paralela: true })),
     pisos: 1,
     anguloCajon: o.angle,
     ...(one ? { sentido: 'unico' } : {}),
@@ -87,7 +90,7 @@ function out(r: ResultadoCajones, used: 'grid' | 'circuit', one: boolean): Basem
   })
   // the engine speaks Spanish; the panel shows the warnings it knows in English
   const warnings = r.avisos.map((a) => (a === AVISO_CIRCUITO_OBSTACULOS ? CIRCUIT_CORES_IN_AISLE : a))
-  return { stalls: r.cajones.map(toR), aisles: r.pasillos.map(toR), arrows, count: r.cajones.length, warnings, used }
+  return { stalls: r.cajones.map(toR), aisles: r.pasillos.map(toR), arrows, count: r.cajones.length, warnings, used, ramps: (r.rampas ?? []).map(toR) }
 }
 
 /** An aisle piece much longer than the aisle is wide, and narrower than it: the ring squeezed on a narrow plate. */
