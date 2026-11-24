@@ -9,11 +9,10 @@ import { useUi } from '../../../../views/layout/ui.ts'
 import { useShown } from '../../../../views/viewport/look.ts'
 import type { Calificacion as Cal, Traza } from '../../engine/calificacion/calificar.ts'
 import { PALANCAS, PALANCA_ES, reglasDe } from '../../engine/calificacion/reglas.ts'
-import { BarraBandas, BarraSuma, DetalleVariable, Puntos, Valor, conSigno, fmtValor, leer } from './piezas.tsx'
+import { BarraBandas, BarraSuma, DetalleVariable, Puntos, Valor, conSigno, fmtValor, leer, texto } from './piezas.tsx'
 import { useCalificacion, usePalancasAbiertas } from './useCalificacion.ts'
 
 const ANCHO_TARJETA = 268
-const color = (r: number) => (r > 0 ? 'text-status-within' : r < 0 ? 'text-status-over' : 'text-ink-secondary')
 
 type Tarjeta = { traza: Traza; left: number; top: number }
 
@@ -21,7 +20,7 @@ function Puntaje({ c }: { c: Cal }) {
   const hay = c.n > 0 && c.puntaje != null && Number.isFinite(c.puntaje)
   return (
     <div role="group" aria-label="Puntaje" className="grid grid-cols-[auto_1fr] items-center gap-x-3.5 gap-y-1.5 rounded-panel border border-separator bg-panel-sunken px-3.5 pb-3 pt-3.5">
-      <span className={`row-span-2 text-[30px] font-semibold leading-none tracking-tight tabular-nums ${hay ? color(c.puntaje!) : 'text-ink-tertiary'}`}>
+      <span className={`row-span-2 text-[30px] font-semibold leading-none tracking-tight tabular-nums ${texto(hay ? c.puntaje : null)}`}>
         {hay ? conSigno(c.puntaje!) : '—'}
       </span>
       <BarraSuma calificacion={c} />
@@ -87,7 +86,9 @@ export function Calificacion() {
     setTarjeta({ traza, left, top })
   }
   const ocultar = () => setTarjeta(null)
-  const visible = tarjeta && !help ? tarjeta : null
+  // por id: si la calificación se recalcula con el cursor encima, la tarjeta sigue y lee la traza nueva
+  const actual = tarjeta && !help ? c.palancas.flatMap((p) => p.trazas).find((t) => t.variable.id === tarjeta.traza.variable.id) : undefined
+  const visible = tarjeta && actual ? { ...tarjeta, traza: actual } : null
 
   return (
     <div ref={raiz} className="flex flex-col gap-3.5">
@@ -134,7 +135,7 @@ export function Calificacion() {
               {abierta && (
                 <div className="flex flex-col pb-1 pl-[24px] pr-1.5">
                   {l.trazas.map((t, i) => (
-                    <Variable key={t.variable.id} t={t} primera={i === 0} help={help} tip={visible?.traza === t ? idTip : undefined} mostrar={mostrar} ocultar={ocultar} />
+                    <Variable key={t.variable.id} t={t} primera={i === 0} help={help} tip={visible?.traza.variable.id === t.variable.id ? idTip : undefined} mostrar={mostrar} ocultar={ocultar} />
                   ))}
                   {!l.trazas.length && <p className="py-2 text-caption text-ink-secondary">sin variables</p>}
                 </div>

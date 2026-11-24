@@ -91,6 +91,19 @@ describe('la pestaña Calificación', () => {
     expect(screen.queryByRole('tooltip')).toBeNull()
   })
 
+  it('la tarjeta sigue a su variable (por id) cuando la calificación se recalcula', () => {
+    render(<App />)
+    const panel = pestana()
+    fireEvent.click(palanca(panel, PALANCA_ES.m2_vendibles))
+    const v = () => within(panel).getByRole('group', { name: /^Eficiencia vendible \/ bruta/ })
+    fireEvent.mouseEnter(v())
+    const antes = calificacionDe(useApp.getState().project, useApp.getState().derived.option)
+    act(() => abre({ ...useApp.getState().project })) // un proyecto nuevo: trazas nuevas
+    expect(calificacionDe(useApp.getState().project, useApp.getState().derived.option)).not.toBe(antes)
+    const tip = screen.getByRole('tooltip')
+    expect(v()).toHaveAttribute('aria-describedby', tip.id)
+  })
+
   it('con la ayuda encendida, la fuente va en línea y no sale la tarjeta', () => {
     useUi.setState({ help: true })
     render(<App />)

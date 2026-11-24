@@ -12,7 +12,8 @@ export const conSigno = (r: number) => (r > 0 ? '+' + r : r < 0 ? '−' + Math.a
 /** Lo que se lee de una calificación: con signo, o «sin datos». */
 export const leer = (r: number | null) => (r == null ? 'sin datos' : conSigno(r))
 
-const texto = (r: number | null) => (r == null ? 'text-ink-tertiary' : r > 0 ? 'text-status-within' : r < 0 ? 'text-status-over' : 'text-ink-secondary')
+/** El color del texto de una calificación: verde compensa, rojo penaliza, gris neutral, tenue sin dato. */
+export const texto = (r: number | null) => (r == null ? 'text-ink-tertiary' : r > 0 ? 'text-status-within' : r < 0 ? 'text-status-over' : 'text-ink-secondary')
 const fondo = (r: number) => (r > 0 ? 'bg-status-within' : r < 0 ? 'bg-status-over' : 'bg-ink-secondary')
 
 /** El valor de una variable con su unidad; «—» sin dato. */
