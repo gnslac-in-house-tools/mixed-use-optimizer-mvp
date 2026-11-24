@@ -210,6 +210,19 @@ describe('derivar', () => {
       derivar(caso(), 'b1')
       expect(Math.min(...ys(derivar(conCalle(caso(), NORTE), 'b1')!))).toBeGreaterThan(16.2 - 6.01)
     })
+    it('(r7) el plano sabe qué extremo de la rampa sube, y su boca alta está ahí', () => {
+      const rp = derivar(caso(), 'b1')!.estacionamiento.plano.rampa!
+      expect(rp).toBeTruthy()
+      expect([...rp.alto].sort()).toEqual([0, 0, 1, 1])
+      const altos = rp.huella.filter((_, i) => rp.alto[i] === 1)
+      const bajos = rp.huella.filter((_, i) => rp.alto[i] === 0)
+      // los dos altos en un extremo (separados por el ancho, 6 m), los bajos en el otro
+      expect(Math.hypot(altos[0][0] - altos[1][0], altos[0][1] - altos[1][1])).toBeCloseTo(6, 1)
+      expect(Math.hypot(bajos[0][0] - bajos[1][0], bajos[0][1] - bajos[1][1])).toBeCloseTo(6, 1)
+      const toca = (q: Pt) => rp.bocaAlta.some((r) => r.some((b) => Math.hypot(b[0] - q[0], b[1] - q[1]) < 0.01))
+      expect(rp.bocaAlta.length).toBeGreaterThan(0)
+      expect(altos.every(toca)).toBe(true)
+    })
     it('(r6) sin calle, el aviso pide dibujarla; con calle, no', () => {
       expect(derivar(caso(), 'b1')!.avisos).toContain(AVISO)
       expect(derivar(conCalle(caso(), SUR), 'b1')!.avisos).not.toContain(AVISO)

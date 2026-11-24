@@ -20,6 +20,8 @@ export interface BasementLayout {
   warnings: string[]
   /** mixed-use-mvp patch: the ramps the engine placed (their outline) */
   ramps?: Ring[]
+  /** mixed-use-mvp patch: per ramp, each vertex's height as a fraction 0..1 of the storey it climbs */
+  rampsHigh?: number[][]
   used: 'grid' | 'circuit'
   /** with Auto, the stalls each layout gives (the panel says why it chose) */
   compare?: { grid: number; circuit: number }
@@ -81,6 +83,13 @@ export function layoutBasement(outline: Shape, cores: Shape, o: { angle: 90 | 60
   return { ...(compare.circuit >= compare.grid * AUTO_CIRCUIT_MIN ? out(c, 'circuit', one) : out(g, 'grid', one)), compare }
 }
 
+/** each vertex's height over the ramp's rise (0 low end, 1 high end) */
+function highOf(rp: { puntos: { z: number }[] }): number[] {
+  const zs = rp.puntos.map((q) => Math.abs(q.z))
+  const top = Math.max(0, ...zs)
+  return zs.map((z) => (top > 0 ? Math.round((z / top) * 1000) / 1000 : 0))
+}
+
 function out(r: ResultadoCajones, used: 'grid' | 'circuit', one: boolean): BasementLayout {
   const arrows: Ring[] = []
   r.pasillos.forEach((p, i) => {
@@ -90,7 +99,7 @@ function out(r: ResultadoCajones, used: 'grid' | 'circuit', one: boolean): Basem
   })
   // the engine speaks Spanish; the panel shows the warnings it knows in English
   const warnings = r.avisos.map((a) => (a === AVISO_CIRCUITO_OBSTACULOS ? CIRCUIT_CORES_IN_AISLE : a))
-  return { stalls: r.cajones.map(toR), aisles: r.pasillos.map(toR), arrows, count: r.cajones.length, warnings, used, ramps: (r.rampas ?? []).map(toR) }
+  return { stalls: r.cajones.map(toR), aisles: r.pasillos.map(toR), arrows, count: r.cajones.length, warnings, used, ramps: (r.rampas ?? []).map(toR), rampsHigh: (r.rampas3d ?? []).map(highOf) }
 }
 
 /** An aisle piece much longer than the aisle is wide, and narrower than it: the ring squeezed on a narrow plate. */
