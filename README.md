@@ -9,9 +9,9 @@ que viene de GIM se queda en inglés; lo nuevo se escribe en español.
 | # | Pieza | Estado |
 |---|---|---|
 | 1 | GIM como base, con la tipología «Uso mixto»: masa, retícula de 8.1 m en módulos de 2.7 m, niveles, plantas tipo y departamentos con los muros sobre la retícula, columnas y KPIs | Hecha |
-| 2 | Sótanos de estacionamiento con el motor de cajones de Praktico (el de GFit), bajo la huella | Primera vuelta: sótanos que pide el programa (o los fijados), sus cajones en planta y 3D, su costo |
+| 2 | Sótanos de estacionamiento con el motor de cajones de Praktico (el de GFit), bajo la huella | Primera vuelta: sótanos que pide el programa (o los fijados), sus cajones en planta y 3D, su costo, y la rampa hacia la calle dibujada, apilada e inclinada |
 | 3 | Blocks habitacionales: catálogo de departamentos con editor (recintos, puertas, ventanas, pasillos y cotas fijas o movibles) | Primera vuelta: pestaña Departamentos y ventana Departamento |
-| 4 | El reconfigurador de plantas, que estira los blocks respetando lo fijo | Pendiente |
+| 4 | El reconfigurador de plantas, que estira los blocks respetando lo fijo | Primera vuelta: el plano de Mi biblioteca sustituye al de GFit en las plantas y se estira respetando sus cotas fijas, con muebles |
 
 ## Correr
 
