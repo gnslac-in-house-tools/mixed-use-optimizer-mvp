@@ -209,7 +209,7 @@ describe('the KPIs', () => {
     // with everything on, the lists meet: nothing is offered twice and nothing is left out
     // mixed-use-mvp: the residential module is offered by Uso mixto only, never by the industrial demo
     for (const m of MODULES.filter((x) => x.id !== 'residential')) expect(isOn(p, m.id)).toBe(true)
-    expect(kpisOn(p).map((k) => k.id)).toEqual(ids)
+    expect(kpisOn(p).map((k) => k.id)).toEqual(ids.filter((id) => !id.startsWith('res-')))
   })
 
   it('the strip shows the chosen KPIs of the modules that are on; the others stay chosen, unread', () => {
@@ -266,7 +266,8 @@ describe('the optimizer’s kinds and measures', () => {
     // with everything, nothing is held back, and each list keeps the order it had (the window's, not the write order)
     const all = projectWithEverything()
     expect(paramKindsOn(all).map((k) => k.id)).toEqual(WINDOW_ORDER)
-    expect(measuresOn(all).map((m) => m.id)).toEqual(measureCatalog(all).map((m) => m.id))
+    // mixed-use-mvp: less the residential module's KPIs (res-*), off in the industrial demo
+    expect(measuresOn(all).map((m) => m.id)).toEqual(measureCatalog(all).map((m) => m.id).filter((id) => !id.startsWith('res-')))
     // the core's alone (no site, so no parking either), each in its place
     expect(paramKindsOn(p).map((k) => k.id)).toEqual(WINDOW_ORDER.filter((id) => !['warehouse.hall', 'court.depth', 'platform.level', 'dock.pattern', 'parking.side'].includes(id)))
   })

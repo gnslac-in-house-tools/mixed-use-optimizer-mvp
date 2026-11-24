@@ -27,6 +27,7 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/views/plan/tools/DrawMass.tsx` | Si la tipología ofrece `residential`, Dibujar llama a `addMass` (masa libre en el edificio del nivel elegido) en vez de `drawBlock` | En GIM, «Draw makes a block»: cada trazo sería un block de bodega con su propio edificio. Uso mixto necesita la torre, el podio y el núcleo en un mismo edificio. Decisión de Ramón, 2026-11-24 |
 | `src/typologies/__tests__/typologies.test.ts` | «Toda tipología ofrece warehouse» excluye `mixed-use` | Uso mixto dibuja masas libres y solo ofrece `residential` |
 | `src/modules/__tests__/catalog.test.ts` | «Con todo, todo módulo está encendido» excluye `residential` | El proyecto de prueba es el demo industrial, que no ofrece `residential` |
+| `src/modules/__tests__/catalog.test.ts` | «Los KPIs y medidas encendidos son todo el catálogo» descuenta los `res-*` | En el demo industrial el módulo residencial está apagado (Tarea 6) |
 
 ## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 

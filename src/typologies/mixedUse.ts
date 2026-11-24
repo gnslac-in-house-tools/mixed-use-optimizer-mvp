@@ -20,7 +20,8 @@ export const mixedUse: Typology = {
   // PROVISIONAL: la ocupación del proyecto demo de mixed-use-optimizer (cov 60 %). Su índice (5) y su altura (100 m) no
   // caben en las reglas de sitio de GIM
   siteRules: { setback: 0, maxCoverage: 0.6 },
-  kpis: [],
+  // los KPIs del módulo residencial (modules/residential/kpis.ts)
+  kpis: ['res-gfa', 'res-vendible', 'res-unidades', 'res-cajones', 'res-margen'],
   levelHeight: 3.0,
   modules: ['residential'],
   // crujías de 8.1 m en 3 módulos de 2.7 m: el ancho de un cajón
