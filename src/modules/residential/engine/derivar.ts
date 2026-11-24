@@ -26,7 +26,7 @@ export interface Derivado {
   /** los núcleos dibujados; sin ninguno, los automáticos de GFit */
   nucleos: Polygon[]
   avisos: string[]
-  /** la zonificaci�n con que corri� GFit (`far` es el �ndice permitido) */
+  /** la zonificación con que corrió GFit (`far` es el índice permitido) */
   zoning: Zoning
 }
 
@@ -61,6 +61,12 @@ function massingDe(p: Project, optionId: Id | null | undefined): MassingDerived 
   let m = porOpcion.get(k)
   if (!m) porOpcion.set(k, (m = deriveMassing(p, optionId)))
   return m
+}
+
+/** El área del predio de la opción (m²), del sitio de GIM; null sin contorno. */
+export function predioDe(p: Project, optionId: Id | null | undefined): number | null {
+  const { site } = massingDe(p, optionId)
+  return site.polygon ? site.area : null
 }
 
 export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Derivado | null {

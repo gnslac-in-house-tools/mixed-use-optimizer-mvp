@@ -1,9 +1,8 @@
 // Los datos del proyecto para las fórmulas de la calificación: los números con nombre (`m2_vendibles`, `ingreso`, …) que
 // salen de `derivar` sumado sobre los edificios de la opción. Puro; `calificacionDe` se memoiza por proyecto y opción.
-import { derive } from '../../../../engine/derive.ts'
 import type { Id, Project } from '../../../../model/schema.ts'
 import { paramsDe } from '../defaults.ts'
-import { derivar } from '../derivar.ts'
+import { derivar, predioDe } from '../derivar.ts'
 import { calificar, type Calificacion } from './calificar.ts'
 import type { Datos } from './formula.ts'
 import { reglasDe } from './reglas.ts'
@@ -51,11 +50,8 @@ export function datosCalificacion(p: Project, optionId: Id): Datos {
   out.ingreso = sum('revenue')
   out.costo = sum('cost')
   out.indice_permitido = ds[0].d.zoning.far
-  // el área del predio: la de GFit si la trae, si no la del sitio dibujado en GIM
-  const predio = ds[0].d.totals.siteA ?? (() => {
-    const dd = derive(p, o!.id)
-    return dd.site.polygon ? dd.metrics.siteArea : null
-  })()
+  // el área del predio: la del sitio de GIM (`derivar` corre sin predio, así que `totals.siteA` no la trae)
+  const predio = predioDe(p, o!.id)
   out.indice_usado = predio ? out.m2_brutos / predio : null
   // la mezcla objetivo (%) de los edificios, ponderada por sus unidades, contra la real por tipo
   const tipos = p.residential?.tipos ?? []

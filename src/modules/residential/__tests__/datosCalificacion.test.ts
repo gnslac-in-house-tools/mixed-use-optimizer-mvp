@@ -45,7 +45,14 @@ describe('datosCalificacion', () => {
     const o = p.options[0]
     const d = datosCalificacion(p, o.id)
     expect(d.indice_permitido).toBe(derivar(p, o.buildingIds[0], o.id)!.zoning.far)
-    if (d.indice_usado != null) expect(d.indice_usado).toBeGreaterThan(0)
+    expect(d.indice_usado).toBeNull() // sin contorno del predio
+  })
+  it('indice_usado es m2_brutos / área del predio cuando hay contorno', () => {
+    const p0 = caso()
+    const p: Project = { ...p0, site: { ...p0.site, boundary: contorno(rect(-10, -10, 50, 30)) } }
+    const d = datosCalificacion(p, p.options[0].id)
+    expect(d.m2_brutos).toBeGreaterThan(0)
+    expect(d.indice_usado).toBeCloseTo(d.m2_brutos! / (60 * 40), 6)
   })
   it('los datos de la pieza 2 son null', () => {
     const p = caso()
