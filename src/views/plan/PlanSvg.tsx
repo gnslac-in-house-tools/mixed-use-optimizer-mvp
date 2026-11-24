@@ -110,6 +110,7 @@ import { ImportLayer } from './site/ImportLayer.tsx'
 import { MapLayer, useMapShown } from './site/MapLayer.tsx'
 import { SiteToolLayer } from './site/SiteToolLayer.tsx'
 import { CutFill, PlatformMarks, TerrainLayer } from '../../modules/terrain/views/TerrainLayer.tsx'
+import { CapaResidencial } from '../../modules/residential/views/CapaResidencial.tsx' // mixed-use-mvp
 import { useSiteTool } from './site/siteTools.ts'
 import { importBounds, useSiteImport } from './site/importState.ts'
 import { addToMix, letGoAll, pickDrawing, pickDrawingForMenu, pickedRefs, pickRefForMenu, selectBox } from './mix.ts'
@@ -465,6 +466,8 @@ export function PlanSvg() {
             })}
 
             {/* a placed block's modules and, zoomed in, its columns (Decision "Blocks on the site") */}
+            {/* mixed-use-mvp: the residential module's typical floor and columns, over the masses, under their labels */}
+            {!showAll && <CapaResidencial />}
             {!showAll && designed && <BlockSiteLayer px={px} scale={camera.scale} />}
             {/* Cut & fill (Decision "Platforms"): over the courts and the masses, where most of it is; under the labels */}
             {!showAll && <CutFill />}

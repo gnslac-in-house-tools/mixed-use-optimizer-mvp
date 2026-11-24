@@ -24,6 +24,12 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/typologies/types.ts` | Campo opcional `extra?(programs): Partial<Project>` | Lo que un módulo agrega a un proyecto nuevo (Uso mixto: `residential`) |
 | `src/typologies/index.ts` | `mixedUse` en `TYPOLOGIES`; `newProject` agrega `t.extra?.(programs)` | Registro de la tipología |
 | `src/modules/index.ts` | `residential` en `MODULES` | Registro del módulo |
+| `src/state/actions/index.ts` | `residential` (`modules/residential/actions.ts`: `setParams`) en `actions` | Los verbos de un módulo entran por aquí, trazados, y así al historial de deshacer |
+| `src/views/plan/PlanSvg.tsx` | `<CapaResidencial />` sobre las masas, bajo sus etiquetas | La planta tipo, las unidades por tipo, el núcleo y las columnas |
+| `src/views/scene/Scene.tsx` | `<Residencial3d />` en la escena principal | Las losas por nivel derivado y las columnas |
+| `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
+| `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
+| `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |
 | `src/views/plan/tools/DrawMass.tsx` | Si la tipología ofrece `residential`, Dibujar llama a `addMass` (masa libre en el edificio del nivel elegido) en vez de `drawBlock` | En GIM, «Draw makes a block»: cada trazo sería un block de bodega con su propio edificio. Uso mixto necesita la torre, el podio y el núcleo en un mismo edificio. Decisión de Ramón, 2026-11-24 |
 | `src/typologies/__tests__/typologies.test.ts` | «Toda tipología ofrece warehouse» excluye `mixed-use` | Uso mixto dibuja masas libres y solo ofrece `residential` |
 | `src/modules/__tests__/catalog.test.ts` | «Con todo, todo módulo está encendido» excluye `residential` | El proyecto de prueba es el demo industrial, que no ofrece `residential` |

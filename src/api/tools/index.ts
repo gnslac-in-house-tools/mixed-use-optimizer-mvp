@@ -61,6 +61,8 @@ export function callTool(p: Project, name: string, input: unknown, ctx: ToolCont
  * H.0) waits for its phase or stays the designer's; the others are steps inside a tool, or the app's own.
  */
 export const LEFT_OUT: Record<string, string> = {
+  // mixed-use-mvp: the residential module's verb; the agent is out of this piece
+  setParams: 'The residential module’s GFit parameters of a building (mixed-use MVP): set in its Properties; the agent is out of piece 1',
   setProjectUnits: 'Project data’s Units (Decision "Project units"): only CAD exports read it, and the agent has no export tool yet',
   // the streets (Decision "Streets"): addStreet, setStreetType, moveStreet, moveStreetNode and removeStreet are tools
   // (ST.3, the road tools'); these are the plan's gestures, and the types the Brief's until ST.9

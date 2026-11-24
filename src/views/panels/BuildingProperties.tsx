@@ -12,6 +12,7 @@ import { BuildingGridSection } from './BuildingGridSection.tsx'
 import { BuildingLevels } from './BuildingLevels.tsx'
 import { Lockable } from './Lockable.tsx'
 import { PlatformSection } from '../../modules/terrain/views/PlatformSection.tsx'
+import { PropiedadesResidencial } from '../../modules/residential/views/PropiedadesResidencial.tsx' // mixed-use-mvp
 import {
   deleteBuilding,
   makeUnique,
@@ -82,6 +83,7 @@ export function BuildingProperties({ building: b, heading }: { building: Buildin
         <BuildingLevels building={b} />
         <BuildingGridSection building={b} />
         <PlatformSection building={b} />
+        <PropiedadesResidencial buildingId={b.id} />
         <div className="flex flex-wrap gap-2">
           {linked && option && (
             <Button title={`${option.name} gets its own copy; the other options keep this one`} onClick={() => makeUnique(b)}>

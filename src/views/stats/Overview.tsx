@@ -15,6 +15,7 @@ import { formatFigure } from '../format.ts'
 import { BuildingRows } from './BuildingRows.tsx'
 import { isolatedName, useIsolate, useIsolatedDerived } from './isolate.ts'
 import { ProgramBars } from './ProgramBars.tsx'
+import { ResumenResidencial } from '../../modules/residential/views/ResumenResidencial.tsx' // mixed-use-mvp
 
 /** The groups and their KPIs, in order (the registry's ids). */
 export const OVERVIEW_GROUPS = [
@@ -128,6 +129,8 @@ export function Overview() {
       {group('docks')}
       {group('parking')}
       {group('ground')}
+      {/* mixed-use-mvp */}
+      <ResumenResidencial />
     </>
   )
 }

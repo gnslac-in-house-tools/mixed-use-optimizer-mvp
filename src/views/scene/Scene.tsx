@@ -26,6 +26,7 @@ import { takeRequest, useGoTo } from '../viewport/goTo.ts'
 import { dropOnMass, isMassDrop } from '../panels/massDrop.ts'
 import { isTypeDrag, TYPE_MIME } from '../../modules/warehouse/views/TypePalette.tsx'
 import { BlockFixtures3D } from '../../modules/warehouse/views/BlockFixtures3D.tsx'
+import { Residencial3d } from '../../modules/residential/views/Residencial3d.tsx' // mixed-use-mvp
 import { placeCopy } from '../../modules/warehouse/views/commands.ts'
 import { useSceneColors } from './colors.ts'
 import { sceneBox } from './geometry3d.ts'
@@ -309,6 +310,8 @@ function MainScene({ className, graph }: { className?: string; graph: boolean })
         {drawsAll(detail) && <BlockFixtures3D masses={derived.masses} colors={colors} />}
         <Grid3D colors={colors} />
         <Masses colors={colors} ghost={graph} />
+        {/* mixed-use-mvp: the residential module's slabs and columns */}
+        <Residencial3d />
         {graph && <Graph3D colors={colors} />}
         {/* each level as a plane at its height (Show's Levels, Decision "Level planes") */}
         {planes && <LevelPlanes colors={colors} />}

@@ -32,6 +32,7 @@ import * as docks from '../../modules/docks/actions.ts'
 import * as parking from '../../modules/parking/actions.ts'
 import * as terrain from '../../modules/terrain/actions.ts'
 import * as warehouse from '../../modules/warehouse/actions.ts'
+import * as residential from '../../modules/residential/actions.ts' // mixed-use-mvp
 
 export const actions = {
   ...traced('state/actions/annotations', annotations),
@@ -60,4 +61,5 @@ export const actions = {
   ...traced('modules/parking/actions', parking),
   ...traced('modules/terrain/actions', terrain),
   ...traced('modules/warehouse/actions', warehouse),
+  ...traced('modules/residential/actions', residential), // mixed-use-mvp
 }
