@@ -6,12 +6,11 @@ import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import type { PlanCatalogo, Ring } from '../engine/catalogo.ts'
 import { CATALOGO, ROOM_FILL, huella } from '../engine/catalogo.ts'
-import { offset } from '../engine/gfit/src/model/geom.ts'
+import { cajasMuro, MEDIO_MURO, type Caja } from '../engine/muros3d.ts'
 import { extruir, type Punto } from './geometria3d.ts'
 import { MAT_ARISTA, MAT_MUEBLE, modeloMueble } from './muebles3d.ts'
 
 export const ALTO_MURO = 2.6
-const MEDIO_MURO = 0.06 // m: cada recinto pone la mitad de su muro, 12 cm entre dos recintos
 const LOSA = 0.08
 const CONTORNO = '#141412' // --outline-3d de Praktico
 
@@ -45,21 +44,20 @@ function Geo({ g, color, opacidad = 1, bordes = true, sombra = true }: { g: THRE
 export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true, detalle = true }: { plan: PlanCatalogo; alto?: number; muebles?: boolean; detalle?: boolean }) {
   const losas = useMemo(() => plan.rooms.map((r) => ({ kind: r.kind, g: extruir(pts(r.shape), 0, LOSA) })), [plan])
   // muros: el recinto menos su contorno hacia adentro; la fachada (y = 0) va aparte, en vidrio
-  const muros = useMemo(
-    () =>
-      plan.rooms.map((r) => {
-        const dentro = offset([r.shape], -MEDIO_MURO)
-        return extruir(pts(r.shape), LOSA, alto - LOSA, dentro.map(pts))
-      }),
-    [plan, alto],
-  )
-  const vidrio = useMemo(() => extruir([{ x: 0, y: -0.02 }, { x: plan.w, y: -0.02 }, { x: plan.w, y: 0.02 }, { x: 0, y: 0.02 }], LOSA, Math.max(alto, 2.4) - LOSA), [plan.w, alto])
+  // los muros con sus huecos: puertas (con dintel) y ventanas (antepecho, dintel y vidrio); sin ventanas, la fachada
+  // entera es vidrio, como antes
+  const { muros, vidrios } = useMemo(() => {
+    const caja = (c: Caja) => extruir([{ x: c.x0, y: c.y0 }, { x: c.x1, y: c.y0 }, { x: c.x1, y: c.y1 }, { x: c.x0, y: c.y1 }], c.z0, c.z1 - c.z0)
+    const { cajas, vidrios: vs } = cajasMuro(plan, alto, LOSA)
+    const todo = [{ x0: 0, x1: plan.w, y0: -0.02, y1: 0.02, z0: LOSA, z1: Math.max(alto, 2.4) }]
+    return { muros: cajas.map(caja), vidrios: (plan.ventanas?.length ? vs : todo).map(caja) }
+  }, [plan, alto])
 
   return (
     <group>
       {losas.map((l, i) => <Geo key={'l' + i} g={l.g} color={ROOM_FILL[l.kind] ?? '#eeeeee'} bordes={false} sombra={false} />)}
       {muros.map((g, i) => <Geo key={'m' + i} g={g} color="#fbfbfa" />)}
-      <Geo g={vidrio} color="#9ec5e8" opacidad={0.28} bordes={false} sombra={false} />
+      {vidrios.map((g, i) => <Geo key={'v' + i} g={g} color="#9ec5e8" opacidad={0.35} bordes={false} sombra={false} />)}
       {muebles &&
         !detalle &&
         plan.muebles.map((m) => {

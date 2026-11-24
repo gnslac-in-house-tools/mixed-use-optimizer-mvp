@@ -40,5 +40,8 @@ if (svg) await page.mouse.click(svg.x + svg.width * 0.35, svg.y + svg.height * 0
 await page.getByRole('checkbox', { name: 'Grafo' }).check()
 await espera(1500)
 await page.screenshot({ path: `${OUT}/12-editor-editado.png` })
+await page.getByRole('checkbox', { name: 'Muebles' }).uncheck()
+await espera(1200)
+await page.screenshot({ path: `${OUT}/13-editor-3d-huecos.png` })
 console.log(JSON.stringify({ puertas: await page.locator('[data-puerta]').count(), ventanas: await page.locator('[data-ventana]').count(), errores }, null, 2))
 await browser.close()
