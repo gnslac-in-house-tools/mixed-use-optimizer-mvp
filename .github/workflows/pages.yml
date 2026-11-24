@@ -1,0 +1,49 @@
+# El link público: cada push a main compila la app y la publica en GitHub Pages (el mismo esquema que GIM, sin
+# versiones). Solo main: los pull requests no publican nada.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# una a la vez; un push nuevo espera a que termine la publicación anterior
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      VITE_STATIC_HOST: 'true' # sin servidor detrás del link: src/plugins/hosting.ts
+      GFIT_BASE: ./ # funciona bajo cualquier ruta
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # la app lee los commits para su versión
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # `npm run build` revisa tipos primero (tsc -b); ninguna llave de API entra al build
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
