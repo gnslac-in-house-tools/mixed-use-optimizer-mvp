@@ -31,6 +31,37 @@ function eje(r: Ring): { c: [number, number]; a: number } {
   return { c: [r.reduce((s, q) => s + q[0], 0) / r.length, r.reduce((s, q) => s + q[1], 0) / r.length], a }
 }
 
+/** m: entrepiso de sótano y grueso de la losa de la rampa */
+const ENTREPISO = 3.3, GRUESO = 0.06
+
+/**
+ * Las rampas apiladas: en cada sótano k (1..n) la huella inclinada, de su piso (`z0s − 3.3·k`) en el extremo bajo al
+ * del de arriba en el alto, y su boca alta plana en ese nivel (la del S1, a nivel de calle).
+ */
+export function rampas3d(plano: Estacionamiento['plano'], z0s: number, sotanos: number): { key: string; geometry: THREE.BufferGeometry; color: string }[] {
+  const rp = plano.rampa
+  if (!rp || sotanos < 1) return []
+  const out: { key: string; geometry: THREE.BufferGeometry; color: string }[] = []
+  for (let k = 1; k <= sotanos; k++) {
+    const piso = z0s - ENTREPISO * k
+    // la losa recta, y cada vértice sube lo que su esquina (la escena es x, z, −y)
+    const g = extrude(pts(rp.huella), 0, GRUESO)
+    const pos = g.getAttribute('position')
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), y = -pos.getZ(i)
+      let j = 0, d = Infinity
+      rp.huella.forEach((q, n) => { const e = Math.hypot(q[0] - x, q[1] - y); if (e < d) { d = e; j = n } })
+      pos.setY(i, pos.getY(i) + piso + (rp.alto[j] ?? 0) * ENTREPISO)
+    }
+    pos.needsUpdate = true
+    g.computeVertexNormals()
+    out.push({ key: `rampa-s${k}`, geometry: g, color: RAMPA })
+    const bocas = rp.bocaAlta.map((r) => extrude(pts(r), piso + ENTREPISO, 0.05))
+    if (bocas.length) out.push({ key: `boca-s${k}`, geometry: mergeGeometries(bocas, false) ?? new THREE.BufferGeometry(), color: RAMPA })
+  }
+  return out
+}
+
 export function detalleSotano(plano: Estacionamiento['plano'], z: number, autos: boolean): { key: string; geometry: THREE.BufferGeometry; color: string }[] {
   const grupos = new Map<string, THREE.BufferGeometry[]>()
   const add = (color: string, g: THREE.BufferGeometry) => grupos.set(color, [...(grupos.get(color) ?? []), g])
@@ -38,7 +69,8 @@ export function detalleSotano(plano: Estacionamiento['plano'], z: number, autos:
   for (const r of plano.pasillos) add(PASILLO, extrude(pts(r), z, 0.01))
   for (const r of plano.cajones) for (let i = 0; i < r.length; i++) add(RAYA, extrude(tira(r[i], r[(i + 1) % r.length], 0.1), z + 0.012, 0.006))
   for (const r of plano.flechas) add(RAYA, extrude(pts(r), z + 0.012, 0.006))
-  for (const r of plano.rampas) add(RAMPA, extrude(pts(r), z, 0.05))
+  // las bocas, planas; la rampa misma va inclinada (rampas3d)
+  for (const r of plano.rampas) if (r !== plano.rampa?.huella) add(RAMPA, extrude(pts(r), z, 0.05))
   if (autos) {
     plano.cajones.forEach((r, i) => {
       const { c, a } = eje(r)

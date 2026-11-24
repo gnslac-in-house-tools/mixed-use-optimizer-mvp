@@ -12,7 +12,7 @@ import type { Shape } from '../engine/gfit/src/model/geom.ts'
 import { solidosDe, useDerivados } from './useDerivado.ts'
 import { usePiso } from './piso.ts'
 import { seeThrough, useDetail } from '../../../views/detail.ts'
-import { detalleSotano } from './sotano3d.ts'
+import { detalleSotano, rampas3d } from './sotano3d.ts'
 import type { PlanCatalogo } from '../engine/catalogo.ts'
 import { interiorDe } from '../engine/pieza4.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
@@ -103,8 +103,10 @@ export function Residencial3d() {
         }
       }
       if (e.sotanos > 0) {
-        // la rampa en el primer sótano y los núcleos dibujados bajando hasta el último
-        if (piso !== 'sotano') e.plano.rampas.forEach((r, j) => out.push({ key: `${buildingId}-rp${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.02, 0.06), color: RAMPA }))
+        // una rampa inclinada por sótano (la del S1 sale a la calle), las bocas del primero y los núcleos dibujados
+        // bajando hasta el último
+        for (const x of rampas3d(e.plano, z0s, e.sotanos)) out.push({ ...x, key: `${buildingId}-${x.key}` })
+        if (piso !== 'sotano') e.plano.rampas.forEach((r, j) => { if (r !== e.plano.rampa?.huella) out.push({ key: `${buildingId}-rp${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.02, 0.06), color: RAMPA }) })
         const fondo = z0s - 3.3 * e.sotanos
         e.plano.nucleos.forEach((r, j) => out.push({ key: `${buildingId}-ns${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), fondo, z0s - fondo), color: NUCLEO }))
       }
