@@ -2,6 +2,7 @@
 // `vistas/paneles/BotonesBarra.tsx`.
 import type { ReactNode } from 'react'
 import { Icon, type IconName } from './Icon.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function TextButton({
   icon,
@@ -22,7 +23,7 @@ export function TextButton({
   return (
     <button
       type="button"
-      title={title}
+      title={title === undefined ? undefined : tr(title)}
       aria-pressed={pressed}
       className={`pressable flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-control px-3 py-1.5 text-body font-medium hover:bg-hover ${
         pressed ? 'bg-fill' : ''
@@ -58,7 +59,7 @@ export function IconButton({
     <button
       type="button"
       aria-label={label}
-      title={title}
+      title={title === undefined ? undefined : tr(title)}
       aria-pressed={pressed}
       data-tour={tour}
       disabled={disabled}

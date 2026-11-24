@@ -66,7 +66,7 @@ export function LocationSection() {
           }}
           className="h-row min-w-0 flex-1 select-text rounded-control border border-separator bg-panel-sunken px-2 text-body text-ink outline-none placeholder:text-ink-tertiary focus:border-ink"
         />
-        <Button title="Put this place at the site's centre, and capture the map round it" disabled={!text.trim() || busy} onClick={locate}>
+        <Button title={tr("Put this place at the site's centre, and capture the map round it")} disabled={!text.trim() || busy} onClick={locate}>
           {tr("Locate")}
         </Button>
       </div>
@@ -108,7 +108,7 @@ export function LocationSection() {
           {busy ? 'Capturing…' : map ? 'Capture again' : 'Capture map'}
         </Button>
         {map && (
-          <Button title="Take the map away from under the plan" disabled={busy} onClick={() => apply((p) => actions.setMap(p, null))}>
+          <Button title={tr("Take the map away from under the plan")} disabled={busy} onClick={() => apply((p) => actions.setMap(p, null))}>
             {tr("Remove map")}
           </Button>
         )}

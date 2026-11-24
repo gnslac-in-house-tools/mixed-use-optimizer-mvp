@@ -85,7 +85,7 @@ function Courts({ id, mine, muted }: { id: Id; mine: DerivedDock[]; muted: strin
               <NumberField label={`Court, wall ${d.wall + 1}${d.ownDepth ? ' (its own)' : ''}`} unit="m" min={5} max={200} value={d.depth} disabled={!!d.shapes} title={d.shapes ? SHAPED_COURT : undefined} onCommit={(v) => apply((p) => actions.setCourtDepth(p, id, d.t, v))} />
             </div>
             {d.ownDepth && (
-              <Button title="Its block's or the standards' depth again" onClick={() => apply((p) => actions.setCourtDepth(p, id, d.t, null))}>
+              <Button title={tr("Its block's or the standards' depth again")} onClick={() => apply((p) => actions.setCourtDepth(p, id, d.t, null))}>
                 {tr("Reset")}
               </Button>
             )}
@@ -152,7 +152,7 @@ function DoorPattern({ id, muted }: { id: Id; muted: string }) {
           />
           {pt.mask && (
             <div>
-              <Button title="A door every so many modules again" onClick={() => apply((p) => actions.setDoorPattern(p, id, { every: pt.every, offset: pt.offset, skip: pt.skip }))}>
+              <Button title={tr("A door every so many modules again")} onClick={() => apply((p) => actions.setDoorPattern(p, id, { every: pt.every, offset: pt.offset, skip: pt.skip }))}>
                 {tr("No mask")}
               </Button>
             </div>
@@ -170,7 +170,7 @@ function DoorPattern({ id, muted }: { id: Id; muted: string }) {
       <Note className={`text-caption ${muted}`}>{tr("Zoom in on the plan: each module of a docked wall is a square there; a click adds or takes away its door.")}</Note>
       {flips > 0 && (
         <div>
-          <Button title="Its doors as the pattern places them" onClick={() => apply((p) => actions.clearDoorFlips(p, id))}>
+          <Button title={tr("Its doors as the pattern places them")} onClick={() => apply((p) => actions.clearDoorFlips(p, id))}>
             Clear {flips} {flips === 1 ? 'exception' : 'exceptions'}
           </Button>
         </div>

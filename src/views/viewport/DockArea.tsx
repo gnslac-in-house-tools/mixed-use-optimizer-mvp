@@ -25,6 +25,7 @@ import { ToolStrip, useStripDrag } from '../tools/ToolStrip.tsx'
 import { useDockDrag } from './DockedBar.tsx'
 import { DraftingBar } from './DraftingBar.tsx'
 import { Viewport } from './Viewport.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const BAR_VIEW: Record<Bar, () => React.JSX.Element> = { drafting: DraftingBar }
 
@@ -82,7 +83,7 @@ export function DockArea() {
               <Divider
                 between="rows"
                 label={`Divider between the viewport and the ${below.name}`}
-                title="Drag to share the height; double-click puts it back"
+                title={tr("Drag to share the height; double-click puts it back")}
                 container={column}
                 fraction={below.share}
                 reset={below.reset}

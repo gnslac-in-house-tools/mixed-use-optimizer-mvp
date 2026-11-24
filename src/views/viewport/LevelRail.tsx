@@ -56,7 +56,7 @@ export function LevelRail() {
       {buildings.length >= 2 && (
         <select
           aria-label="Building shown"
-          title="The building whose levels the rail shows"
+          title={tr("The building whose levels the rail shows")}
           value={building.id}
           onChange={(e) => {
             const b = buildings.find((x) => x.id === e.target.value)
@@ -129,7 +129,7 @@ function RefButton() {
         aria-label="Reference levels"
         aria-haspopup="dialog"
         aria-expanded={open}
-        title="How many levels below and above"
+        title={tr("How many levels below and above")}
         className="glass pressable grid h-[2rem] w-[1.5rem] place-items-center rounded-l-control rounded-r-pill text-ink-glass hover:text-ink"
         onClick={() => setOpen(!open)}
         onContextMenu={menu}
@@ -230,7 +230,7 @@ function Section({ levels, active, onPick }: { levels: Level[]; active: string |
       aria-valuemax={floors.length - 1}
       aria-valuenow={Math.max(0, index)}
       aria-valuetext={current ? floorText(current) : 'All'}
-      title="Drag through the floors: it stays on the nearest one"
+      title={tr("Drag through the floors: it stays on the nearest one")}
       className="glass relative my-[1.75rem] w-6 shrink-0 cursor-ns-resize touch-none select-none rounded-pill py-2"
       onPointerDown={(e) => {
         // the mouse's main button only

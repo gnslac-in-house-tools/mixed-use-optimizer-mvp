@@ -72,7 +72,7 @@ export function AboutView() {
         </p>
       </header>
       <div className="grid grid-cols-2 gap-x-8 gap-y-5 phone:grid-cols-1">
-        <Part title="How a project goes">
+        <Part title={tr("How a project goes")}>
           <ol className="flex flex-col gap-1.5 text-body">
             {STEPS.map((s, i) => (
               <li key={s.title} className="grid grid-cols-[1.25rem_1fr] gap-x-2">
@@ -84,13 +84,13 @@ export function AboutView() {
             ))}
           </ol>
         </Part>
-        <Part title="Three ways to model">
+        <Part title={tr("Three ways to model")}>
           <Terms items={WAYS.map((w) => ({ term: w.title, text: w.plugin && isSoon(soon, w.plugin) ? `${w.text} Coming soon.` : w.text }))} />
         </Part>
-        <Part title="Files">
+        <Part title={tr("Files")}>
           <Terms items={FILES.map((f) => ({ term: f.ext, text: f.text }))} />
         </Part>
-        <Part title="Where the work is kept">
+        <Part title={tr("Where the work is kept")}>
           <p className="text-body text-ink-secondary">
             In this browser: projects, blocks and terrains are saved as you work and stay here, at this address, until the browser’s data is cleared; Export makes a file to keep or share.
             Nothing goes to a server unless you publish to Speckle{agentHere ? ' or ask the agent' : ''}.
@@ -98,7 +98,7 @@ export function AboutView() {
         </Part>
       </div>
       {build.versions.length > 0 && (
-        <Part title="Versions">
+        <Part title={tr("Versions")}>
           <ol aria-label="Versions" className="flex flex-col gap-2.5 text-body">
             {build.versions.map((v) => (
               <li key={v.version} aria-label={`v${v.version}`} className="grid grid-cols-[6rem_1fr] gap-x-3">

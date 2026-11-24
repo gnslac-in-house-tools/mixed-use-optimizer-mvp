@@ -64,7 +64,7 @@ function SearchRange({ k, label }: { k: SearchedStandard; label: string }) {
     apply((p) => actions.setStandardSearch(p, k, next))
   }
   return (
-    <div className="-mt-1 flex items-center justify-end gap-1 text-caption text-ink-secondary" title="The range a road width may be tried in, low to high: what the optimizer searches (its Roads stage: Road widths); each option keeps what it tried. Empty: the standard alone">
+    <div className="-mt-1 flex items-center justify-end gap-1 text-caption text-ink-secondary" title={tr("The range a road width may be tried in, low to high: what the optimizer searches (its Roads stage: Road widths); each option keeps what it tried. Empty: the standard alone")}>
       <span>{tr("Search range")}</span>
       <span className="w-11">
         <CellField label={`${label} search from`} value={range?.[0] ?? null} number={{ min: 3 }} step={0.5} optional placeholder="—" onCommit={(v) => set(0, v)} />

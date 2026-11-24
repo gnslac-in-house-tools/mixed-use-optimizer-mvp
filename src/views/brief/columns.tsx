@@ -161,7 +161,7 @@ function ProgramSize({ program: g }: { program: Program }) {
   if (!hall) return <NewMass program={g} />
   const set = (k: 'length' | 'width', v: string) => apply((p) => actions.setProgramHall(p, g.id, { [k]: Number(v) }))
   return (
-    <span className="flex h-7 items-center justify-end gap-1" data-hall={`${hall.length}x${hall.width}`} title="Its warehouse type’s hall, column line to column line">
+    <span className="flex h-7 items-center justify-end gap-1" data-hall={`${hall.length}x${hall.width}`} title={tr("Its warehouse type’s hall, column line to column line")}>
       <span className="w-12 shrink-0">
         <CellField label={`${g.name} hall length`} value={hall.length} number={{ min: 1 }} step={1} onCommit={(v) => set('length', v)} />
       </span>
@@ -182,7 +182,7 @@ export function ProgramDocks({ program: g }: { program: Program }) {
   const [last, setLast] = useState<Docks>(g.docks ?? DEFAULT_DOORS)
   const grid = useApp((s) => gridOf(s.project, s.option) !== null)
   const docks = g.docks
-  if (!g.built) return <span className="text-ink-tertiary" title="Open ground has no docks">—</span>
+  if (!g.built) return <span className="text-ink-tertiary" title={tr("Open ground has no docks")}>—</span>
   const set = (next: Docks | null) => {
     if (next) setLast(next)
     apply((p) => actions.setProgramDocks(p, g.id, next))
@@ -230,7 +230,7 @@ function ProgramPattern({ program: g, docks }: { program: Program; docks: Docks 
   return (
     <span className="flex h-6 items-center justify-end gap-1 text-caption text-ink-secondary" data-pattern={patternText(pt)} title={`On the grid: ${patternText(pt)}`}>
       {pt.mask ? (
-        <span className="whitespace-nowrap tabular-nums" title="The doors' pattern, module by module (1 a door, 0 none), repeated">
+        <span className="whitespace-nowrap tabular-nums" title={tr("The doors' pattern, module by module (1 a door, 0 none), repeated")}>
           pattern {maskText(pt.mask)}
         </span>
       ) : (
@@ -243,14 +243,14 @@ function ProgramPattern({ program: g, docks }: { program: Program; docks: Docks 
         </>
       )}
       <span aria-hidden>·</span>
-      <span title="The module of each wall where the first door goes">first</span>
+      <span title={tr("The module of each wall where the first door goes")}>first</span>
       <span className="w-7 shrink-0">
         <CellField label={`${g.name}: from module`} value={pt.offset + 1} number={{ min: 1, integer: true }} step={1} onCommit={(v) => set({ offset: Number(v) - 1 })} />
       </span>
       <span aria-hidden>·</span>
       <select
         aria-label={`${g.name}: modules skipped`}
-        title="The modules with no door whatever the pattern says: the building's end bays, the wall's corners, or none"
+        title={tr("The modules with no door whatever the pattern says: the building's end bays, the wall's corners, or none")}
         value={pt.skip}
         onChange={(e) => set({ skip: e.target.value as DockPattern['skip'] })}
         className="h-6 shrink-0 rounded-control bg-transparent text-caption text-ink-secondary outline-none hover:bg-hover focus:bg-hover"
@@ -318,7 +318,7 @@ function NewMass({ program: g }: { program: Program }) {
         )}
         {!fixed && (
           <>
-            <span aria-hidden className="shrink-0 pl-1 text-ink-tertiary" title="Up to: the most elongated the optimizer may make its masses">
+            <span aria-hidden className="shrink-0 pl-1 text-ink-tertiary" title={tr("Up to: the most elongated the optimizer may make its masses")}>
               ≤
             </span>
             <span className="w-9 shrink-0" title={`The most elongated the optimizer may make its masses, long side over short (empty: ${MAX_ASPECT}:1)`}>

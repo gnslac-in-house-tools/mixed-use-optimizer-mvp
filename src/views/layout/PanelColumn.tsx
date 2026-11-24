@@ -138,7 +138,7 @@ function EdgeHandle({ side, panel }: { side: Side; panel: RefObject<HTMLElement 
       aria-valuemax={MAX_PANEL_PX}
       aria-valuenow={width ?? undefined}
       tabIndex={0}
-      title="Drag to change the width (or ← →); double-click gives the default back"
+      title={tr("Drag to change the width (or ← →); double-click gives the default back")}
       className="group absolute inset-y-3 z-[1] w-2 cursor-col-resize touch-none focus:outline-none"
       style={side === 'left' ? { right: edge } : { left: edge }}
       onPointerDown={(e) => {

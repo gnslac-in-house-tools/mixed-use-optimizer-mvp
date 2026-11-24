@@ -33,7 +33,7 @@ function OwnGatesButton() {
   const apply = useApp((s) => s.apply)
   const optionName = project.options.find((o) => o.id === option)?.name ?? 'this option'
   return ownsGates(project, option) ? (
-    <Button title="Drop this option's own gates and use the site's again" onClick={() => apply((p) => actions.dropOwnGates(p, option))}>
+    <Button title={tr("Drop this option's own gates and use the site's again")} onClick={() => apply((p) => actions.dropOwnGates(p, option))}>
       {tr("Use the site's")}
     </Button>
   ) : (
@@ -47,7 +47,7 @@ function OwnGatesButton() {
 function AddGateButton() {
   const noBoundary = useApp((s) => s.derived.site.polygon === null)
   return (
-    <Button title="A gate at the middle of the side nearest a street, else of the longest side" disabled={noBoundary} onClick={() => addGateOnSide()}>
+    <Button title={tr("A gate at the middle of the side nearest a street, else of the longest side")} disabled={noBoundary} onClick={() => addGateOnSide()}>
       + Gate
     </Button>
   )
@@ -129,7 +129,7 @@ function GateFields({ gate: g }: { gate: Gate }) {
         options={VEHICLES.map((v) => ({ value: v, label: VEHICLE_LABELS[v] }))}
         onCommit={(v) => update({ vehicles: v as Vehicles })}
       />
-      <label className="flex items-center justify-between gap-3" title="A booth beside the lane, inside the boundary">
+      <label className="flex items-center justify-between gap-3" title={tr("A booth beside the lane, inside the boundary")}>
         <span className="text-label text-ink-secondary">{tr("Guard house")}</span>
         <input type="checkbox" className="h-4 w-4 accent-ink" checked={g.guardHouse === true} onChange={(e) => update({ guardHouse: e.target.checked || undefined })} />
       </label>

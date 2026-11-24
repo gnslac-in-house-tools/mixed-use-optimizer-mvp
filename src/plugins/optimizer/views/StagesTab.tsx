@@ -103,7 +103,7 @@ function Stages({ data }: { data: OptimizerData }) {
       <div className="flex items-center gap-2">
         <select
           aria-label="Plan template"
-          title="The plan template this plan comes from: another starts the plan over from it"
+          title={tr("The plan template this plan comes from: another starts the plan over from it")}
           className={`min-w-0 flex-1 ${selectClass}`}
           value={from?.id ?? ''}
           onChange={(e) => {
@@ -127,11 +127,11 @@ function Stages({ data }: { data: OptimizerData }) {
             ×
           </Small>
         )}
-        <Small label="Save plan as template" title="Save this plan as a template of your own" onClick={save}>
+        <Small label="Save plan as template" title={tr("Save this plan as a template of your own")} onClick={save}>
           +
         </Small>
         {!wide && (
-          <Small title="The run’s specimens" onClick={() => showTabs(OPTIMIZER, { right: 'specimens' })}>
+          <Small title={tr("The run’s specimens")} onClick={() => showTabs(OPTIMIZER, { right: 'specimens' })}>
             {tr("Specimens")}
           </Small>
         )}
@@ -287,7 +287,7 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
       </div>
       {skips && <p className="text-caption text-ink-secondary">Runs on {against}{feeder ? '’s approved option' : ''}: {circled(index)} {before!.name} is not approved yet.</p>}
       {status === 'running' && run && (
-        <MainButton filled={false} progress={progressOf(run)} title="Stop after the specimens evaluated so far: Resume goes on" onClick={() => useRun.getState().stop()}>
+        <MainButton filled={false} progress={progressOf(run)} title={tr("Stop after the specimens evaluated so far: Resume goes on")} onClick={() => useRun.getState().stop()}>
           <span aria-hidden>■</span> Stop · <span className="tabular-nums">{Math.round(progressOf(run) * 100)} %</span>
         </MainButton>
       )}
@@ -310,7 +310,7 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
           )}
           <div className="flex flex-wrap gap-2">
             {own?.status === 'stopped' && (
-              <Small title="Go on from where it stopped" onClick={() => useRun.getState().resume()}>
+              <Small title={tr("Go on from where it stopped")} onClick={() => useRun.getState().resume()}>
                 ▶ Resume
               </Small>
             )}
@@ -321,7 +321,7 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
             >
               {pick === null ? 'Approve' : `Approve #${pick}`}
             </MainButton>
-            <Small title="Change its parameters or its seed and run it again" onClick={edit}>
+            <Small title={tr("Change its parameters or its seed and run it again")} onClick={edit}>
               {tr("Redo")}
             </Small>
           </div>
@@ -334,10 +334,10 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
           </p>
           {keptReview}
           <div className="flex flex-wrap gap-2">
-            <MainButton disabled={!worked} title="Take that option as this stage’s; the later approved stages to review again" onClick={() => approveByHand(option, stage.id)}>
+            <MainButton disabled={!worked} title={tr("Take that option as this stage’s; the later approved stages to review again")} onClick={() => approveByHand(option, stage.id)}>
               {tr("Approve")}
             </MainButton>
-            <Small title="Change its settings" onClick={edit}>
+            <Small title={tr("Change its settings")} onClick={edit}>
               {tr("Edit…")}
             </Small>
           </div>
@@ -355,19 +355,19 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
             </MainButton>
           )}
           {stage.by === 'hand' && (
-            <MainButton title="Edit a copy of the option it runs on, then approve it" onClick={() => startByHand(option, stage.id)}>
+            <MainButton title={tr("Edit a copy of the option it runs on, then approve it")} onClick={() => startByHand(option, stage.id)}>
               {tr("Start by hand")}
             </MainButton>
           )}
           {stage.by === 'agent' && (
             <MainButton
-              title="Write this stage’s request in the Agent tab, to send: it works it with the stages’ tools"
+              title={tr("Write this stage’s request in the Agent tab, to send: it works it with the stages’ tools")}
               onClick={() => askAgentFor(project, plan, stage) || notify('error', 'The Agent is off in this browser: View → Plugins turns it on.')}
             >
               {tr("Ask the agent")}
             </MainButton>
           )}
-          <Small title="Its parameters, in a window" onClick={edit}>
+          <Small title={tr("Its parameters, in a window")} onClick={edit}>
             {tr("Edit…")}
           </Small>
         </div>
@@ -380,12 +380,12 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
           {keptReview}
           <div className="flex flex-wrap gap-2">
             <Small
-              title="Take the approval back: the approved stages after it go to review again"
+              title={tr("Take the approval back: the approved stages after it go to review again")}
               onClick={() => reopenStage(option, stage.id)}
             >
               {tr("Reopen")}
             </Small>
-            <Small title="Its parameters, in a window" onClick={edit}>
+            <Small title={tr("Its parameters, in a window")} onClick={edit}>
               {tr("Edit…")}
             </Small>
           </div>

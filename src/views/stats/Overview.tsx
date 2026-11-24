@@ -83,7 +83,7 @@ function IsolatedChip() {
         Isolated: <span className="font-medium text-ink">{name}</span>
         <span className="block text-caption text-ink-secondary">{tr("The figures are its alone")}</span>
       </span>
-      <button type="button" aria-label="Show everything" title="Show everything (Esc)" onClick={() => useIsolate.getState().clear()} className="grid h-6 w-6 place-items-center rounded-control text-ink-secondary hover:bg-hover hover:text-ink">
+      <button type="button" aria-label="Show everything" title={tr("Show everything (Esc)")} onClick={() => useIsolate.getState().clear()} className="grid h-6 w-6 place-items-center rounded-control text-ink-secondary hover:bg-hover hover:text-ink">
         <Icon name="close" className="h-3.5 w-3.5" />
       </button>
     </div>
@@ -114,7 +114,7 @@ export function Overview() {
     <>
       <IsolatedChip />
       <div className="-mb-3 flex justify-end">
-        <label className="flex shrink-0 items-center gap-1.5 text-label text-ink-secondary" title="A building into its programs, a program into its masses">
+        <label className="flex shrink-0 items-center gap-1.5 text-label text-ink-secondary" title={tr("A building into its programs, a program into its masses")}>
           <input type="checkbox" className="h-3.5 w-3.5 accent-ink" checked={expanded} onChange={(e) => useOverview.getState().setExpanded(e.target.checked)} />
           {tr("Expand")}
         </label>

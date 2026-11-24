@@ -53,10 +53,10 @@ export function SaveBlock({ type: t, onSaved, unlink = true }: { type: Warehouse
         <span className="text-label text-ink-secondary">
           “{linked?.block.type.name ?? t.name}”{linked?.shelf === 'gfit' ? ' is GFit’s: overwrite it in this browser, or save a copy?' : ': overwrite it, or save a copy?'}
         </span>
-        <button type="button" title="A new version of the block: every project linked to it takes it when it opens" onClick={() => save('overwrite')} className={`${BUTTON} bg-ink font-semibold text-on-ink hover:opacity-90`}>
+        <button type="button" title={tr("A new version of the block: every project linked to it takes it when it opens")} onClick={() => save('overwrite')} className={`${BUTTON} bg-ink font-semibold text-on-ink hover:opacity-90`}>
           {tr("Overwrite")}
         </button>
-        <button type="button" title="A block of its own; this type then follows it" onClick={() => save('copy')} className={`${BUTTON} bg-panel text-ink hover:bg-hover`}>
+        <button type="button" title={tr("A block of its own; this type then follows it")} onClick={() => save('copy')} className={`${BUTTON} bg-panel text-ink hover:bg-hover`}>
           {tr("Save a copy")}
         </button>
         <button type="button" onClick={() => setAsking(false)} className={`${BUTTON} text-ink-secondary shadow-none hover:bg-hover`}>
@@ -77,7 +77,7 @@ export function SaveBlock({ type: t, onSaved, unlink = true }: { type: Warehouse
       {t.library && unlink && (
         <button
           type="button"
-          title="Keep this block as it is here: the library’s changes no longer reach it (undo links it again)"
+          title={tr("Keep this block as it is here: the library’s changes no longer reach it (undo links it again)")}
           onClick={() => useApp.getState().apply((p) => actions.unlinkBlock(p, t.id))}
           className={`${BUTTON} text-ink-secondary shadow-none hover:bg-hover`}
         >

@@ -52,7 +52,7 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
   return (
     <section aria-label="Block library" className="flex min-h-0 flex-1 flex-col gap-3 rounded-[0.875rem] bg-panel p-4 shadow-[inset_0_0_0_1px_var(--separator)]">
       <div className="flex flex-wrap items-center gap-2">
-        <button type="button" onClick={onBack} title="Back to your projects" className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
+        <button type="button" onClick={onBack} title={tr("Back to your projects")} className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
           <Icon path={HOME_ICONS.back} className="h-4 w-4" />
           {tr("Projects")}
         </button>
@@ -71,7 +71,7 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
         </select>
         <button
           type="button"
-          title="A block's file (.gfb) a colleague exported: into this browser's blocks"
+          title={tr("A block's file (.gfb) a colleague exported: into this browser's blocks")}
           onClick={() => fileInput.current?.click()}
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-fill px-3 text-label text-ink hover:bg-hover"
         >
@@ -81,7 +81,7 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
         <input ref={fileInput} type="file" accept=".gfb,.json,application/json" aria-label="Upload block" className="hidden" onChange={onFile} />
         <button
           type="button"
-          title="A new block: blank, or starting as one of the library's"
+          title={tr("A new block: blank, or starting as one of the library's")}
           onClick={() => openCreateNew('block')}
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90"
         >
@@ -130,7 +130,7 @@ function BlockTile({ entry: e }: { entry: LibraryBlock }) {
         <button
           type="button"
           aria-label={`Download ${t.name} as .gfb`}
-          title="Its file (.gfb): to share it, or to publish it for the team in src/state/blocks/"
+          title={tr("Its file (.gfb): to share it, or to publish it for the team in src/state/blocks/")}
           onClick={() => download(new Blob([writeBlockFile(e.block)], { type: 'application/json' }), blockFileName(e.block))}
           className="pressable flex h-7 items-center rounded-control px-2.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
         >
@@ -140,7 +140,7 @@ function BlockTile({ entry: e }: { entry: LibraryBlock }) {
           <button
             type="button"
             aria-label={`Remove ${t.name}`}
-            title="Forget this block in this browser (projects linked to it keep it as it is)"
+            title={tr("Forget this block in this browser (projects linked to it keep it as it is)")}
             onClick={() => useToast.getState().confirm(`Remove “${t.name}” from this browser’s blocks? Projects that use it keep it as it is.`, () => removeBlock(e.block.id))}
             className="pressable flex h-7 items-center rounded-control px-2.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
           >

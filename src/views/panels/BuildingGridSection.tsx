@@ -7,6 +7,7 @@ import { bayOf, gridOf, lineName, nameBase, optionBays, type Axis } from '../../
 import { actions } from '../../state/actions/index.ts'
 import { useApp } from '../../state/store.ts'
 import { NumberField, Section } from '../controls/fields.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const AXES: { axis: Axis; title: string }[] = [
   { axis: 'x', title: 'Along x (A, B, C…)' },
@@ -27,7 +28,7 @@ export function BuildingGridSection({ building }: { building: Building }) {
   const stretch = (axis: Axis, side: 'start' | 'end', to: number) => apply((p) => actions.stretchBuilding(p, optionId, building.id, axis, side, to))
   const off = bays.off.map((id) => derived.masses[id]?.name ?? id)
   return (
-    <Section title="Grid">
+    <Section title={tr("Grid")}>
       <p className="select-text text-body tabular-nums" data-building-grid="">
         {bays.x.from}–{bays.x.to} × {bays.y.from}–{bays.y.to}
         <span className="text-caption text-ink-secondary">

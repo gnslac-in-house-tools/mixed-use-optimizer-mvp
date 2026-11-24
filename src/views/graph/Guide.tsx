@@ -43,7 +43,7 @@ export function Guide() {
         <button
           type="button"
           aria-label="Hide the help"
-          title="Hide the guide and the notes (Help › Help in the top menu shows them again)"
+          title={tr("Hide the guide and the notes (Help › Help in the top menu shows them again)")}
           className="pressable -mr-1 -mt-0.5 grid h-6 w-6 place-items-center rounded-pill text-ink-glass hover:bg-hover hover:text-ink"
           onClick={() => setHelp(false)}
         >

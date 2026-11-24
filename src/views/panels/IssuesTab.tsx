@@ -97,7 +97,7 @@ function IssueItem({ issue, place, picked }: { issue: Issue; place: string | nul
         {goes ? (
           <button
             type="button"
-            title="Go to it"
+            title={tr("Go to it")}
             onClick={() => {
               goToIssue(issue)
               pickIssues(place)
@@ -124,12 +124,12 @@ function IssueItem({ issue, place, picked }: { issue: Issue; place: string | nul
             </button>
           )}
           {issue.code === 'brief' && (
-            <button type="button" title="The brief asks for what the option has, for this program" onClick={() => briefFor(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
+            <button type="button" title={tr("The brief asks for what the option has, for this program")} onClick={() => briefFor(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
               {tr("Update brief")}
             </button>
           )}
           {issue.rule !== undefined && (
-            <button type="button" title="The Rules step, with the rule picked" onClick={() => editRule(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
+            <button type="button" title={tr("The Rules step, with the rule picked")} onClick={() => editRule(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
               {tr("Edit the rule")}
             </button>
           )}

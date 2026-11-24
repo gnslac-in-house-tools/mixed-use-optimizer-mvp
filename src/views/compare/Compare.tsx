@@ -67,7 +67,7 @@ export function Compare() {
         <button
           type="button"
           aria-label="Frame all"
-          title="Frame every pane again (double-click a plan does it too)"
+          title={tr("Frame every pane again (double-click a plan does it too)")}
           onClick={() => (mode === 'plan' ? setPlan(null) : reframe())}
           className="pressable grid h-[2rem] w-[2rem] place-items-center rounded-control text-ink-segment hover:bg-hover hover:text-ink"
         >
@@ -76,7 +76,7 @@ export function Compare() {
         <button
           type="button"
           aria-label="Close compare"
-          title="Back to editing (Esc)"
+          title={tr("Back to editing (Esc)")}
           onClick={close}
           className="pressable grid h-[2rem] w-[2rem] place-items-center rounded-control text-ink-segment hover:bg-hover hover:text-ink"
         >

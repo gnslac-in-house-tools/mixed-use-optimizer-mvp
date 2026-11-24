@@ -105,7 +105,7 @@ export function Rules() {
                     </option>
                   ))}
                 </select>
-                <label className="flex items-center gap-1 text-caption text-ink-secondary" title="Broken, a required rule is an error; otherwise a warning">
+                <label className="flex items-center gap-1 text-caption text-ink-secondary" title={tr("Broken, a required rule is an error; otherwise a warning")}>
                   <input type="checkbox" className="h-3.5 w-3.5 accent-ink" checked={r.required === true} onChange={(e) => update(r.id, { required: e.target.checked })} />
                   {tr("Required")}
                 </label>
@@ -116,7 +116,7 @@ export function Rules() {
                 <button
                   type="button"
                   aria-label={`Remove rule ${r.id}`}
-                  title="Remove the rule"
+                  title={tr("Remove the rule")}
                   onClick={(e) => {
                     e.stopPropagation()
                     apply((p) => actions.removeRule(p, r.id))
@@ -132,7 +132,7 @@ export function Rules() {
       )}
       <div>
         <Button
-          title="A new rule between the first two programs: change its programs and kind in the row"
+          title={tr("A new rule between the first two programs: change its programs and kind in the row")}
           disabled={programs.length === 0}
           onClick={() => {
             let made: Id | null = null

@@ -467,7 +467,7 @@ function Composer() {
           <button
             type="button"
             aria-label="Stop"
-            title="Stop: what it already did stays (each one undo step)"
+            title={tr("Stop: what it already did stays (each one undo step)")}
             onClick={stop}
             className="pressable grid h-6 w-6 shrink-0 place-items-center rounded-pill border border-separator bg-panel text-ink shadow-control"
           >
@@ -479,7 +479,7 @@ function Composer() {
           <button
             type="button"
             aria-label="Send"
-            title="Send (Enter)"
+            title={tr("Send (Enter)")}
             disabled={!text.trim()}
             onClick={go}
             className="pressable grid h-6 w-6 shrink-0 place-items-center rounded-pill border border-separator bg-panel text-ink shadow-control disabled:opacity-40"
@@ -489,7 +489,7 @@ function Composer() {
         )}
       </div>
       {turns.length > 0 && (
-        <button type="button" onClick={clear} className="self-start text-caption text-ink-secondary hover:text-ink" title="Start again: the changes it made stay">
+        <button type="button" onClick={clear} className="self-start text-caption text-ink-secondary hover:text-ink" title={tr("Start again: the changes it made stay")}>
           {tr("New chat")}
         </button>
       )}

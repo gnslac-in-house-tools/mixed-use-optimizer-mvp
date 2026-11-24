@@ -34,13 +34,13 @@ export function BuildingLevels({ building }: { building: Building }) {
         <thead>
           <tr className="text-left text-caption text-ink-secondary">
             <th className="w-[22%] font-medium">{tr("Name")}</th>
-            <th className="font-medium" title="Its floor, from the site's ground (m)">
+            <th className="font-medium" title={tr("Its floor, from the site's ground (m)")}>
               {tr("Elev.")}
             </th>
-            <th className="font-medium" title="Floor to floor (m)">
+            <th className="font-medium" title={tr("Floor to floor (m)")}>
               {tr("Height")}
             </th>
-            <th className="w-[13%] font-medium" title="Repeats: a typical floor, N times">
+            <th className="w-[13%] font-medium" title={tr("Repeats: a typical floor, N times")}>
               ×N
             </th>
             <th className="w-[10%]">

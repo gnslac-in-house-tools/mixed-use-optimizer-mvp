@@ -13,6 +13,7 @@ import { actions } from '../../../state/actions/index.ts'
 import { useApp } from '../../../state/store.ts'
 import { Section, SelectField, Total } from '../../../views/controls/fields.tsx'
 import { Note } from '../../../views/layout/Note.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export const PARKING_LABELS: Record<ParkingSide, string> = { double: 'Both sides', single: 'One side', none: 'None' }
 const SIDES = (['double', 'single', 'none'] as const).map((v) => ({ value: v, label: PARKING_LABELS[v] }))
@@ -32,7 +33,7 @@ export function CarParking() {
   const own = roads.filter((r) => r.kind === 'street' && r.parking?.some((x) => x !== null)).length
   if (!option) return null
   return (
-    <Section title="Car parking">
+    <Section title={tr("Car parking")}>
       <Note>
         Stalls along the streets cars use, at right angles to them, in {option.name}. A street picked takes its own side (its P on the
         plan, Shift+click for more); the other streets take this.
@@ -59,7 +60,7 @@ export function ParkingTotals() {
   const stalls = useApp((s) => s.derived.circulation.totals.stalls)
   const inLots = useApp((s) => s.derived.circulation.totals.lotStalls)
   return (
-    <Section title="Totals">
+    <Section title={tr("Totals")}>
       <dl aria-label="Parking totals" className="flex flex-col gap-1.5">
         <Total label="Car stalls" value={stalls.toLocaleString('en-US')} />
         {inLots > 0 && <Total label="In the lots" value={inLots.toLocaleString('en-US')} />}

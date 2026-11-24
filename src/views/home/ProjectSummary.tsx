@@ -86,7 +86,7 @@ export function ProjectSummary({ row, close, changed }: { row: Row; close: () =>
           <div className="text-caption font-semibold uppercase tracking-[0.07em] text-ink-tertiary">{kind}</div>
           <h2 className="mt-0.5 truncate text-headline text-ink">{row.name}</h2>
         </div>
-        <IconButton icon="close" label="Close the summary" title="Close (Esc)" onClick={close} />
+        <IconButton icon="close" label="Close the summary" title={tr("Close (Esc)")} onClick={close} />
       </header>
 
       {s && o ? (

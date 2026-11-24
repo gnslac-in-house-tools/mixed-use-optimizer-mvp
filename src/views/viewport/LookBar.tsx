@@ -12,13 +12,13 @@ export function LookBar() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex justify-center px-4 phone:top-3">
       <div role="toolbar" aria-label="Preview" className="glass pointer-events-auto flex max-w-full items-center gap-1 rounded-glass px-1.5 py-1 shadow-glass">
-        <button type="button" aria-label="Previous" title="The previous one in the list" disabled={!look.prev} onClick={() => look.prev?.()} className={STEP}>
+        <button type="button" aria-label="Previous" title={tr("The previous one in the list")} disabled={!look.prev} onClick={() => look.prev?.()} className={STEP}>
           ‹
         </button>
-        <span className="min-w-0 truncate px-1 text-label tabular-nums text-ink" title="Read only: to edit it, keep it first">
+        <span className="min-w-0 truncate px-1 text-label tabular-nums text-ink" title={tr("Read only: to edit it, keep it first")}>
           {look.title}
         </span>
-        <button type="button" aria-label="Next" title="The next one in the list" disabled={!look.next} onClick={() => look.next?.()} className={STEP}>
+        <button type="button" aria-label="Next" title={tr("The next one in the list")} disabled={!look.next} onClick={() => look.next?.()} className={STEP}>
           ›
         </button>
         <span aria-hidden className="mx-1 h-4 w-px bg-separator" />
@@ -36,7 +36,7 @@ export function LookBar() {
         ))}
         <button
           type="button"
-          title="Back to my design (Escape)"
+          title={tr("Back to my design (Escape)")}
           onClick={() => endLook()}
           className="pressable h-row shrink-0 rounded-control px-2.5 text-label text-ink hover:bg-hover"
         >

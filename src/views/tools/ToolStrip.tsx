@@ -40,6 +40,7 @@ import { useHand } from './hand.ts'
 import { stripGroups } from './strip.ts'
 import { dockAt, stepDock } from './stripDock.ts'
 import { beginDrag } from '../controls/beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The strip being dragged by its grip, and where it would land (null: not dragging). */
 export const useStripDrag = create<{ to: StripDock | null }>()(() => ({ to: null }))
@@ -122,7 +123,7 @@ function Grip({ flat }: { flat: boolean }) {
       ref={ref}
       type="button"
       aria-label="Move the tools"
-      title="Drag to the window's left, beside the panel, to the viewport's right, above or below it (or the arrow keys)"
+      title={tr("Drag to the window's left, beside the panel, to the viewport's right, above or below it (or the arrow keys)")}
       className={`pressable grid shrink-0 cursor-grab touch-none place-items-center rounded-control text-ink-tertiary hover:bg-hover hover:text-ink active:cursor-grabbing ${flat ? '-mr-1.5 h-6 w-4' : 'mx-auto h-4 w-[2rem]'}`}
       onKeyDown={(e) => {
         if (!isArrow(e.key)) return

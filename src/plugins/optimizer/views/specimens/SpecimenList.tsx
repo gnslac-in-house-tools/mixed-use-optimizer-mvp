@@ -134,12 +134,12 @@ export const SpecimenList = memo(function SpecimenList(props: {
                   <span className="flex items-center gap-1 pl-1.5">
                     #{r.s.id}
                     {r.s.id === knee && (
-                      <span aria-label="the most balanced" title="The most balanced of the front: nearest the best of every objective at once">
+                      <span aria-label="the most balanced" title={tr("The most balanced of the front: nearest the best of every objective at once")}>
                         ★
                       </span>
                     )}
                     {!r.feasible && (
-                      <span aria-label="breaks a must-hold" title="It breaks a must-hold" className="text-status-over">
+                      <span aria-label="breaks a must-hold" title={tr("It breaks a must-hold")} className="text-status-over">
                         ✕
                       </span>
                     )}

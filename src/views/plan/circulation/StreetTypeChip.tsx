@@ -21,7 +21,7 @@ export function StreetTypeChip({ onPick }: { /** Told after a type is picked her
       {tr("Type")}
       <select
         aria-label="Street type"
-        title="The type the next street takes: its width, its turning radius and who drives it (Brief › Circulation edits the types)"
+        title={tr("The type the next street takes: its width, its turning radius and who drives it (Brief › Circulation edits the types)")}
         value={type.id}
         onChange={(e) => {
           setType(e.target.value)

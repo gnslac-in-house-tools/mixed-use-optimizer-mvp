@@ -7,13 +7,14 @@ import { actions } from '../../state/actions/index.ts'
 import { useApp } from '../../state/store.ts'
 import { NumberField, Section, Total } from '../controls/fields.tsx'
 import { formatFigure } from '../format.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function SiteFigures() {
   const metrics = useApp((s) => s.derived.metrics)
   const hasSite = useApp((s) => s.derived.site.polygon !== null)
   const figure = (v: number | null, unit: 'm2' | 'pct') => formatFigure(hasSite ? v : null, unit)
   return (
-    <Section title="Site">
+    <Section title={tr("Site")}>
       <dl aria-label="Site figures" className="flex flex-col gap-1.5">
         <Total label="Site area" value={figure(metrics.siteArea, 'm2')} />
         <Total label="Buildable area" value={figure(metrics.buildableArea, 'm2')} />
@@ -27,7 +28,7 @@ export function SiteRules() {
   const rules = useApp((s) => s.project.site.rules)
   const apply = useApp((s) => s.apply)
   return (
-    <Section title="Site rules">
+    <Section title={tr("Site rules")}>
       <NumberField label="Setback" unit="m" min={0} value={rules.setback} onCommit={(v) => apply((p) => actions.updateSiteRules(p, { setback: v }))} />
       <NumberField
         label="Max. coverage"

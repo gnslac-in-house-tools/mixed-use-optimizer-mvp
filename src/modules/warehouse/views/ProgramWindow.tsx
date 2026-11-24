@@ -157,7 +157,7 @@ export function ProgramWindow() {
         {editor ? (
           <button
             type="button"
-            title="Back to Home (it asks first when the block has changes not saved)"
+            title={tr("Back to Home (it asks first when the block has changes not saved)")}
             onClick={closeBlockEditor}
             className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
           >
@@ -168,7 +168,7 @@ export function ProgramWindow() {
             <Note>Next, Rules: say how the programs relate; then ▶ Solve all, in Issues, turns the brief into masses.</Note>
             <button
               type="button"
-              title="The programs are ready: close this window"
+              title={tr("The programs are ready: close this window")}
               onClick={() => useUi.getState().closeDialog()}
               className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
             >

@@ -98,7 +98,7 @@ function StepBody({ t, g, step, status }: { t: WarehouseType; g: Generated; step
       {status === 'locked' ? (
         <div className="flex items-center justify-between gap-2">
           <span className="text-caption text-ink-tertiary">{tr("Locked: an edit opens it again.")}</span>
-          <Button title="Take its lock away: the later locked steps will need locking again" onClick={() => reopenStep(t.id, step)}>
+          <Button title={tr("Take its lock away: the later locked steps will need locking again")} onClick={() => reopenStep(t.id, step)}>
             {tr("Unlock")}
           </Button>
         </div>

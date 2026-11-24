@@ -2,6 +2,7 @@
 // look (`Segmented.tsx`): a grey track, the white pill with its shadow under what is on, grey ink for what is off.
 // Never a black fill: on and off read like the rest of the app's controls.
 import type { ReactNode } from 'react'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function ChipTrack({ children, dim = false }: { children: ReactNode; dim?: boolean }) {
   return <div className={`flex shrink-0 items-center gap-0.5 rounded-segment bg-fill p-0.5 ${dim ? 'opacity-50' : ''}`}>{children}</div>
@@ -26,7 +27,7 @@ export function ToggleChip(props: {
       data-tour={props.tour}
       aria-pressed={props.pressed}
       aria-label={props.label}
-      title={props.title}
+      title={props.title === undefined ? undefined : tr(props.title)}
       disabled={props.disabled}
       onClick={props.onClick}
       className={`pressable flex items-center justify-center gap-1 rounded-segment-pill text-label ${props.small ? 'h-[1.25rem] min-w-[1.25rem] px-1.5' : 'h-6 min-w-6 px-2'} ${

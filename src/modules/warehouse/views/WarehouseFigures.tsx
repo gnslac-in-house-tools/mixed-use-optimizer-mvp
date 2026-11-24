@@ -32,14 +32,14 @@ export function WarehouseFigures() {
           Along the length: {baysInWords(g.runs.x, unit)}. Along the width: {baysInWords(g.runs.y, unit)}.
         </Note>
       </Section>
-      <Section title="Structure and envelope">
+      <Section title={tr("Structure and envelope")}>
         <dl className="flex flex-col gap-1.5">
           <Total label="Columns" value={String(f.columns)} />
           <Total label="Wall" value={whole(f.wallLength)} />
           <Total label="Wall area" value={area(f.wallArea)} />
         </dl>
       </Section>
-      <Section title="Shape and elements">
+      <Section title={tr("Shape and elements")}>
         <dl className="flex flex-col gap-1.5">
           <Total label="Edges" value={String(f.edges)} />
           <Total label="Holes" value={String(f.holes)} />

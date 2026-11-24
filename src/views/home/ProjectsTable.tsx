@@ -97,7 +97,7 @@ export function ProjectsTable({
           </label>
           <button
             type="button"
-            title="A project's file (.gft): opened, and kept in this browser"
+            title={tr("A project's file (.gft): opened, and kept in this browser")}
             onClick={onOpen}
             className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] px-3 text-label text-ink-segment hover:bg-hover hover:text-ink"
           >
@@ -106,7 +106,7 @@ export function ProjectsTable({
           </button>
           <button
             type="button"
-            title="A new project: its type, then its site"
+            title={tr("A new project: its type, then its site")}
             onClick={onNew}
             className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-fill px-3 text-label text-ink hover:bg-hover"
           >

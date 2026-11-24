@@ -235,7 +235,7 @@ function Window() {
         <button
           type="button"
           aria-label="Close the Keyboard shortcuts"
-          title="Close (Esc)"
+          title={tr("Close (Esc)")}
           onClick={closeShortcuts}
           className="pressable absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-control text-ink-secondary hover:bg-hover hover:text-ink"
         >

@@ -35,7 +35,7 @@ export function MassProgram() {
       )}
       <select
         aria-label="New block’s program"
-        title="The program a block drawn with Draw takes; the stroke is its outer face, drawn free. A program with its type (▦) draws a block of it; one without gets its type on the first stroke"
+        title={tr("The program a block drawn with Draw takes; the stroke is its outer face, drawn free. A program with its type (▦) draws a block of it; one without gets its type on the first stroke")}
         value={id ?? ''}
         onChange={(e) => {
           const v = e.target.value

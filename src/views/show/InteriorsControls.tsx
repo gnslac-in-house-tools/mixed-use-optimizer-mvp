@@ -10,10 +10,10 @@ export function InteriorsControls() {
   return (
     <div role="toolbar" aria-label="Interiors" className="flex shrink-0 items-center gap-1.5">
       <ChipTrack>
-        <ToggleChip pressed={s.interiors} title="Programs: the spaces inside the masses, by use (the rooms of each unit)" onClick={() => s.toggle('interiors')}>
+        <ToggleChip pressed={s.interiors} title={tr("Programs: the spaces inside the masses, by use (the rooms of each unit)")} onClick={() => s.toggle('interiors')}>
           {tr("Programs")}
         </ToggleChip>
-        <ToggleChip pressed={s.furniture} title="Furniture and equipment inside the masses" onClick={() => s.toggle('furniture')}>
+        <ToggleChip pressed={s.furniture} title={tr("Furniture and equipment inside the masses")} onClick={() => s.toggle('furniture')}>
           {tr("Furniture")}
         </ToggleChip>
       </ChipTrack>

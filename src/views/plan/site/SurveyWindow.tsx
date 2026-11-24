@@ -130,7 +130,7 @@ function Layers({ s }: { s: SurveyImport }) {
           <span>
             {chosen.length} picked · Shift a run, Ctrl one more
           </span>
-          <button type="button" className={`${BUTTON} flex items-center gap-1 px-2`} title="Take them out of the import (Delete)" onClick={remove}>
+          <button type="button" className={`${BUTTON} flex items-center gap-1 px-2`} title={tr("Take them out of the import (Delete)")} onClick={remove}>
             <Icon name="trash" className="h-3.5 w-3.5" />
             {tr("Delete")}
           </button>
@@ -186,7 +186,7 @@ function Layers({ s }: { s: SurveyImport }) {
           <button
             type="button"
             className="pressable shrink-0 rounded-control px-1.5 underline underline-offset-2 hover:text-ink"
-            title="Bring them back into the list, each as its guess or the first kind it can be"
+            title={tr("Bring them back into the list, each as its guess or the first kind it can be")}
             onClick={() => setKinds(Object.fromEntries(deleted.map((l) => [l.name, restored(l, KINDS)])))}
           >
             {tr("Restore")}
@@ -316,7 +316,7 @@ function Boundary({ s }: { s: SurveyImport }) {
   return (
     <div className="flex items-center justify-between gap-2">
       <p className="text-caption text-ink">{k} shapes: click the boundary on the plan</p>
-      <button type="button" className={`${BUTTON} bg-fill`} title="Make the largest shape the boundary" onClick={() => pick(0)}>
+      <button type="button" className={`${BUTTON} bg-fill`} title={tr("Make the largest shape the boundary")} onClick={() => pick(0)}>
         {tr("Use the largest")}
       </button>
     </div>
@@ -402,14 +402,14 @@ function Foot({ s }: { s: SurveyImport }) {
               </select>
             </label>
           )}
-          <label className="flex items-center gap-1.5" title="Keep the units, the coordinates and what each layer is, in this browser, for the next file">
+          <label className="flex items-center gap-1.5" title={tr("Keep the units, the coordinates and what each layer is, in this browser, for the next file")}>
             <input type="checkbox" className="h-4 w-4 accent-ink" checked={s.remember} onChange={(e) => setRemember(e.target.checked)} />
             {tr("Remember this setup")}
           </label>
         </div>
       )}
       <div className="flex justify-end gap-1.5">
-        <button type="button" className={BUTTON} title="Leave the site as it was (Escape)" onClick={cancel}>
+        <button type="button" className={BUTTON} title={tr("Leave the site as it was (Escape)")} onClick={cancel}>
           {tr("Cancel")}
         </button>
         <button
@@ -453,7 +453,7 @@ export function SurveyWindow() {
         <button
           type="button"
           aria-label="Cancel the import"
-          title="Leave the site as it was (Escape)"
+          title={tr("Leave the site as it was (Escape)")}
           className="pressable -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-pill text-ink-glass hover:bg-hover hover:text-ink"
           onClick={() => useSiteImport.getState().cancel()}
         >
@@ -462,7 +462,7 @@ export function SurveyWindow() {
       </header>
       <div className="flex min-h-0 flex-col gap-3 overflow-y-auto px-3 pb-3 pt-1">
         <Brings s={s} />
-        <Step n={1} title="Units and coordinates" tour="survey-units">
+        <Step n={1} title={tr("Units and coordinates")} tour="survey-units">
           <Coordinates s={s} />
         </Step>
         <Step n={2} title={table ? 'Columns' : 'Layers'} tour="survey-layers">

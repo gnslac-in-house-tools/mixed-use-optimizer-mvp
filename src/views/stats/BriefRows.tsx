@@ -52,13 +52,13 @@ export function BriefRows() {
           <thead>
             <tr className="border-b border-separator align-bottom text-caption text-ink-secondary">
               <th className="pb-1.5 text-left font-medium">{tr("Program")}</th>
-              <th className={head} title="What the active option has: its floor area (ground area for open programs)">
+              <th className={head} title={tr("What the active option has: its floor area (ground area for open programs)")}>
                 {tr("Option")}<span className="block font-normal text-ink-tertiary">m²</span>
               </th>
-              <th className={head} title="The option’s area minus the target, and as a share of it (±5 % meets it)">
+              <th className={head} title={tr("The option’s area minus the target, and as a share of it (±5 % meets it)")}>
                 Δ<span className="block font-normal text-ink-tertiary">m²</span>
               </th>
-              <th className={head} title="How many masses of it the active option has, against the target">
+              <th className={head} title={tr("How many masses of it the active option has, against the target")}>
                 {tr("Now")}<span className="block font-normal text-ink-tertiary">#</span>
               </th>
             </tr>

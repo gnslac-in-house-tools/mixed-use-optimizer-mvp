@@ -23,6 +23,7 @@ import { useShown } from '../viewport/look.ts'
 import type { SceneColors } from './colors.ts'
 import { Z_STEP } from './gumball.ts'
 import { buildingLift, useLaid } from './laid.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The level whose chip shows (the view's). */
 export const useLevelChip = create<{ levelId: Id | null; pick(id: Id | null): void }>()((set) => ({
@@ -47,7 +48,7 @@ function Chip({ id, name, elevation }: { id: Id; name: string; elevation: number
       <span className="font-medium">{name}</span>
       <input
         aria-label={`${name}'s floor height`}
-        title="The level's floor height (m); its gumball moves it by half metres"
+        title={tr("The level's floor height (m); its gumball moves it by half metres")}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={keep}

@@ -72,7 +72,7 @@ function BackToStages() {
   return (
     <button
       type="button"
-      title="Back to the stages"
+      title={tr("Back to the stages")}
       onClick={() => showTabs(OPTIMIZER, { left: 'stages' })}
       className="pressable h-row shrink-0 rounded-control bg-fill px-2 text-label text-ink hover:bg-hover"
     >
@@ -183,7 +183,7 @@ function Discard() {
     <div className="flex justify-start">
       <button
         type="button"
-        title="Its specimens go, and the options kept from it; your design stays"
+        title={tr("Its specimens go, and the options kept from it; your design stays")}
         onClick={() => discard(project)}
         className="pressable h-row rounded-control px-2.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
       >

@@ -48,7 +48,7 @@ export function RuleProperties({ id, muted }: { id: Id; muted: string }) {
       {r.kind === 'near' && <NumberField label="Within" unit="m" min={0} value={r.max} onCommit={(v) => update({ max: v })} />}
       {r.kind === 'apart' && <NumberField label="At least" unit="m" min={0} value={r.min} onCommit={(v) => update({ min: v })} />}
       <SelectField label={r.kind === 'apart' ? 'From every' : 'Its nearest'} value={r.b} options={options} onCommit={(v) => update({ b: v })} />
-      <label className="flex items-start justify-between gap-3" title="Broken, a required rule is an error; otherwise a warning">
+      <label className="flex items-start justify-between gap-3" title={tr("Broken, a required rule is an error; otherwise a warning")}>
         <span className="flex flex-col">
           <span className="text-label text-ink-secondary">{tr("Required")}</span>
           <span className={`text-caption ${muted}`}>{tr("Broken, it is an error, not a warning")}</span>
@@ -60,7 +60,7 @@ export function RuleProperties({ id, muted }: { id: Id; muted: string }) {
       <p className={`select-text text-caption ${muted}`}>{tr("The weight is its pull when Solve moves the masses; why shows with its warnings.")}</p>
       <div className="flex gap-2">
         <Button
-          title="Delete the rule (Delete); the masses stay"
+          title={tr("Delete the rule (Delete); the masses stay")}
           onClick={() => {
             apply((p) => actions.removeRule(p, id))
             useGraph.getState().selectRule(null)
@@ -102,7 +102,7 @@ export function RelationProperties({ id, muted }: { id: string; muted: string })
       <div className="flex flex-wrap gap-2">
         {rule && (
           <Button
-            title="Open the rule in the Rules window, to change it"
+            title={tr("Open the rule in the Rules window, to change it")}
             onClick={() => {
               useUi.getState().openDialog('rules')
               useGraph.getState().selectRule(rule.id)
@@ -111,7 +111,7 @@ export function RelationProperties({ id, muted }: { id: string; muted: string })
             {tr("Edit the rule")}
           </Button>
         )}
-        <Button title="Pick both masses" onClick={() => {
+        <Button title={tr("Pick both masses")} onClick={() => {
             // a locked mass is not picked from here (the padlock is CAD's: its row in Layers is the way to it), nor a hidden one
             const { project, level } = useApp.getState()
             const free = pickUnlocked([x.a, x.b].filter((id) => !massHiddenOnPlan(project, level, id, useLayerView.getState().hidden)))

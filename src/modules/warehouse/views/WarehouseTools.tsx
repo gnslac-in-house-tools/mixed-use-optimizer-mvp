@@ -14,6 +14,7 @@ import { useModule } from '../../../views/modules.ts'
 import { elementToolsFor } from './siteBlockState.ts'
 import { useUnits, type LengthUnit } from './units.ts'
 import { useCurrentType, useWarehouse } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function WarehouseTools() {
   const t = useCurrentType()
@@ -27,13 +28,13 @@ export function WarehouseTools() {
   return (
     <div role="group" aria-label="Warehouse tools" className="panel flex shrink-0 items-center gap-3 px-2 py-1">
       <Group caption="Type">
-        <ToolButton icon="plus" label="New" title="A new Warehouse program, its type every step open" onClick={newType} />
+        <ToolButton icon="plus" label="New" title={tr("A new Warehouse program, its type every step open")} onClick={newType} />
         <ToolButton icon="duplicate" label="Duplicate" title={t ? `A copy of ${t.name}, a program of its own` : 'No type to copy'} disabled={!t} why onClick={() => t && duplicateType(t.id)} />
       </Group>
       <StripSeparator />
       <Group caption="Edit">
-        <ToolButton icon="cursor" label="Select" title="Pick a zone, an edge or a hole; drag a wall or a corner (onto a module line when near one, Shift free); double click a wall: its bay, to pull out or push in (Alt: a corner); double click a corner: removed (Esc)" pressed={tool === 'select'} disabled={rest} onClick={() => setTool('select')} />
-        <ToolButton icon="hole" label="Hole" title="A hole through the block (a court): drag a rectangle inside the outline (its corners land on the module nodes when near them, Shift free)" pressed={tool === 'hole'} disabled={rest} onClick={() => setTool(tool === 'hole' ? 'select' : 'hole')} />
+        <ToolButton icon="cursor" label="Select" title={tr("Pick a zone, an edge or a hole; drag a wall or a corner (onto a module line when near one, Shift free); double click a wall: its bay, to pull out or push in (Alt: a corner); double click a corner: removed (Esc)")} pressed={tool === 'select'} disabled={rest} onClick={() => setTool('select')} />
+        <ToolButton icon="hole" label="Hole" title={tr("A hole through the block (a court): drag a rectangle inside the outline (its corners land on the module nodes when near them, Shift free)")} pressed={tool === 'hole'} disabled={rest} onClick={() => setTool(tool === 'hole' ? 'select' : 'hole')} />
         <ToolButton icon="split" label="Split" title={titleWith('A zone of the block in two, on the module line nearest the pointer; or a line from outside the block: the truck court it crosses is split', 'block.split')} pressed={tool === 'split'} disabled={rest} onClick={() => setTool(tool === 'split' ? 'select' : 'split')} />
       </Group>
       <StripSeparator />

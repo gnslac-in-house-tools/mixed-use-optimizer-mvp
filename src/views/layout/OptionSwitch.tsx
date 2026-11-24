@@ -71,7 +71,7 @@ export function OptionSwitch() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Design option: ${current.name}`}
-        title="Design options: the KPIs, the Summary and the views show the active one"
+        title={tr("Design options: the KPIs, the Summary and the views show the active one")}
         onClick={() => (open ? close() : setOpen(true))}
         className="pressable flex max-w-full items-center gap-1 rounded-control px-1.5 py-0.5 text-body text-ink hover:bg-hover"
       >
@@ -124,7 +124,7 @@ export function OptionSwitch() {
                 <Icon name="plus" className="h-[1.125rem] w-[1.125rem] shrink-0 text-ink-secondary" />
                 <span className="flex-1">{tr("New option")}</span>
               </button>
-              <button type="button" role="menuitem" className={itemClass} onClick={run(duplicateActiveOption)} title="The same buildings, linked: an edit shows in both">
+              <button type="button" role="menuitem" className={itemClass} onClick={run(duplicateActiveOption)} title={tr("The same buildings, linked: an edit shows in both")}>
                 <Icon name="link" className="h-[1.125rem] w-[1.125rem] shrink-0 text-ink-secondary" />
                 <span className="flex-1">{tr("Duplicate (linked)")}</span>
               </button>

@@ -97,7 +97,7 @@ export function LogTab() {
         <button
           type="button"
           disabled={entries.length === 0}
-          title="Every entry as a spreadsheet, oldest first"
+          title={tr("Every entry as a spreadsheet, oldest first")}
           onClick={exportLogCsv}
           className="pressable h-row rounded-control bg-fill px-3 text-label text-ink hover:bg-hover disabled:text-ink-tertiary disabled:hover:bg-fill"
         >
@@ -138,7 +138,7 @@ function Author() {
     setDraft(null)
   }
   return (
-    <label className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-center gap-2" title="Your name on the changes you make, in this browser">
+    <label className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-center gap-2" title={tr("Your name on the changes you make, in this browser")}>
       <span className="text-label text-ink-secondary">{tr("You")}</span>
       <input
         aria-label="Your name"

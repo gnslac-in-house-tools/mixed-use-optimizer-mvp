@@ -255,7 +255,7 @@ function PhoneMenu() {
         aria-haspopup="dialog"
         aria-expanded={open}
         data-tour="menu"
-        title="Menu"
+        title={tr("Menu")}
         className="pressable grid h-11 w-11 shrink-0 place-items-center rounded-pill hover:bg-hover"
         onClick={() => (open ? close() : setOpen(true))}
       >
@@ -357,7 +357,7 @@ function Rows({ items, depth, onClose }: { items: MenuEntry[]; depth: number; on
             data-sheet-key={e.key}
             aria-pressed={e.checked}
             disabled={e.disabled}
-            title={e.title}
+            title={e.title === undefined ? undefined : tr(e.title)}
             onClick={() => {
               // the sheet closes first: what the command opens (a window, a panel's sheet) is not under it
               onClose()

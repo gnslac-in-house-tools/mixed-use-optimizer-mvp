@@ -69,7 +69,7 @@ export function TerrainLibraryView({ onBack }: { onBack: () => void }) {
   return (
     <section aria-label="Terrain library" className="flex min-h-0 flex-1 flex-col gap-3 rounded-[0.875rem] bg-panel p-4 shadow-[inset_0_0_0_1px_var(--separator)]">
       <div className="flex flex-wrap items-center gap-2">
-        <button type="button" onClick={onBack} title="Back to your projects" className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
+        <button type="button" onClick={onBack} title={tr("Back to your projects")} className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
           <Icon path={HOME_ICONS.back} className="h-4 w-4" />
           {tr("Projects")}
         </button>
@@ -80,7 +80,7 @@ export function TerrainLibraryView({ onBack }: { onBack: () => void }) {
         </label>
         <button
           type="button"
-          title="A terrain's file (.gfs), or a survey or parcel (DXF, DWG, CSV, KML, GeoJSON, Shapefile) imported as Site › Import does"
+          title={tr("A terrain's file (.gfs), or a survey or parcel (DXF, DWG, CSV, KML, GeoJSON, Shapefile) imported as Site › Import does")}
           onClick={() => fileInput.current?.click()}
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90"
         >
@@ -125,7 +125,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
         <button
           type="button"
           aria-label={`New project on ${t.name}`}
-          title="A new project on this terrain: its type next"
+          title={tr("A new project on this terrain: its type next")}
           onClick={() => openCreateNew('project', t.id)}
           className="pressable flex h-7 items-center rounded-control bg-fill px-2.5 text-label text-ink hover:bg-hover"
         >
@@ -134,7 +134,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
         <button
           type="button"
           aria-label={`Download ${t.name} as .gfs`}
-          title="Its file (.gfs): all of it, to share it or upload it again"
+          title={tr("Its file (.gfs): all of it, to share it or upload it again")}
           onClick={() => download(new Blob([writeTerrainFile(t)], { type: 'application/json' }), terrainFileName(t))}
           className={small}
         >
@@ -143,7 +143,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
         <button
           type="button"
           aria-label={`Download ${t.name} as DXF`}
-          title="For CAD: the boundary, the contours at their heights and the points, on GFIT- layers"
+          title={tr("For CAD: the boundary, the contours at their heights and the points, on GFIT- layers")}
           onClick={() => download(new Blob([terrainDxf(t)], { type: 'application/dxf' }), terrainFileName(t, 'dxf'))}
           className={small}
         >
@@ -153,7 +153,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
           <button
             type="button"
             aria-label={`Remove ${t.name}`}
-            title="Forget this terrain in this browser (projects on it keep their site)"
+            title={tr("Forget this terrain in this browser (projects on it keep their site)")}
             onClick={() => useToast.getState().confirm(`Remove “${t.name}” from this browser’s terrains? Projects on it keep their site.`, () => removeTerrain(t.id))}
             className={small}
           >

@@ -3,6 +3,7 @@
 // it and a double click goes back to `reset`.
 import { useRef, type RefObject } from 'react'
 import { beginDrag } from './beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const MIN_FRACTION = 0.2
 const MAX_FRACTION = 0.8
@@ -33,7 +34,7 @@ export function Divider(props: {
       aria-valuemax={MAX_FRACTION * 100}
       aria-valuenow={Math.round(fraction * 100)}
       tabIndex={0}
-      title={props.title}
+      title={props.title === undefined ? undefined : tr(props.title)}
       className={`group relative shrink-0 touch-none ${columns ? 'w-2 cursor-col-resize' : 'h-2 cursor-row-resize'}`}
       onPointerDown={(e) => {
         if (e.button !== 0) return // only the main button drags

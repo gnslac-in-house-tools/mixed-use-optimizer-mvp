@@ -4,7 +4,7 @@
 // siguen leyendo el inglés. El idioma es del navegador (localStorage), no del proyecto. Al cambiarlo, la app se vuelve
 // a montar (main.tsx), así que `t` no necesita suscribirse.
 import { create } from 'zustand'
-import { ES } from './es.ts'
+import { ES, FORMAS } from './es.ts'
 
 export type Idioma = 'es' | 'en'
 const LLAVE = 'gfit-idioma'
@@ -30,7 +30,17 @@ export const useIdioma = create<{ idioma: Idioma; poner: (i: Idioma) => void }>(
   },
 }))
 
-/** El texto en el idioma de la interfaz: su traducción si el idioma es español y el diccionario la trae. */
+/**
+ * El texto en el idioma de la interfaz: su traducción si el idioma es español y el diccionario la trae; si no, la de
+ * su forma (un texto que GIM arma con un nombre adentro, como «Bodega A footprint»), con el nombre como está.
+ */
 export function t(texto: string): string {
-  return useIdioma.getState().idioma === 'es' ? (ES[texto] ?? texto) : texto
+  if (useIdioma.getState().idioma !== 'es') return texto
+  const exacto = ES[texto]
+  if (exacto !== undefined) return exacto
+  for (const [forma, es] of FORMAS) {
+    const m = forma.exec(texto)
+    if (m) return es(m[1])
+  }
+  return texto
 }

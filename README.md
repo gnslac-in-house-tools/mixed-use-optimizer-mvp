@@ -16,8 +16,8 @@ que viene de GIM se queda en inglés; lo nuevo se escribe en español.
 ## Idioma
 
 La interfaz arranca en español; **View › Language** cambia entre Español e English (se guarda en el navegador). El
-diccionario es `src/i18n/es.ts`: lo que no está ahí se queda en inglés. Primera vuelta: menús, comandos, campos,
-paneles, KPIs, la barra inferior y el Home; las notas y tooltips largos siguen en inglés. Los tests corren en inglés.
+diccionario es `src/i18n/es.ts`: lo que no está ahí se queda en inglés. Traducido: menús, comandos, campos,
+paneles, KPIs, la barra inferior, el Home, las notas y los tooltips. Los `aria-label` siguen en inglés (los usan los tests). Los tests corren en inglés.
 
 ## Correr
 

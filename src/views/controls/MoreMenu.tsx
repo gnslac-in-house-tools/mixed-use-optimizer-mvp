@@ -95,7 +95,7 @@ export function MoreMenu({ items, compact = false, align = 'left' }: { items: Me
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="More actions"
-        title="More actions"
+        title={tr("More actions")}
         className={`pressable grid place-items-center rounded-pill hover:bg-hover ${compact ? 'h-[2rem] w-[2rem]' : 'h-11 w-11'}`}
         onClick={() => setOpen((o) => !o)}
       >

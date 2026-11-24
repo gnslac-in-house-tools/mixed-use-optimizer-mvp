@@ -30,7 +30,7 @@ export function RoadProperties({ id, muted }: { id: string; muted: string }) {
         <button
           type="button"
           aria-label="Clear selection"
-          title="Clear selection (Esc)"
+          title={tr("Clear selection (Esc)")}
           className={`pressable -mr-1 grid h-6 w-6 shrink-0 place-items-center rounded-pill hover:bg-hover hover:text-ink ${muted}`}
           onClick={() => useRoads.getState().pick(null)}
         >

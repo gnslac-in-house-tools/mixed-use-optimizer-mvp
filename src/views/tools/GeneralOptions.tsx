@@ -20,7 +20,7 @@ export function GeneralOptions() {
   const set = useGeneralTools.getState
   return (
     <div className="flex w-56 flex-col gap-1.5">
-      <label className="flex items-center justify-between gap-2 text-label text-ink-secondary" title="Mirror makes a mirrored copy and leaves the original; off, the thing itself is reflected">
+      <label className="flex items-center justify-between gap-2 text-label text-ink-secondary" title={tr("Mirror makes a mirrored copy and leaves the original; off, the thing itself is reflected")}>
         {tr("Mirror keeps the original")}
         <input type="checkbox" className="h-4 w-4 accent-ink" checked={keep} onChange={(e) => set().setKeep(e.target.checked)} />
       </label>

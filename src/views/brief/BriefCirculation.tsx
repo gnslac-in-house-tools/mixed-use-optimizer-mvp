@@ -47,13 +47,13 @@ function DemandSection() {
         <thead>
           <tr className="border-b border-separator text-left align-bottom text-caption text-ink-secondary">
             <th className="w-[32%] pb-1.5 font-medium">{tr("Program")}</th>
-            <th className="pb-1.5 pr-2 text-right font-medium" title="A car stall per so many m² of the program’s floor (GFA; ground for an open one)">
+            <th className="pb-1.5 pr-2 text-right font-medium" title={tr("A car stall per so many m² of the program’s floor (GFA; ground for an open one)")}>
               {tr("Car stalls")}<span className="block font-normal text-ink-tertiary">1 per m²</span>
             </th>
             <th className="pb-1.5 pr-2 text-right font-medium">{tr("Asks")}</th>
             {docks && (
               <>
-                <th className="pb-1.5 pr-2 text-right font-medium" title="Trailer stalls per dock door of the program’s masses">
+                <th className="pb-1.5 pr-2 text-right font-medium" title={tr("Trailer stalls per dock door of the program’s masses")}>
                   {tr("Trailer stalls")}<span className="block font-normal text-ink-tertiary">per door</span>
                 </th>
                 <th className="pb-1.5 text-right font-medium">{tr("Asks")}</th>

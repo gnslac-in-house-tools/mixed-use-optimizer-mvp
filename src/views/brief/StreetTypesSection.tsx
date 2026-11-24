@@ -38,8 +38,8 @@ export function StreetTypesSection() {
         <thead>
           <tr className="border-b border-separator text-left align-bottom text-caption text-ink-secondary">
             <th className="w-[34%] pb-1.5 font-medium">{tr("Name")}</th>
-            <th className="pb-1.5 pr-2 text-right font-medium" title="What a new street of this type is drawn with: once drawn, its sides are pulled by hand">{tr("New street width")}<span className="block font-normal text-ink-tertiary">m</span></th>
-            <th className="pb-1.5 pr-2 text-right font-medium" title="The turning radius its corners are drawn with">
+            <th className="pb-1.5 pr-2 text-right font-medium" title={tr("What a new street of this type is drawn with: once drawn, its sides are pulled by hand")}>{tr("New street width")}<span className="block font-normal text-ink-tertiary">m</span></th>
+            <th className="pb-1.5 pr-2 text-right font-medium" title={tr("The turning radius its corners are drawn with")}>
               {tr("Radius")}<span className="block font-normal text-ink-tertiary">m</span>
             </th>
             <th className="w-[28%] pb-1.5 font-medium">{tr("Who")}</th>

@@ -29,10 +29,10 @@ export function ImportBar() {
           <span className="font-semibold">{pending.file.name}</span> · click the site’s boundary ({n} shape{n === 1 ? '' : 's'})
         </span>
         <span aria-hidden className="mx-0.5 h-4 w-px bg-separator" />
-        <button type="button" title="Make the largest shape the boundary" onClick={() => pick(0)} className={`${BUTTON} bg-fill`}>
+        <button type="button" title={tr("Make the largest shape the boundary")} onClick={() => pick(0)} className={`${BUTTON} bg-fill`}>
           {tr("Use the largest")}
         </button>
-        <button type="button" title="Leave the site as it was (Escape)" onClick={cancel} className={BUTTON}>
+        <button type="button" title={tr("Leave the site as it was (Escape)")} onClick={cancel} className={BUTTON}>
           {tr("Cancel")}
         </button>
       </div>

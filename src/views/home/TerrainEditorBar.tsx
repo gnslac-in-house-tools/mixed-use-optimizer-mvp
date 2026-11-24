@@ -29,7 +29,7 @@ export function TerrainEditorBar() {
       </button>
       <button
         type="button"
-        title="Back to Home’s terrains"
+        title={tr("Back to Home’s terrains")}
         onClick={closeTerrainEditor}
         className="pressable flex h-[2rem] items-center rounded-control px-3 text-label text-ink-secondary hover:bg-hover hover:text-ink"
       >

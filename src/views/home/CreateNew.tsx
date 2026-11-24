@@ -119,7 +119,7 @@ function ProjectTerrains() {
   useEffect(() => void loadGfitTerrains(), [])
   return (
     <ul aria-label="Terrains" className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2.5">
-      <TypeCard tour="create-no-terrain" label="No terrain" title="None" text="Import or draw it in Site" pressed={terrain === null} onClick={() => useCreateNew.setState({ terrain: null })}>
+      <TypeCard tour="create-no-terrain" label="No terrain" title={tr("None")} text="Import or draw it in Site" pressed={terrain === null} onClick={() => useCreateNew.setState({ terrain: null })}>
         <span aria-hidden className="grid h-16 place-items-center rounded-[0.5rem] bg-fill text-ink-tertiary">
           <Icon path={HOME_ICONS.terrain} className="h-6 w-6" />
         </span>
@@ -222,8 +222,8 @@ function Dialog() {
           {tr("Create new")}
         </h2>
         <div className="grid grid-cols-2 gap-2.5 phone:grid-cols-1">
-          <KindCard kind="project" icon={HOME_ICONS.project} title="Project" text="A site and the buildings on it, with its options" />
-          <KindCard kind="block" icon={HOME_ICONS.library} title="Block" text="A building designed once, placed in projects as copies" />
+          <KindCard kind="project" icon={HOME_ICONS.project} title={tr("Project")} text="A site and the buildings on it, with its options" />
+          <KindCard kind="block" icon={HOME_ICONS.library} title={tr("Block")} text="A building designed once, placed in projects as copies" />
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto">
           {kind === null ? (

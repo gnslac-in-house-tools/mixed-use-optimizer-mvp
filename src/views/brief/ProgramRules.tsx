@@ -56,7 +56,7 @@ export function ProgramRules({ program: g, row }: { program: Program; row: Brief
         <span>mod</span>
       </span>
 
-      <span className="flex items-center gap-1" title="The sizes its masses may take, low to high: what the optimizer may search. Empty: its size as it is">
+      <span className="flex items-center gap-1" title={tr("The sizes its masses may take, low to high: what the optimizer may search. Empty: its size as it is")}>
         <span className="text-ink">{tr("Range")}</span>
         {(['width', 'depth'] as const).map((side) => (
           <span key={side} className="flex items-center gap-1">
@@ -87,13 +87,13 @@ export function ProgramRules({ program: g, row }: { program: Program; row: Brief
       )}
 
       {docks && (
-        <span className="flex items-center gap-1" title="Whether its masses have loading docks (on the building’s front, turning with it) and how many doors: one per so many m² of floor, or one every so many m of wall. On a structural grid, under it the doors’ pattern">
+        <span className="flex items-center gap-1" title={tr("Whether its masses have loading docks (on the building’s front, turning with it) and how many doors: one per so many m² of floor, or one every so many m of wall. On a structural grid, under it the doors’ pattern")}>
           <span className="text-ink">{tr("Docks")}</span>
           <ProgramDocks program={g} />
         </span>
       )}
 
-      <span title="The target area shared by the target masses: what each one should be">
+      <span title={tr("The target area shared by the target masses: what each one should be")}>
         <span className="text-ink">{tr("Per mass")}</span> <span className="tabular-nums">{row.unitArea === null ? '—' : m2(row.unitArea)}</span>
       </span>
     </div>

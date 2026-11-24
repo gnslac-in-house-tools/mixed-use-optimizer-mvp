@@ -49,7 +49,7 @@ function Step({ x, names }: { x: DerivedPlatform; names: (ids: Id[]) => string }
     <div data-step={x.id} className="flex flex-col gap-1 rounded-control bg-panel-sunken px-2 py-1.5">
       <div className="flex items-center justify-between gap-2">
         <span className="truncate text-label text-ink">{names(x.massIds)}</span>
-        <RowButton label={`Undo the step of ${names(x.massIds)}`} title="Back onto the building’s platform" icon="close" onClick={() => removeStep(x.id)} />
+        <RowButton label={`Undo the step of ${names(x.massIds)}`} title={tr("Back onto the building’s platform")} icon="close" onClick={() => removeStep(x.id)} />
       </div>
       <NumberField key={`${x.id}:${x.typed}`} label={x.typed ? 'Level (typed)' : 'Level (balanced)'} unit="m" value={x.level} onCommit={(v) => setStepLevel(x.id, v)} />
       <div className="flex items-center justify-between gap-2 text-caption text-ink-secondary">

@@ -41,7 +41,7 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
         </ToggleChip>
       </ChipTrack>
       {/* its kinds in a drop-down (Decision "Bottom bar"): each with the sign the plan draws and its name */}
-      <BarMenu label={null} name="Snap kinds" title="Which points the snap finds" disabled={disabled} align="left">
+      <BarMenu label={null} name="Snap kinds" title={tr("Which points the snap finds")} disabled={disabled} align="left">
         <div role="group" aria-label="Snap kinds" className="flex flex-col">
           {SNAP_KINDS.map((k) => (
             <button
@@ -86,7 +86,7 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
         <ToggleChip
           pressed={s.align}
           disabled={disabled}
-          title="Align: walls line up with parallel walls (other masses, site, setback); a dragged corner tracks the mass's axes and the lines of nearby walls"
+          title={tr("Align: walls line up with parallel walls (other masses, site, setback); a dragged corner tracks the mass's axes and the lines of nearby walls")}
           onClick={() => toggle('align')}
         >
           {tr("Align")}
@@ -105,7 +105,7 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
         </ToggleChip>
       </ChipTrack>
       {gridMenu && (
-        <BarMenu label={null} name="Grid" title="The grid’s parameters (bays, modules, angle, origin), Move pivot, and its colour and opacity" align="left">
+        <BarMenu label={null} name="Grid" title={tr("The grid’s parameters (bays, modules, angle, origin), Move pivot, and its colour and opacity")} align="left">
           <GridMenu disabled={disabled} />
         </BarMenu>
       )}

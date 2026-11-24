@@ -99,7 +99,7 @@ export function Home() {
           type="button"
           onClick={() => openCreateNew()}
           data-tour="create-new"
-          title="A new project or a new block"
+          title={tr("A new project or a new block")}
           className="pressable flex h-[2.375rem] items-center gap-2.5 rounded-[0.625rem] bg-ink px-3 text-body font-semibold text-on-ink hover:opacity-90"
         >
           <Icon path={HOME_ICONS.create} className="h-[1.125rem] w-[1.125rem]" />
@@ -131,7 +131,7 @@ export function Home() {
           <button
             type="button"
             aria-label={BUILD.version ? `Version ${BUILD.version}` : 'A local build'}
-            title="This version and the ones before it, in About"
+            title={tr("This version and the ones before it, in About")}
             onClick={() => show('about')}
             className="pressable -mx-1.5 rounded-control px-1.5 text-caption tabular-nums text-ink-tertiary hover:bg-hover hover:text-ink"
           >

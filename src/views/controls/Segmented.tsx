@@ -64,7 +64,7 @@ export function Segmented<K extends string>({
             aria-selected={kind === 'tabs' ? active : undefined}
             aria-pressed={kind === 'toggle' ? active : undefined}
             disabled={o.disabled}
-            title={o.title}
+            title={o.title === undefined ? undefined : tr(o.title)}
             className={`pressable rounded-segment-pill ${kind === 'tabs' ? 'px-2 py-1' : 'px-3 py-1'} text-body phone:min-h-10 ${
               stretch ? 'flex-1' : ''
             } ${vertical ? 'flex items-center gap-2 text-left' : ''} ${

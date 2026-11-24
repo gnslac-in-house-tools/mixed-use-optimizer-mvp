@@ -9,6 +9,7 @@ import { useApp } from '../../state/store.ts'
 import { Section, Total } from '../controls/fields.tsx'
 import { m2 } from '../format.ts'
 import { useUi } from '../layout/ui.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The line that says where the roads', gates' and stalls' standards are, with the button that opens them (Brief › Circulation). */
 export function BriefCirculationLink() {
@@ -17,7 +18,7 @@ export function BriefCirculationLink() {
       What the roads, gates and stalls are made with:{' '}
       <button
         type="button"
-        title="The Brief’s Circulation tab: the standards, the ranges the optimizer searches, the parking’s demand"
+        title={tr("The Brief’s Circulation tab: the standards, the ranges the optimizer searches, the parking’s demand")}
         onClick={() => {
           useUi.getState().setBriefTab('circulation')
           useUi.getState().openDialog('brief')
@@ -36,7 +37,7 @@ export function CirculationTab() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Section title="Totals">
+      <Section title={tr("Totals")}>
         <dl aria-label="Circulation totals" className="flex flex-col gap-1.5">
           <Total label="Truck roads" value={m2(totals.roadArea - totals.carRoadArea)} />
           <Total label="Car roads" value={m2(totals.carRoadArea)} />

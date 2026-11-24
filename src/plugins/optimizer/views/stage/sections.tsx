@@ -103,7 +103,7 @@ export function MayChange({ template: t, edit, summary, kinds, own: ownKinds }: 
   const gates = count('gate.position')
   return (
     <section aria-label="What may change" className="flex flex-col gap-1.5">
-      <Heading title="What may change" />
+      <Heading title={tr("What may change")} />
       {AREAS.map((area) => {
         const rows = listed.filter((k) => k.area === area)
         return rows.length === 0 ? null : (
@@ -229,7 +229,7 @@ export function Objectives(props: { template: Template; edit: Edit; measures: Me
   const order = [...AREAS.filter((a) => first.includes(a)), ...AREAS.filter((a) => !first.includes(a))]
   return (
     <section aria-label="Objectives" className="flex flex-col gap-1.5">
-      <Heading title="Objectives" right="design" />
+      <Heading title={tr("Objectives")} right="design" />
       {t.objectives.map((o, i) => {
         const m = measures.find((x) => x.id === o.measure)
         const label = m?.label ?? o.measure
@@ -333,8 +333,8 @@ export function MustHold(props: { template: Template; edit: Edit; measures: Meas
   )
   return (
     <section aria-label="Must hold" className="flex flex-col gap-1.5">
-      <Heading title="Must hold" right="design" />
-      <div role="group" aria-label="Always held" className="flex items-center gap-1.5" title="Every run holds these at 0; they cannot be loosened">
+      <Heading title={tr("Must hold")} right="design" />
+      <div role="group" aria-label="Always held" className="flex items-center gap-1.5" title={tr("Every run holds these at 0; they cannot be loosened")}>
         <Icon name="lock" className="h-3 w-3 shrink-0 text-ink-tertiary" />
         <span className="min-w-0 flex-1 truncate text-label text-ink">{tr("Inside the buildable area · No overlaps · Required rules")}</span>
         <span
@@ -413,12 +413,12 @@ export function Margin({ margins, set }: { margins: { kind: string; step: number
   const known = margins.filter((m) => paramKind(m.kind) !== undefined)
   return (
     <section aria-label="Margin over earlier stages" className="flex flex-col gap-1.5">
-      <Heading title="Margin over earlier stages" right="± steps" />
+      <Heading title={tr("Margin over earlier stages")} right="± steps" />
       {margins.length === 0 ? (
         <p className="text-caption text-ink-secondary">{tr("The first stage: nothing earlier to keep.")}</p>
       ) : (
         known.map((m) => (
-          <div key={m.kind} className="flex items-center gap-1.5" title="How many of its steps this stage may move what an earlier stage approved; 0 keeps it as approved">
+          <div key={m.kind} className="flex items-center gap-1.5" title={tr("How many of its steps this stage may move what an earlier stage approved; 0 keeps it as approved")}>
             <span className="min-w-0 flex-1 truncate text-label text-ink">{label(m.kind)}</span>
             <span className="shrink-0 text-caption text-ink-tertiary">±</span>
             <span className="w-12 shrink-0">
@@ -452,13 +452,13 @@ export function Budget({ template: t, edit, ms }: { template: Template; edit: Ed
   )
   return (
     <section aria-label="Budget" className="flex flex-col gap-1.5">
-      <Heading title="Budget" />
+      <Heading title={tr("Budget")} />
       <div className="grid grid-cols-3 gap-2">
         {field('Population', b.population, 4, (n) => set({ population: n }))}
         {field('Generations', b.generations, 1, (n) => set({ generations: n }))}
         {field('Seed', b.seed, 0, (n) => set({ seed: n }))}
       </div>
-      <p className="text-caption text-ink-secondary" title="The same seed and settings give the same run">
+      <p className="text-caption text-ink-secondary" title={tr("The same seed and settings give the same run")}>
         {whole(evaluations)} specimens · {duration(evaluations * ms)}
       </p>
     </section>

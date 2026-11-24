@@ -73,7 +73,7 @@ export function BuildingProperties({ building: b, heading }: { building: Buildin
             ))}
           </div>
         </div>
-        <label className="flex items-start justify-between gap-3" title="Drawn grey, left out of the KPIs, the Summary and its own checks">
+        <label className="flex items-start justify-between gap-3" title={tr("Drawn grey, left out of the KPIs, the Summary and its own checks")}>
           <span className="flex flex-col">
             <span className="text-label text-ink-secondary">{tr("Context")}</span>
             <span className="text-caption text-ink-tertiary">{tr("Surroundings: drawn, not counted")}</span>

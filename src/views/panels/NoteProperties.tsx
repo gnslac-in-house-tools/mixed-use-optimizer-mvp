@@ -73,7 +73,7 @@ export function NoteProperties({ id, muted, answersRename = true }: { id: Id; mu
             rows={Math.min(8, Math.max(3, lineCount))}
             disabled={locked}
             value={draft ?? note.text}
-            title="Enter is a new line. It is saved when you leave the field; Escape drops what was typed."
+            title={tr("Enter is a new line. It is saved when you leave the field; Escape drops what was typed.")}
             className="w-full min-w-0 resize-y select-text rounded-control border border-separator bg-panel-sunken px-2 py-1 text-body text-ink outline-none focus:border-ink disabled:border-transparent disabled:bg-transparent disabled:text-ink-secondary"
             onChange={(e) => {
               typed.current = { id, base: typed.current?.base ?? note.text, text: e.target.value }

@@ -161,7 +161,7 @@ function RowView({ row, depth, open, eye, eyeTitle, top, picked, current, dim, e
           type="button"
           aria-label={`On top ${row.label}`}
           aria-pressed={top === 'mixed' ? 'mixed' : top === 'on'}
-          title="On top: drawn over the model"
+          title={tr("On top: drawn over the model")}
           onClick={() => h.top(row)}
           className={`${iconButton} ${top === 'on' ? 'bg-fill text-ink' : ''} ${top === 'mixed' ? 'opacity-50' : ''}`}
         >

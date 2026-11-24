@@ -120,7 +120,7 @@ export function CopySection({ buildingId }: { buildingId: Id }) {
         o.courts && <p className="select-text text-caption text-ink-tertiary">{tr("Own courts")}</p>
       )}
       <div className="flex gap-2">
-        <Button tour="back-to-type" disabled={!variant && !depths} title="Its figures, its docks and its courts as its type's again" onClick={() => backToType(buildingId)}>
+        <Button tour="back-to-type" disabled={!variant && !depths} title={tr("Its figures, its docks and its courts as its type's again")} onClick={() => backToType(buildingId)}>
           {tr("Back to type")}
         </Button>
         <Button title={`The Program window, on ${type.name}`} onClick={() => openType(type.id)}>

@@ -116,10 +116,10 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
             {draft.by === 'optimizer' && <Budget template={draft.template} edit={edit} ms={rate} />}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Small title="These parameters as a template of the project’s, to start other stages from" onClick={() => saveAsTemplate(draft.template, `${draft.name} template`)}>
+            <Small title={tr("These parameters as a template of the project’s, to start other stages from")} onClick={() => saveAsTemplate(draft.template, `${draft.name} template`)}>
               {tr("Save as template")}
             </Small>
-            <Small title="Close without saving (Esc)" onClick={close}>
+            <Small title={tr("Close without saving (Esc)")} onClick={close}>
               {tr("Cancel")}
             </Small>
           </div>
@@ -139,7 +139,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
         </button>
         <span className="flex-1" />
         <Small
-          title="Keep these parameters"
+          title={tr("Keep these parameters")}
           onClick={() => {
             save()
             close()
@@ -162,7 +162,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
         )}
         {draft.by === 'hand' && (
           <MainButton
-            title="Save, and edit a copy of the option it runs on"
+            title={tr("Save, and edit a copy of the option it runs on")}
             onClick={() => {
               save()
               close()
@@ -174,7 +174,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
         )}
         {draft.by === 'agent' && (
           <MainButton
-            title="Save, and write its request in the Agent tab, to send: it works it with the stages’ tools"
+            title={tr("Save, and write its request in the Agent tab, to send: it works it with the stages’ tools")}
             onClick={() => {
               save()
               close()

@@ -43,7 +43,7 @@ export function ReferenceLineProperties({ id, muted }: { id: Id; muted: string }
           type="button"
           aria-label="On top Reference lines"
           aria-pressed={onTop}
-          title="On top: the reference lines are drawn over the model"
+          title={tr("On top: the reference lines are drawn over the model")}
           onClick={() => toggleOnTop([REFERENCE_LINES])}
           className={`pressable grid h-6 w-6 place-items-center rounded-pill ${onTop ? 'bg-fill text-ink' : `hover:bg-hover hover:text-ink ${muted}`}`}
         >

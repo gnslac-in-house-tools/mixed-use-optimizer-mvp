@@ -55,7 +55,7 @@ export function NumberField(props: NumberFieldProps) {
         <input
           className={`${inputClass} ${narrow ? 'w-[4rem]' : 'w-[5.5rem]'} text-right disabled:border-transparent disabled:bg-transparent disabled:text-ink-secondary`}
           disabled={disabled}
-          title={props.title}
+          title={props.title === undefined ? undefined : tr(props.title)}
           inputMode="decimal"
           placeholder={value === null ? '—' : undefined}
           value={draft ?? (value === null ? '' : String(Math.round(value * k) / k))}
@@ -191,7 +191,7 @@ export function TextField(props: {
         ref={props.inputRef}
         className={`${inputClass} w-[9rem] disabled:border-transparent disabled:bg-transparent disabled:text-ink-secondary`}
         disabled={props.disabled}
-        title={props.title}
+        title={props.title === undefined ? undefined : tr(props.title)}
         value={draft ?? props.value}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
@@ -215,7 +215,7 @@ export function SelectField(props: {
       <select
         className={`${inputClass} w-[9rem] disabled:border-transparent disabled:bg-transparent disabled:text-ink-secondary`}
         disabled={props.disabled}
-        title={props.title}
+        title={props.title === undefined ? undefined : tr(props.title)}
         value={props.value}
         onChange={(e) => props.onCommit(e.target.value)}
       >
@@ -234,7 +234,7 @@ export function Button(props: { children: ReactNode; onClick(): void; disabled?:
     <button
       type="button"
       data-tour={props.tour}
-      title={props.title}
+      title={props.title === undefined ? undefined : tr(props.title)}
       disabled={props.disabled}
       onClick={props.onClick}
       className="h-row rounded-control bg-fill px-3 text-label hover:bg-hover disabled:text-ink-tertiary disabled:hover:bg-fill"

@@ -22,6 +22,7 @@ import { create } from 'zustand'
 import { chordLabel, normalizeChord } from './keys.ts'
 import { commands, everyCommand, knownCommand } from './registry.ts'
 import type { Command, Place } from './types.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export const SHORTCUTS_KEY = 'gfit.shortcuts'
 
@@ -134,7 +135,7 @@ export const keyOrMenu = (id: string, menu: string): string => keyHint(id) || me
 /** "Move (M)": `text` with its command's key in brackets, as the titles of the tools' buttons say it; no key, no brackets. */
 export function titleWith(text: string, id: string): string {
   const k = keyHint(id)
-  return k ? `${text} (${k})` : text
+  return k ? `${tr(text)} (${k})` : tr(text)
 }
 
 /** A menu row's `detail` (the key at its right) for a command: spread it into the row; none when the command has no key. */

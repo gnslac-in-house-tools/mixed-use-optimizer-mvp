@@ -79,7 +79,7 @@ function EdgeRows({ t, g, editable }: Props) {
           const long = Math.hypot(e.b.x - e.a.x, e.b.y - e.a.y)
           return (
             <li key={e.id} data-edge={e.id} aria-current={on || undefined} className={`flex flex-col gap-1 rounded-control border p-1.5 ${on ? 'border-grid-line bg-grid-soft' : 'border-separator'}`}>
-              <button type="button" className="pressable flex items-center justify-between gap-2 text-left" title="Light this edge on the plan" onClick={() => setPicked(on ? [] : [{ kind: 'edge', id: e.id }])}>
+              <button type="button" className="pressable flex items-center justify-between gap-2 text-left" title={tr("Light this edge on the plan")} onClick={() => setPicked(on ? [] : [{ kind: 'edge', id: e.id }])}>
                 <Title>{edgeName(g.outline, e.id)}</Title>
                 <span className="text-caption tabular-nums text-ink-tertiary">{`${FACING[e.side]} · ${text(long)}${e.outer ? ' · box' : ''}`}</span>
               </button>
@@ -165,7 +165,7 @@ function ZoneFields({ t, g, editable }: Props) {
           <LengthField label="Zone level" min={-20} max={20} value={z.level ?? 0} disabled={off} onCommit={(level) => setZone(z.id, { level: level || undefined })} />
           {editable && (
             <div className="flex flex-wrap gap-1.5">
-              <Button title="This zone in two, across its longer side" disabled={!halve(z)} onClick={() => save(halve(z))}>
+              <Button title={tr("This zone in two, across its longer side")} disabled={!halve(z)} onClick={() => save(halve(z))}>
                 {tr("Split")}
               </Button>
               {neighbours(zones, z.id).map((n) => (

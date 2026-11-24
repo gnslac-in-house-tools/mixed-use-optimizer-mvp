@@ -98,7 +98,7 @@ function Frame({ label, children }: { label: string; children: ReactNode }) {
           type="button"
           aria-label={`Close the ${label}`}
           data-tour="dialog-close"
-          title="Close (Esc)"
+          title={tr("Close (Esc)")}
           onClick={close}
           className="pressable absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-control text-ink-secondary hover:bg-hover hover:text-ink"
         >
@@ -132,7 +132,7 @@ function RulesWindow() {
           </button>
           <select
             aria-label="New rule kind"
-            title="New rule kind"
+            title={tr("New rule kind")}
             value={kind}
             onChange={(e) => {
               setKind(e.target.value as RuleKind)
@@ -149,7 +149,7 @@ function RulesWindow() {
         </div>
         <label className="flex items-center gap-1.5 text-label text-ink-secondary">
           {tr("Lines")}
-          <select aria-label="Lines" title="Lines" value={lines} onChange={(e) => setLines(e.target.value as LineStyle)} className={SELECT}>
+          <select aria-label="Lines" title={tr("Lines")} value={lines} onChange={(e) => setLines(e.target.value as LineStyle)} className={SELECT}>
             {LINE_STYLES.map((l) => (
               <option key={l.key} value={l.key}>
                 {l.label}
@@ -165,7 +165,7 @@ function RulesWindow() {
         <Divider
           between="rows"
           label="Divider between the graph and its rules"
-          title="Drag to share the height; double-click puts it back"
+          title={tr("Drag to share the height; double-click puts it back")}
           container={column}
           fraction={share}
           reset={GRAPH_SHARE}
@@ -179,7 +179,7 @@ function RulesWindow() {
         <Note>Next, the plan: ▶ Solve all, in Issues (or S), turns the brief into masses where these rules ask.</Note>
         <button
           type="button"
-          title="The rules are ready: back to the plan"
+          title={tr("The rules are ready: back to the plan")}
           onClick={() => useUi.getState().closeDialog()}
           className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
         >

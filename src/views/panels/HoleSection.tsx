@@ -38,7 +38,7 @@ export function HoleSection({ id, locked, muted }: { id: Id; locked: boolean; mu
             <button
               type="button"
               className="flex justify-between gap-3 text-left text-body"
-              title="Pick it on the plan"
+              title={tr("Pick it on the plan")}
               aria-label={`Hole ${k + 1}, ${m2(holeArea(h))}`}
               onClick={() => setPick({ massId: id, k, vertex: null })}
             >
@@ -56,7 +56,7 @@ export function HoleSection({ id, locked, muted }: { id: Id; locked: boolean; mu
             {corridor && <p className={`select-text text-caption ${muted}`}>A corridor of {m2(corridor.area)} round it</p>}
             <div>
               <Button
-                title="Delete this hole (Del, picked on the plan)"
+                title={tr("Delete this hole (Del, picked on the plan)")}
                 disabled={locked}
                 onClick={() => {
                   apply((p) => actions.removeHole(p, id, k))

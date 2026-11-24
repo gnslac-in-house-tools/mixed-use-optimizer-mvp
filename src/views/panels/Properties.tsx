@@ -200,7 +200,7 @@ function Header(props: {
         <button
           type="button"
           aria-label="Clear selection"
-          title="Clear selection (Esc)"
+          title={tr("Clear selection (Esc)")}
           className={`pressable grid h-6 w-6 place-items-center rounded-pill hover:bg-hover hover:text-ink ${muted}`}
           onClick={props.onClear}
         >
@@ -526,7 +526,7 @@ function DimensionProperties({ id, muted }: { id: Id; muted: string }) {
     <>
       <Header
         sign={<Icon name="dimension" className={`h-4 w-4 shrink-0 ${muted}`} />}
-        title="Dimension"
+        title={tr("Dimension")}
         what="dimension"
         locked={locked}
         // its lock fixes its length: it is not the padlock, and does not say so

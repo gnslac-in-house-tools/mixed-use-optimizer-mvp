@@ -308,7 +308,7 @@ function OnTopToggle({ row, muted }: { row: LayerRow; muted: string }) {
         type="button"
         aria-label={`On top ${row.label}`}
         aria-pressed={onTop === 'mixed' ? 'mixed' : onTop === 'on'}
-        title="On top: drawn over the model"
+        title={tr("On top: drawn over the model")}
         onClick={() => toggleOnTop(row.top ?? [])}
         className={`pressable grid h-6 w-6 place-items-center rounded-pill ${onTop === 'on' ? 'bg-fill text-ink' : `hover:bg-hover hover:text-ink ${muted}`} ${onTop === 'mixed' ? 'opacity-50' : ''}`}
       >

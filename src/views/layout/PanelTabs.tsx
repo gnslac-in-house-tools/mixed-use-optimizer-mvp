@@ -84,7 +84,7 @@ export function PanelTabs() {
         icon="layers"
         label="Layers"
         controls={panelId('Layers')}
-        title="Layers: what the option in view holds, seen, hidden, locked and picked from one tree"
+        title={tr("Layers: what the option in view holds, seen, hidden, locked and picked from one tree")}
         on={item === 'layers'}
         onClick={() => setRail('layers')}
       />
@@ -93,7 +93,7 @@ export function PanelTabs() {
           icon="blocks"
           label="Blocks"
           controls={panelId('Blocks')}
-          title="Blocks: the smart blocks (warehouse types) to drag onto the site; new ones, and editing their rules"
+          title={tr("Blocks: the smart blocks (warehouse types) to drag onto the site; new ones, and editing their rules")}
           on={item === 'blocks'}
           onClick={() => setRail('blocks')}
         />
@@ -102,7 +102,7 @@ export function PanelTabs() {
         icon="properties"
         label="Properties"
         controls={panelId('Properties')}
-        title="Properties: the fields of what is selected or picked in Layers (with nothing picked, the active building’s)"
+        title={tr("Properties: the fields of what is selected or picked in Layers (with nothing picked, the active building’s)")}
         on={item === 'properties'}
         onClick={() => setRail('properties')}
       />
@@ -144,7 +144,7 @@ function Tab(props: {
       data-tour={`tab-${props.label.toLowerCase()}`}
       aria-selected={on}
       aria-label={props.iconOnly ? props.label : undefined}
-      title={props.title}
+      title={props.title === undefined ? undefined : tr(props.title)}
       disabled={props.disabled}
       onClick={props.onClick}
       className={`pressable relative flex h-7 items-center rounded-control text-label leading-none phone:h-11 ${

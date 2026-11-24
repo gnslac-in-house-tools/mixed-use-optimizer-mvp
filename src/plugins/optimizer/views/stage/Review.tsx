@@ -49,7 +49,7 @@ export function Review({ before, after, template, title, back }: { before: Side;
           <span className={`shrink-0 text-caption tabular-nums ${c.held ? 'text-status-within' : 'text-status-over'}`}>{c.held ? '✓' : fmt(c.after, c.unit)}</span>
         </div>
       ))}
-      {r.changed.length > 0 && <Heading title="Changed" />}
+      {r.changed.length > 0 && <Heading title={tr("Changed")} />}
       {r.changed.map((f) => (
         <Row key={f.id} f={f} />
       ))}
@@ -66,7 +66,7 @@ export function Review({ before, after, template, title, back }: { before: Side;
       {open && r.same.map((f) => <Row key={f.id} f={f} />)}
       {margins && r.moved && (
         <section aria-label="What moved of earlier stages" className="flex flex-col gap-1.5">
-          <Heading title="Earlier stages" right="within their margins" />
+          <Heading title={tr("Earlier stages")} right="within their margins" />
           {r.moved.length === 0 && <p className="text-caption text-ink-secondary">{tr("Nothing they approved moved.")}</p>}
           {r.moved.map((m) => (
             <div key={m.key} className="flex items-center gap-1.5">
@@ -85,7 +85,7 @@ export function Review({ before, after, template, title, back }: { before: Side;
       )}
       {r.massesOnly.length > 0 && (
         <section aria-label="Only the masses can fix" className="flex flex-col gap-1.5">
-          <Heading title="Only the masses can fix" right={`${r.massesOnly.length}`} />
+          <Heading title={tr("Only the masses can fix")} right={`${r.massesOnly.length}`} />
           <p className="text-caption text-ink-secondary">This stage moves the roads and the parking, not the masses: {back ? `reopen ${back.label} to move them.` : 'move them in Massing.'}</p>
           <ul className="flex flex-col gap-1">
             {r.massesOnly.map((i, k) => (

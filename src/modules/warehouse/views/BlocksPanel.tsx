@@ -214,7 +214,7 @@ export function BlocksPanel() {
       )}
       <Button
         tour="new-block"
-        title="A new block: its rule set designed step by step in the Program window"
+        title={tr("A new block: its rule set designed step by step in the Program window")}
         onClick={() => {
           newType()
           openProgram()

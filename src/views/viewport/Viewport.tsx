@@ -38,6 +38,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { usePlanRef } from '../plan/planRef.ts'
 import { useSceneRef } from '../scene/sceneRef.ts'
 import { frameModel } from './frame.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Frame (Decision "One Frame"): the plan fits the site, the 3D frames the model; in Split both at once. */
 function FrameButton() {
@@ -48,7 +49,7 @@ function FrameButton() {
       type="button"
       className="glass pressable pointer-events-auto grid h-[2rem] w-[2rem] place-items-center text-ink shadow-control hover:bg-hover disabled:opacity-40"
       aria-label="Frame the model"
-      title="Frame the model (in the plan, or double-click on empty space)"
+      title={tr("Frame the model (in the plan, or double-click on empty space)")}
       disabled={!fit && !frame}
       onClick={frameModel}
     >
@@ -94,7 +95,7 @@ export function Viewport() {
           <Divider
             between="columns"
             label="Divider between plan and 3D"
-            title="Drag to change the width; double-click shares it in half"
+            title={tr("Drag to change the width; double-click shares it in half")}
             container={rowRef}
             fraction={fraction}
             reset={0.5}

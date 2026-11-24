@@ -40,7 +40,7 @@ export function GridMenu({ disabled = false, inPanel = false }: { disabled?: boo
           <ToggleChip
             pressed={pivot}
             disabled={disabled}
-            title="Move the grid by its origin and turn it by its handle on the plan (Shift: free, 15° steps). Escape or this button lets it go"
+            title={tr("Move the grid by its origin and turn it by its handle on the plan (Shift: free, 15° steps). Escape or this button lets it go")}
             onClick={() => toggle('grid')}
           >
             {tr("Move pivot")}
@@ -48,7 +48,7 @@ export function GridMenu({ disabled = false, inPanel = false }: { disabled?: boo
         </ChipTrack>
         <button
           type="button"
-          title="Along the site’s main axis again, from the buildable area’s corner (its bays and modules kept)"
+          title={tr("Along the site’s main axis again, from the buildable area’s corner (its bays and modules kept)")}
           onClick={restoreGrid}
           className="pressable h-6 rounded-control px-2 text-label text-ink-segment hover:bg-hover hover:text-ink"
         >

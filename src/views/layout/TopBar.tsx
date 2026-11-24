@@ -28,6 +28,7 @@ import { usePhone } from './media.ts'
 import { closeProjectData, openProjectData, ProjectDialog, useProjectData } from './ProjectDialog.tsx'
 import { SaveStatus } from './SaveStatus.tsx'
 import { ViewSwitch } from './ViewSwitch.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Undo or Redo as the bar's arrow: its command's label and key, and the reason as the title while it cannot run. */
 function HistoryButton({ id, icon }: { id: 'edit.undo' | 'edit.redo'; icon: 'undo' | 'redo' }) {
@@ -72,7 +73,7 @@ export function TopBar() {
       type="button"
       data-tour="home"
       aria-label="GFit"
-      title="Home: your projects, the sample and its tour"
+      title={tr("Home: your projects, the sample and its tour")}
       onClick={goHome}
       className="pressable shrink-0 rounded-control p-0.5 hover:bg-hover"
     >

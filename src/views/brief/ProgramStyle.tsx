@@ -33,7 +33,7 @@ export function ProgramStyle({ program }: { program: Program }) {
         aria-label={`Colour and hatch of ${program.name}`}
         aria-haspopup="dialog"
         aria-expanded={open}
-        title="Its colour and hatch on the plan"
+        title={tr("Its colour and hatch on the plan")}
         onClick={(e) => {
           if (open) return close()
           const r = e.currentTarget.getBoundingClientRect()

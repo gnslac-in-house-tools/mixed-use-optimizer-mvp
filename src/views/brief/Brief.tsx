@@ -172,7 +172,7 @@ export function Brief() {
                           type="button"
                           draggable
                           aria-label={`Move ${g.name}`}
-                          title="Drag up or down to reorder the brief (or ↑ ↓); Alt+drag: a copy of it"
+                          title={tr("Drag up or down to reorder the brief (or ↑ ↓); Alt+drag: a copy of it")}
                           onDragStart={(e) => {
                             dragged.current = g.id
                             e.dataTransfer?.setData('text/plain', g.id) // Firefox starts a drag only with data
@@ -264,14 +264,14 @@ export function Brief() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Button title="A new built program, without a target yet" onClick={() => apply((p) => actions.addProgram(p).project)}>
+            <Button title={tr("A new built program, without a target yet")} onClick={() => apply((p) => actions.addProgram(p).project)}>
               + Program
             </Button>
             <p className="text-caption text-ink-secondary">
               How {option.name} stands against it:{' '}
               <button
                 type="button"
-                title="The Summary’s Against the brief tab: each program’s area, Δ and masses in the option"
+                title={tr("The Summary’s Against the brief tab: each program’s area, Δ and masses in the option")}
                 onClick={() => showAgainst(wide)}
                 className="pressable rounded-control underline underline-offset-2 hover:text-ink"
               >
@@ -288,7 +288,7 @@ export function Brief() {
         <Note>{tr("Next, Program: each program’s rule set, deep; then Rules, how the programs relate.")}</Note>
         <button
           type="button"
-          title="The brief is ready: on to Program, each program’s rule set designed alone"
+          title={tr("The brief is ready: on to Program, each program’s rule set designed alone")}
           onClick={approve}
           className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
         >

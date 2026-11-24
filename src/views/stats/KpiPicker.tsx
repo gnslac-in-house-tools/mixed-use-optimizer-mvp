@@ -40,7 +40,7 @@ export function KpiPicker() {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label="Customize KPIs"
-        title="Customize the KPIs: which ones and in what order"
+        title={tr("Customize the KPIs: which ones and in what order")}
         className={`pressable grid h-[2rem] w-[2rem] place-items-center rounded-control text-ink-segment hover:bg-hover hover:text-ink ${open ? 'bg-fill text-ink' : ''}`}
         onClick={() => setOpen((o) => !o)}
       >

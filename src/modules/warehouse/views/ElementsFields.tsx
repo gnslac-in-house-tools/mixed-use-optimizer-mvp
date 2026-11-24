@@ -148,7 +148,7 @@ function CourtsRow({ t, g, courts, standard, editable, some, picked }: { t: Ware
       </div>
       {court && editable && !waits && (
         <div>
-          <Button title="The project's standard court depth again" onClick={() => set(null)}>
+          <Button title={tr("The project's standard court depth again")} onClick={() => set(null)}>
             {tr("Standard depth")}
           </Button>
         </div>

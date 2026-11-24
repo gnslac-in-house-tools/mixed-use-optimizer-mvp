@@ -328,7 +328,7 @@ function Panel({
             aria-expanded={sub ? expanded : undefined}
             data-menu-key={item.key}
             disabled={item.disabled}
-            title={item.title}
+            title={item.title === undefined ? undefined : tr(item.title)}
             onMouseEnter={(e) => onEnterRow(item, e.currentTarget)}
             onClick={(e) => onActivate(item, e.currentTarget)}
             className={`pressable flex h-row w-full items-center gap-3 rounded-control px-2.5 text-left text-body hover:bg-hover focus:bg-hover focus:outline-none disabled:opacity-40 disabled:hover:bg-transparent ${expanded ? 'bg-hover' : ''}`}

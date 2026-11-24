@@ -18,6 +18,15 @@ describe('el idioma de la interfaz', () => {
     expect(t('Something nobody translated')).toBe('Something nobody translated')
   })
 
+  it('los textos con un nombre adentro se traducen por su forma, y el nombre queda como está', () => {
+    useIdioma.getState().poner('es')
+    expect(t('Warehouse footprint')).toBe('Huella de naves')
+    expect(t('Bodega A footprint')).toBe('Huella de Bodega A')
+    expect(t('Cross-dock 1 GFA')).toBe('Área construida de Cross-dock 1')
+    useIdioma.getState().poner('en')
+    expect(t('Bodega A footprint')).toBe('Bodega A footprint')
+  })
+
   it('se guarda en este navegador', () => {
     useIdioma.getState().poner('es')
     expect(localStorage.getItem('gfit-idioma')).toBe('es')

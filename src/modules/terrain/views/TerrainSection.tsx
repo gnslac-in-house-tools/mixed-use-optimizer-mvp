@@ -24,7 +24,7 @@ export function TerrainSection() {
   const shown = useTerrainView((s) => s.show !== 'off')
   if (!terrain)
     return (
-      <Section title="Terrain">
+      <Section title={tr("Terrain")}>
         <p className="select-text text-caption text-ink-secondary">No ground yet: Import a DXF or a CSV with its contours or points (Site › Import).</p>
       </Section>
     )
@@ -40,7 +40,7 @@ export function TerrainSection() {
     count(null) ? `${count(null)} without a height` : '',
   ].filter(Boolean)
   return (
-    <Section title="Terrain">
+    <Section title={tr("Terrain")}>
       <dl aria-label="Terrain figures" className="flex flex-col gap-1.5">
         {terrain.source && <Total label="File" value={terrain.source.file} />}
         <Total label="Contours" value={terrain.contours.length.toLocaleString('en-US')} />
@@ -123,7 +123,7 @@ export function TerrainSection() {
         onCommit={(v) => apply((p) => actions.updateStandards(p, { maxGrade: v / 100 }))}
       />
       <div>
-        <Button title="Remove the ground from the site (undo brings it back)" onClick={() => apply((p) => actions.setTerrain(p, null))}>
+        <Button title={tr("Remove the ground from the site (undo brings it back)")} onClick={() => apply((p) => actions.setTerrain(p, null))}>
           {tr("Remove terrain")}
         </Button>
       </div>
