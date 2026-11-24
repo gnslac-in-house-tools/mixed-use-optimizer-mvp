@@ -134,3 +134,14 @@ describe('calificar · datos de hoy que no dan un número', () => {
     }
   })
 })
+
+describe('calificar · redondeo', () => {
+  it('pesos 1.1 y 2.2 dan 6.6, sin ruido de coma flotante', () => {
+    const reglas: Reglas = { ...REGLAS_INICIO, weights: { m2_vendibles: 1.1, precio_producto: 2.2, velocidad_venta: 0, costo_obra: 0, plazo_riesgo: 0 } }
+    const datos = { indice_usado: 1, indice_permitido: 1, m2_vendibles: 80, m2_brutos: 100, ajuste_mezcla: 0.95, ingreso: 100 }
+    const r = calificar(reglas, datos, [])
+    expect(palanca(r, 'm2_vendibles').rating).toBe(2)
+    expect(palanca(r, 'precio_producto').rating).toBe(2)
+    expect(r.puntaje).toBe(6.6)
+  })
+})

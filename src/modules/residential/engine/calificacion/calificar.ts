@@ -14,6 +14,8 @@ export type Calificacion = {
 }
 
 const acotar = (n: number): Rating => Math.max(-2, Math.min(2, n)) as Rating
+/** A 2 decimales: 1.1 × 2 + 2.2 × 2 da 6.6, no 6.6000000000000005. */
+const redondear = (n: number) => Math.round(n * 100) / 100
 
 function mediana(xs: number[]): number | null {
   if (!xs.length) return null
@@ -76,7 +78,7 @@ export function calificar(reglas: Reglas, enUso: Datos, otras: Datos[]): Calific
   const cuentan = palancas.filter((p) => p.rating != null && p.peso > 0)
   return {
     palancas,
-    puntaje: cuentan.length ? cuentan.reduce((a, p) => a + p.rating! * p.peso, 0) : null,
+    puntaje: cuentan.length ? redondear(cuentan.reduce((a, p) => a + p.rating! * p.peso, 0)) : null,
     n: cuentan.length,
     nVars: trazas.filter((t) => t.rating != null).length,
     nTot: trazas.length,
