@@ -43,6 +43,8 @@ export interface Estacionamiento {
   porSotano: number
   cajones: number
   requeridos: number
+  /** el margen (ingreso menos costo) con la rampa centrada en su orilla, para comparar con el elegido */
+  margenCentrada: number
   /** excavación más cajones (sin indirectos) */
   costo: number
   /** el acomodo de un sótano tipo: su contorno, sus cajones, sus pasillos, su rampa y los núcleos que lo atraviesan */
@@ -70,19 +72,18 @@ const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
  * del contorno mayor que mira a la calle (la más cercana a alguna de `calles`, entre las que dan para la rampa y una
  * boca) o, sin calles, en el más largo. Pegada a una esquina, la boca de arranque se saldría del sótano.
  */
-export function tRampa(contorno: Shape, boca: number, largo: number, calles: Pt[][] = []): { t: number; cabe: boolean; lado: number; sinCalle: boolean } {
+export function tRampa(contorno: Shape, boca: number, largo: number, calles: Pt[][] = []): { t: number; ts: number[]; cabe: boolean; lado: number; sinCalle: boolean } {
   const sinCalle = !calles.some((c) => c.length >= 2)
   const mayor = contorno.filter((r) => signedArea(r) > 0).sort((a, b) => signedArea(b) - signedArea(a))[0]
-  if (!mayor) return { t: 0, cabe: false, lado: 0, sinCalle }
+  if (!mayor) return { t: 0, ts: [0], cabe: false, lado: 0, sinCalle }
   const lados = mayor.map(([x, y], i) => { const [u, v] = mayor[(i + 1) % mayor.length]; return Math.hypot(u - x, v - y) })
   const total = lados.reduce((s, l) => s + l, 0)
-  if (!(total > 0)) return { t: 0, cabe: false, lado: 0, sinCalle }
+  if (!(total > 0)) return { t: 0, ts: [0], cabe: false, lado: 0, sinCalle }
   let k = lados.indexOf(Math.max(...lados))
   if (!sinCalle) {
     const todas = lados.map((_, i) => i)
     const dan = todas.filter((i) => lados[i] >= largo + boca - 1e-6)
     const dist = (i: number) => distanciaACalle(mayor[i], mayor[(i + 1) % mayor.length], calles)
-    // la más cercana; si empatan, la más larga
     // la más cercana; entre las que le quedan a 1 cm, la más larga
     const pool = dan.length ? dan : todas
     const min = Math.min(...pool.map(dist))
@@ -90,9 +91,13 @@ export function tRampa(contorno: Shape, boca: number, largo: number, calles: Pt[
   }
   const antes = lados.slice(0, k).reduce((s, l) => s + l, 0)
   const L = lados[k]
-  // centrado; el motor corre la rampa hacia el lado con más largo libre, así que el punto no pasa de la mitad
-  const s = Math.min(Math.max(0, (L - largo) / 2), L / 2)
-  return { t: (antes + s) / total, cabe: L >= largo + 2 * boca - 1e-6, lado: L, sinCalle }
+  // centrado, pegado al inicio de la orilla o a su final (con las bocas dentro); el motor corre la rampa hacia el lado
+  // con más largo libre, así que el punto no pasa de la mitad. Las que caen a menos de medio metro de otra, fuera.
+  const mitad = L / 2
+  const ss = [Math.min(Math.max(0, (L - largo) / 2), mitad), Math.min(boca, mitad), Math.max(0, Math.min(L - largo - boca, mitad))]
+  const unicas = ss.filter((s, i) => ss.slice(0, i).every((o) => Math.abs(o - s) >= 0.5))
+  const ts = unicas.map((s) => (antes + s) / total)
+  return { t: ts[0], ts, cabe: L >= largo + 2 * boca - 1e-6, lado: L, sinCalle }
 }
 
 /** La boca que sigue al extremo alto de la rampa (sus vértices más altos), o null sin bocas. */
@@ -230,43 +235,58 @@ function calcular(
   }
   let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], rampa: null, nucleos: [], flechas: [] }
   let porSotano = 0, sotanos = 0
-  let avisoRampa: string | null = null, sinCalle = false
+  let avisoRampa: string | null = null, sinCalle = false, margenCentrada = 0
   try {
     // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
     const uno = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: 1 }] }, s, { geom, sections, siteArea: null })
     const bas = uno.bs[0].mass.basements[0]
+    const calcula = (pl: Estacionamiento['plano'], n: number, cajones: number): Totals => {
+      // sin sótanos no hay rampa; con ellos, la del S1 sube a la calle por la planta baja: su huella y su boca alta
+      // le quitan el lugar a los departamentos y locales de ese nivel
+      const rp = n > 0 ? pl.rampa : null
+      return calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: n }] }, s, {
+        geom, sections, siteArea: norma.predio, stalls: new Map([[buildingId, Array.from({ length: n }, () => cajones)]]),
+        ...(rp ? { plantaBaja: new Map([[buildingId, union([[rp.huella], rp.bocaAlta])]]) } : {}),
+      })
+    }
+    const cuantos = (cajones: number) => params.sotanos ?? (cajones > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / cajones)) : 0)
+    let elegido: { totals: Totals; margen: number } | null = null
     if (uno.bs[0].ok && bas) {
-      // una rampa de doble sentido (6 m) sobre el lado más largo, con su boca dentro; los núcleos dibujados bajan
+      // una rampa de doble sentido (6 m) en la orilla que mira a la calle, con sus bocas dentro; los núcleos dibujados bajan
       const cores = nucleos.map((m) => ring(m.polygon))
       const largo = medidaDeRampa({ t: 0, ancho: RAMPA, largo: null, paralela: true }, ENTREPISO_SOTANO).largo
       const donde = tRampa(bas.shape, PASILLO_SOTANO, largo, (p.site.existingRoads ?? []).map((r) => r.points.map((q): Pt => [q.x, q.y])))
       sinCalle = donde.sinCalle
-      const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: PASILLO_SOTANO, ramps: [{ t: donde.t, ancho: RAMPA }] })
-      porSotano = lay.count
-      // sin largo para las dos bocas, la rampa va entera y sus bocas (zona de maniobra) se recortan al sótano
-      const [rp, ...bocas] = lay.ramps ?? []
-      // cada boca recortada una vez, para que `rampa.bocaAlta` sean los mismos anillos que `rampas`
-      const recortadas = bocas.map((b): Ring[] => (donde.cabe ? [b] : intersection([b], bas.shape)))
-      const rampas = rp ? [rp, ...recortadas.flat()] : []
-      if (rp && !donde.cabe) avisoRampa = `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en su lado del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas`
-      // el extremo que sube y la boca que lo sigue: por ahí sale el auto al nivel de arriba (en el S1, a la calle)
-      const alto = lay.rampsHigh?.[0]
-      let rampa: Estacionamiento['plano']['rampa'] = null
-      if (rp && alto && alto.length === rp.length) {
-        const boca = bocaAltaDe(rp, alto, bocas)
-        rampa = { huella: rp, alto, bocaAlta: boca ? recortadas[bocas.indexOf(boca)] : [] }
-      }
-      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, rampa, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
+      // en esa orilla, centrada o pegada a un extremo: la que deja el mejor margen (cajones contra planta baja)
+      donde.ts.forEach((t, k) => {
+        const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: PASILLO_SOTANO, ramps: [{ t, ancho: RAMPA }] })
+        // sin largo para las dos bocas, la rampa va entera y sus bocas (zona de maniobra) se recortan al sótano
+        const [rp, ...bocas] = lay.ramps ?? []
+        // cada boca recortada una vez, para que `rampa.bocaAlta` sean los mismos anillos que `rampas`
+        const recortadas = bocas.map((bc): Ring[] => (donde.cabe ? [bc] : intersection([bc], bas.shape)))
+        const rampas = rp ? [rp, ...recortadas.flat()] : []
+        // el extremo que sube y la boca que lo sigue: por ahí sale el auto al nivel de arriba (en el S1, a la calle)
+        const alto = lay.rampsHigh?.[0]
+        let rampa: Estacionamiento['plano']['rampa'] = null
+        if (rp && alto && alto.length === rp.length) {
+          const boca = bocaAltaDe(rp, alto, bocas)
+          rampa = { huella: rp, alto, bocaAlta: boca ? recortadas[bocas.indexOf(boca)] : [] }
+        }
+        const pl: Estacionamiento['plano'] = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, rampa, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
+        const n = cuantos(lay.count)
+        const tot = calcula(pl, n, lay.count)
+        const margen = tot.revenue - tot.cost
+        if (k === 0) margenCentrada = margen
+        if (!elegido || margen > elegido.margen + 1e-6) {
+          elegido = { totals: tot, margen }
+          plano = pl; porSotano = lay.count; sotanos = n
+          avisoRampa = rp && !donde.cabe ? `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en su lado del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas` : null
+        }
+      })
     }
-    sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
-    // sin sótanos no hay rampa; con ellos, la del S1 sube a la calle por la planta baja: su huella y su boca alta
-    // le quitan el lugar a los departamentos y locales de ese nivel
+    if (elegido) totals = (elegido as { totals: Totals }).totals
+    else { sotanos = cuantos(0); totals = calcula(plano, sotanos, 0) }
     if (sotanos === 0) plano = { ...plano, rampa: null }
-    const rp = plano.rampa
-    totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {
-      geom, sections, siteArea: norma.predio, stalls: new Map([[buildingId, Array.from({ length: sotanos }, () => porSotano)]]),
-      ...(rp ? { plantaBaja: new Map([[buildingId, union([[rp.huella], rp.bocaAlta])]]) } : {}),
-    })
     modulo = avisosModulo()
   } finally {
     setUnitModule(null)
@@ -277,7 +297,7 @@ function calcular(
   const niveles = r.levels
   const precioM2 = new Map(s.unitTypes.map((t) => [t.id, t.price]))
   const unidades = niveles.flatMap((l) => (l.layout?.units ?? []).map((unidad) => ({ nivel: l.num, unidad, precio: unidad.area * (precioM2.get(unidad.type) ?? 0) })))
-  const estacionamiento: Estacionamiento = { sotanos, porSotano, cajones: r.prov, requeridos: r.req, costo: r.costB.exc + r.costB.park, plano }
+  const estacionamiento: Estacionamiento = { sotanos, porSotano, cajones: r.prov, requeridos: r.req, costo: r.costB.exc + r.costB.park, plano, margenCentrada }
   if (sotanos > 0 && r.prov < r.req) avisos0.push(`Faltan ${r.req - r.prov} cajones: ${sotanos} sótanos dan ${r.prov} de ${r.req}`)
   // avisos: los de la masa, los de cada nivel (el remanente, agrupado por medida) y los del módulo
   // el POT: lo que GFit midió contra él y no cumple

@@ -44,7 +44,8 @@ npm run dev        # http://localhost:5180
    el 3D pasa a Ghosted y muestra los departamentos por color y los sótanos bajo el suelo. Los sótanos son los que pide
    el programa (hasta 5) o los fijados en Properties; ahí también van el precio tope y el terreno.
    La rampa de doble sentido se pone en la orilla que mira a la calle dibujada con *Existing road* (sin calle, en la más
-   larga, con un aviso). Se apila en cada sótano, inclinada en 3D, y la del S1 sale a la calle por la planta baja, donde
+   larga, con un aviso); en esa orilla va centrada o pegada a un extremo, donde deje mejor margen (cajones contra planta
+   baja). Se apila en cada sótano, inclinada en 3D, y la del S1 sale a la calle por la planta baja, donde
    deja libre su lugar («Rampa ↓»).
 7. **Columnas.** Con la retícula, los anchos de cada tramo se ordenan para que los muros entre departamentos caigan en
    las columnas (8.1 m), sin cambiar la mezcla.

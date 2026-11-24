@@ -254,6 +254,16 @@ describe('derivar', () => {
       for (const u of unidades) expect(area(intersection(u.shape, ocupa))).toBeLessThan(0.01)
       expect(d.totals.fpA).toBeCloseTo(32.4 * 16.2, 0)
     })
+    it('(r10) en su orilla, la rampa va donde deja el mejor margen: con el núcleo al centro, pegada a un extremo', () => {
+      const barra = (nx: number) => conSotanos(conCalle(proyecto([masa('vivienda', rect(0, 0, 48.6, 16.2), 30), masa('nucleo', rect(nx, 5.4, nx + 8.1, 10.8), 30)]), SUR), 2)
+      const d = derivar(barra(20.25), 'b1')!
+      const xs = d.estacionamiento.plano.rampa!.huella.map((q) => q[0])
+      // centrada iría de 13.3 a 35.3; en un extremo, la planta baja vende más (el experimento: 335 → 391 m²)
+      expect(Math.abs((Math.min(...xs) + Math.max(...xs)) / 2 - 24.3)).toBeGreaterThan(3)
+      expect(planta1(d).sell).toBeGreaterThan(335)
+      // y nunca peor que centrada: el margen elegido es el mayor
+      expect(d.totals.revenue - d.totals.cost).toBeGreaterThanOrEqual(d.estacionamiento.margenCentrada - 1)
+    })
     it('(r9) con 0 sótanos no hay rampa, no se resta nada y no se pide la calle', () => {
       const cero = derivar(conSotanos(caso(), 0), 'b1')!
       expect(cero.estacionamiento.plano.rampa).toBeNull()
