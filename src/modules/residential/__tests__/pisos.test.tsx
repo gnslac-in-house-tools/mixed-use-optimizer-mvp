@@ -100,6 +100,21 @@ describe('pisos y estacionamiento de uso mixto', () => {
     expect(container.querySelector('[data-sotano] text[data-rampa-rotulo]')).toHaveTextContent('Rampa')
   })
 
+  it('la planta del nivel de calle dibuja la rampa del S1 y su boca alta con «Rampa ↓»; los demás niveles no', () => {
+    const d = derivar(caso(), 'b1')!
+    const rp = d.estacionamiento.plano.rampa!
+    const calle = d.niveles.findIndex((l) => l.num === 1)
+    act(() => usePiso.setState({ piso: calle }))
+    const { container, unmount } = render(<svg><CapaResidencial /></svg>)
+    expect(container.querySelectorAll('path[data-rampa-calle]').length).toBe(1 + rp.bocaAlta.length)
+    expect(container.querySelector('text[data-rampa-rotulo]')).toHaveTextContent('Rampa ↓')
+    unmount()
+    act(() => usePiso.setState({ piso: 3 }))
+    const otro = render(<svg><CapaResidencial /></svg>).container
+    expect(otro.querySelectorAll('path[data-rampa-calle]').length).toBe(0)
+    expect(otro.querySelector('text[data-rampa-rotulo]')).toBeNull()
+  })
+
   it('el Resumen trae los sótanos, los cajones y su costo', () => {
     render(<ResumenResidencial />)
     const s = screen.getByRole('region', { name: 'Uso mixto' })

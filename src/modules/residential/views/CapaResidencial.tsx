@@ -46,10 +46,11 @@ export function CapaResidencial() {
     const g = gridOf(project, derived.option)
     const cols: Point[] = g ? columnas(g, solidosDe(project, derived.masses, building.id), d.nucleos) : []
     const color = new Map(project.residential!.tipos.map((t) => [t.id, t.color]))
-    return { tipo, sotano, cols, color, angulo: g?.angle ?? 0 }
+    const rampaCalle = d.estacionamiento.sotanos > 0 ? d.estacionamiento.plano.rampa : null
+    return { tipo, sotano, cols, color, angulo: g?.angle ?? 0, rampaCalle }
   }, [d, building, project, level, derived, piso])
   if (!dibujo) return null
-  const { tipo, sotano, cols, color, angulo } = dibujo
+  const { tipo, sotano, cols, color, angulo, rampaCalle } = dibujo
   const h = LADO_COLUMNA / 2
   return (
     <g pointerEvents="none" data-capa="residencial">
@@ -106,6 +107,17 @@ export function CapaResidencial() {
       })}
       {programas && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
       {tipo && <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />}
+      {/* en el nivel de calle, la rampa del S1 y su boca alta (por ahí sale el auto) */}
+      {tipo?.num === 1 && rampaCalle && (
+        <g data-rampa-calle-grupo>
+          {[rampaCalle.huella, ...rampaCalle.bocaAlta].map((r, i) => <path key={'rc' + i} data-rampa-calle d={trazo([r])} fill={RAMPA} stroke="none" />)}
+          {(() => {
+            const xs = rampaCalle.huella.map((q) => q[0]), ys = rampaCalle.huella.map((q) => q[1])
+            const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2
+            return <text data-rampa-rotulo x={cx} y={-cy} fontSize={1} textAnchor="middle" dominantBaseline="middle" fill="#6b4a0f" fontWeight={600}>Rampa ↓</text>
+          })()}
+        </g>
+      )}
       {cols.map((c, i) => (
         <rect key={i} data-columna x={c.x - h} y={-c.y - h} width={LADO_COLUMNA} height={LADO_COLUMNA} fill={COLUMNA} transform={angulo ? `rotate(${-angulo} ${c.x} ${-c.y})` : undefined} />
       ))}
