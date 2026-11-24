@@ -16,19 +16,38 @@ import { blankBuilding, fresh } from './gfit/src/model/state.ts'
 import type { Building, Zoning } from './gfit/src/model/state.ts'
 import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
+import { layoutBasement } from './gfit/src/parking/adapter.ts'
+import type { Shape } from './gfit/src/model/geom.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
 
 export interface Derivado {
   totals: Totals
   /** los niveles de GFit, de abajo arriba (`prog`: 'res' vivienda, 'ret' comercio) */
   niveles: LevelResult[]
-  unidades: { nivel: number; unidad: PlacedUnit }[]
+  /** cada departamento con su nivel y su precio (área × precio por m² de su tipo) */
+  unidades: { nivel: number; unidad: PlacedUnit; precio: number }[]
+  /** los sótanos de estacionamiento bajo la huella, con el motor de cajones de Praktico (el de GFit) */
+  estacionamiento: Estacionamiento
   /** los núcleos dibujados; sin ninguno, los automáticos de GFit */
   nucleos: Polygon[]
   avisos: string[]
   /** la zonificación con que corrió GFit (`far` es el índice permitido) */
   zoning: Zoning
 }
+
+export interface Estacionamiento {
+  sotanos: number
+  /** cajones que el motor acomoda en un sótano */
+  porSotano: number
+  cajones: number
+  requeridos: number
+  /** excavación más cajones (sin indirectos) */
+  costo: number
+  /** el acomodo de un sótano tipo: su contorno, sus cajones y sus pasillos */
+  plano: { contorno: Shape; cajones: Ring[]; pasillos: Ring[] }
+}
+/** Sótanos como máximo cuando el edificio no fija los suyos. */
+export const SOTANOS_MAX = 5
 
 type Uso = 'vivienda' | 'comercio' | 'nucleo'
 const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
@@ -134,19 +153,36 @@ function calcular(
   let modulo: string[] = []
   if (g) {
     const a = (g.angle * Math.PI) / 180
-    setUnitModule({ origin: [g.origin.x, g.origin.y], u: [Math.cos(a), Math.sin(a)], step: g.x / g.modules })
+    setUnitModule({ origin: [g.origin.x, g.origin.y], u: [Math.cos(a), Math.sin(a)], step: g.x / g.modules, bay: [g.x, g.y] })
   }
+  let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [] }
+  let porSotano = 0, sotanos = 0
   try {
-    totals = calcOption({ id: 'o', name: 'o', buildings: [b] }, s, { geom, sections, siteArea: null })
+    // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
+    const uno = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: 1 }] }, s, { geom, sections, siteArea: null })
+    const bas = uno.bs[0].mass.basements[0]
+    if (uno.bs[0].ok && bas) {
+      const lay = layoutBasement(bas.shape, nucleos.map((m) => ring(m.polygon)), { angle: 90, aisle: 6 })
+      porSotano = lay.count
+      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles }
+    }
+    sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
+    totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {
+      geom, sections, siteArea: null, stalls: new Map([[buildingId, Array.from({ length: sotanos }, () => porSotano)]]),
+    })
     modulo = avisosModulo()
   } finally {
     setUnitModule(null)
   }
   const r = totals.bs[0]
+  const avisos0: string[] = []
   const niveles = r.levels
-  const unidades = niveles.flatMap((l) => (l.layout?.units ?? []).map((unidad) => ({ nivel: l.num, unidad })))
+  const precioM2 = new Map(s.unitTypes.map((t) => [t.id, t.price]))
+  const unidades = niveles.flatMap((l) => (l.layout?.units ?? []).map((unidad) => ({ nivel: l.num, unidad, precio: unidad.area * (precioM2.get(unidad.type) ?? 0) })))
+  const estacionamiento: Estacionamiento = { sotanos, porSotano, cajones: r.prov, requeridos: r.req, costo: r.costB.exc + r.costB.park, plano }
+  if (sotanos > 0 && r.prov < r.req) avisos0.push(`Faltan ${r.req - r.prov} cajones: ${sotanos} sótanos dan ${r.prov} de ${r.req}`)
   // avisos: los de la masa, los de cada nivel (el remanente, agrupado por medida) y los del módulo
-  const avisos: string[] = []
+  const avisos: string[] = [...avisos0]
   const add = (a: string) => { const e = enEspanol(a); if (!avisos.includes(e)) avisos.push(e) }
   r.issues.forEach(add)
   r.mass.issues.forEach(add)
@@ -162,7 +198,7 @@ function calcular(
   for (const [x, ns] of remanente) add(`remanente de ${x} m en ${ns.length === 1 ? ns[0] : ns.length + ' niveles'}`)
   if (!totals.units && !avisos.length) add('Ninguna unidad cabe en la placa')
   const drawn = nucleos.map((m) => m.polygon)
-  return { totals, niveles, unidades, nucleos: drawn.length ? drawn : r.mass.cores.map(poly), avisos, zoning: { ...s.zoning } }
+  return { totals, niveles, unidades, estacionamiento, nucleos: drawn.length ? drawn : r.mass.cores.map(poly), avisos, zoning: { ...s.zoning } }
 }
 
 export type { Point }

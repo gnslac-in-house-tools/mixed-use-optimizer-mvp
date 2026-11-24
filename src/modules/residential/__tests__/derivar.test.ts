@@ -144,6 +144,34 @@ describe('derivar', () => {
     expect(d.totals.units).toBeGreaterThan(0)
   })
 
+  it('(l) estacionamiento: sótanos bajo la huella con el motor de cajones, los que pide el programa', () => {
+    const d = derivar(caso(), 'b1')!
+    const e = d.estacionamiento
+    expect(e.porSotano).toBeGreaterThan(0)
+    expect(e.sotanos).toBe(Math.min(5, Math.ceil(d.totals.req / e.porSotano)))
+    expect(e.cajones).toBe(e.sotanos * e.porSotano)
+    expect(d.totals.prov).toBe(e.cajones)
+    expect(e.plano.cajones.length).toBe(e.porSotano)
+    expect(e.costo).toBeGreaterThan(0)
+  })
+
+  it('(m) los sótanos fijados en el edificio mandan', () => {
+    const p = caso()
+    const q: Project = { ...p, residential: { ...p.residential!, edificios: { b1: { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, sotanos: 1 } } } }
+    const d = derivar(q, 'b1')!
+    expect(d.estacionamiento.sotanos).toBe(1)
+    expect(d.totals.prov).toBe(d.estacionamiento.porSotano)
+  })
+
+  it('(n) con la crujía, los muros de fachada caen en columnas al menos tanto como sin columnas', () => {
+    // una barra de 48.6 × 16.2 con el núcleo en una punta: tramos con varios departamentos
+    const placa = rect(0, 0, 48.6, 16.2)
+    const d = derivar(proyecto([masa('vivienda', placa, 30), masa('nucleo', rect(0, 5.4, 8.1, 10.8), 30)]), 'b1')!
+    const xs = enFachada(d, placa, G0)
+    expect(enModulos(xs)).toBe(true)
+    expect(xs.filter((x) => Math.abs(x / 8.1 - Math.round(x / 8.1)) < 1e-3 && x > 8.2 && x < 48.5).length).toBeGreaterThanOrEqual(3)
+  })
+
   it('sin masas de vivienda ni de comercio da null', () => {
     expect(derivar(proyecto([masa('nucleo', NUCLEO, 30)]), 'b1')).toBeNull()
     expect(derivar(newProject('mixed-use'), 'b1')).toBeNull()

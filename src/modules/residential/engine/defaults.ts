@@ -27,9 +27,11 @@ export function RESIDENTIAL0(programIds: { vivienda: Id; comercio: Id; nucleo: I
 }
 
 /** Los de GFit (`blankBuilding`), salvo el pasillo, que va a 1.8 m, y la semilla. */
-export const PARAMS0: ParamsEdificio = { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1 }
+export const PARAMS0: ParamsResueltos = { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, sotanos: null, tope: 250000 }
+/** los parámetros con los opcionales resueltos */
+export type ParamsResueltos = Omit<ParamsEdificio, 'sotanos' | 'tope'> & { sotanos: number | null; tope: number }
 
-export function paramsDe(p: Project, buildingId: Id): ParamsEdificio {
+export function paramsDe(p: Project, buildingId: Id): ParamsResueltos {
   const own = p.residential?.edificios[buildingId]
-  return own ? { ...own, mezcla: { ...own.mezcla } } : { ...PARAMS0, mezcla: { ...PARAMS0.mezcla } }
+  return own ? { ...own, mezcla: { ...own.mezcla }, sotanos: own.sotanos ?? null, tope: own.tope ?? PARAMS0.tope } : { ...PARAMS0, mezcla: { ...PARAMS0.mezcla } }
 }

@@ -117,7 +117,7 @@ describe('validarVariable', () => {
     expect(validarVariable(v('higher', [null, null, null, null]))).toBe('pon al menos un umbral')
   })
   it('las reglas de inicio son válidas', () => {
-    expect(REGLAS_INICIO.variables.map(validarVariable)).toEqual(Array(8).fill(null))
+    expect(REGLAS_INICIO.variables.map(validarVariable)).toEqual(Array(9).fill(null))
   })
 })
 

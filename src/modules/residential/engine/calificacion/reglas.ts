@@ -63,6 +63,7 @@ export const REGLAS_INICIO: Reglas = {
     { id: 'ajuste_mezcla', label: 'Ajuste a la mezcla objetivo', lever: 'precio_producto', formula: 'ajuste_mezcla', mode: 'higher', steps: [0.9, 0.8, 0.7, 0.6], unit: 'ratio', legalRef: 'Estudio de mercado · mezcla objetivo' },
     { id: 'ticket', label: 'Unidades bajo el tope FAPRIVI', lever: 'velocidad_venta', formula: 'unidades_bajo_tope / unidades', mode: 'higher', steps: [0.6, 0.4, 0.2, 0.1], unit: '%', legalRef: 'FAPRIVI · ticket máximo' },
     { id: 'costo_m2', label: 'Costo por m² vendible', lever: 'costo_obra', formula: 'costo / m2_vendibles', mode: 'vsMedianLower', steps: [-0.05, -0.02, 0.02, 0.05], unit: 'USD/m²', legalRef: 'AGIES · estructura' },
+    { id: 'costo_ingreso', label: 'Costo entre ingreso', lever: 'costo_obra', formula: 'costo / ingreso', mode: 'lower', steps: [0.7, 0.8, 0.9, 1], unit: 'ratio', legalRef: 'Pro forma · costo con terreno entre ingreso (califica con una sola opción)' },
     { id: 'parking_unidad', label: 'Costo de parking por unidad', lever: 'costo_obra', formula: 'costo_parking / unidades', mode: 'vsMedianLower', steps: [-0.05, -0.02, 0.02, 0.05], unit: 'USD/unidad', legalRef: 'POT · dotación de estacionamientos' },
     { id: 'sotanos', label: 'Número de sótanos', lever: 'plazo_riesgo', formula: 'sotanos', mode: 'lower', steps: [null, null, 1, 2], unit: 'niveles', legalRef: 'AGIES · NRD-2' },
   ],

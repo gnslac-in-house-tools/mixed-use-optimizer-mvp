@@ -49,6 +49,10 @@ export function datosCalificacion(p: Project, optionId: Id): Datos {
   out.cajones = sum('req')
   out.ingreso = sum('revenue')
   out.costo = sum('cost')
+  // el estacionamiento (sótanos con el motor de cajones) y los departamentos bajo el tope de precio de su edificio
+  out.sotanos = ds.reduce((x, { d }) => x + d.estacionamiento.sotanos, 0)
+  out.costo_parking = ds.reduce((x, { d }) => x + d.estacionamiento.costo, 0)
+  out.unidades_bajo_tope = ds.reduce((x, { b, d }) => { const tope = paramsDe(p, b).tope; return x + d.unidades.filter((u) => u.precio <= tope).length }, 0)
   out.indice_permitido = ds[0].d.zoning.far
   // el área del predio: la del sitio de GIM (`derivar` corre sin predio, así que `totals.siteA` no la trae)
   const predio = predioDe(p, o!.id)

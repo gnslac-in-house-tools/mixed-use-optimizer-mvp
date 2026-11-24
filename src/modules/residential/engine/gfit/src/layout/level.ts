@@ -61,7 +61,7 @@ const inLevels = (r: SRule, n: number) => n >= (r.a ?? 1) && n <= (r.b ?? 999)
 
 // ---- mixed-use-mvp patch: unit widths and band runs on the structural grid's modules -------------------------------
 /** The grid's origin and x axis (a unit vector) on the plan, and its module (m). */
-export type ModuloUnidad = { origin: Pt; u: Pt; step: number }
+export type ModuloUnidad = { origin: Pt; u: Pt; step: number; /** the column spacing along u and v (m): the walls are ordered to fall on it */ bay?: [number, number] }
 let MOD: ModuloUnidad | null = null
 /** where layoutLevel moved the plate (it solves at the local origin): the module's origin moves with it */
 let SHIFT: Pt = [0, 0]
@@ -84,7 +84,8 @@ export function avisosModulo(): string[] {
 }
 
 /** The run cut to the module lines along its facade (in the grid's u or v); what was cut, m. A run slanted to the grid is kept. */
-function aModulo(run: Run): { run: Run; cut: number } {
+type Columnas = { g0: number; sign: 1 | -1; bay: number }
+function aModulo(run: Run): { run: Run; cut: number; col?: Columnas } {
   if (!MOD) return { run, cut: 0 }
   const f = run.frame
   const u = MOD.u
@@ -104,7 +105,53 @@ function aModulo(run: Run): { run: Run; cut: number } {
   let x1 = sign > 0 ? Math.floor((ao + run.x1) / s + 1e-6) * s - ao : ao - Math.ceil((ao - run.x1) / s - 1e-6) * s
   x0 = Math.max(run.x0, x0)
   x1 = Math.min(run.x1, Math.max(x0, x1))
-  return { run: { ...run, x0, x1, convexStart: run.convexStart && x0 - run.x0 < Q, convexEnd: run.convexEnd && run.x1 - x1 < Q }, cut: x0 - run.x0 + (run.x1 - x1) }
+  const bay = MOD.bay ? (axis === u ? MOD.bay[0] : MOD.bay[1]) : 0
+  const col: Columnas | undefined = bay > 0 ? { g0: ao, sign: sign as 1 | -1, bay } : undefined
+  return { run: { ...run, x0, x1, convexStart: run.convexStart && x0 - run.x0 < Q, convexEnd: run.convexEnd && run.x1 - x1 < Q }, cut: x0 - run.x0 + (run.x1 - x1), col }
+}
+
+/** How many walls between the widths, laid from grid coordinate g0 in direction sign, fall on a column line (every bay). */
+export function golpesColumna(ws: number[], g0: number, sign: 1 | -1, bay: number): number {
+  let x = 0, n = 0
+  for (let k = 0; k < ws.length - 1; k++) {
+    x += ws[k]
+    const g = (g0 + sign * x) / bay
+    if (Math.abs(g - Math.round(g)) * bay < 0.01) n++
+  }
+  return n
+}
+
+/** The order of the widths (indices) that puts the most walls on column lines; the given order when none does better. */
+export function ordenColumnas(ws: number[], g0: number, sign: 1 | -1, bay: number): number[] {
+  const id = ws.map((_, k) => k)
+  if (ws.length < 3 || ws.length > 12) return id
+  // the distinct widths and how many of each; the best order by memo over what is left
+  const distintos = [...new Set(ws.map(r2))]
+  const cuenta = distintos.map((w) => ws.filter((x) => r2(x) === w).length)
+  const memo = new Map<string, { n: number; seq: number[] }>()
+  const mejor = (resta: number[], x: number): { n: number; seq: number[] } => {
+    const key = resta.join(',')
+    const hit = memo.get(key)
+    if (hit) return hit
+    const quedan = resta.reduce((a, b) => a + b, 0)
+    let best = { n: quedan ? -1 : 0, seq: [] as number[] }
+    for (let i = 0; i < distintos.length; i++) {
+      if (!resta[i]) continue
+      const r = resta.slice()
+      r[i]--
+      const x1 = x + distintos[i]
+      const g = (g0 + sign * x1) / bay
+      const aqui = quedan > 1 && Math.abs(g - Math.round(g)) * bay < 0.01 ? 1 : 0
+      const sub = mejor(r, x1)
+      if (sub.n + aqui > best.n) best = { n: sub.n + aqui, seq: [i, ...sub.seq] }
+    }
+    memo.set(key, best)
+    return best
+  }
+  const b = mejor(cuenta, 0)
+  if (b.n <= golpesColumna(ws, g0, sign, bay)) return id
+  const libres = distintos.map((w) => ws.map((x, k) => (r2(x) === w ? k : -1)).filter((k) => k >= 0))
+  return b.seq.map((i) => libres[i].shift()!)
 }
 // ---- end of mixed-use-mvp patch ---------------------------------------------------------------------------------
 
@@ -288,6 +335,17 @@ function solveLevel0(i: LevelInput): LevelLayout {
           }
           const res = solveBand({ name: 'B' + ri, length: len, reach: reachOf(run, z), entry: ENTRY, bias }, bandRules, r, counts)
           if (res.ok) {
+            // mixed-use-mvp patch: the columns adjust the widths: the run's widths in the order that puts its walls on the columns
+            if (trimmed.col && res.units.length > 2) {
+              const us = [...res.units].sort((a, b) => a.x - b.x)
+              const junto = us.every((u, k) => k === 0 || Math.abs(us[k - 1].x + us[k - 1].w - u.x) < 1e-6)
+              if (junto) {
+                const c = trimmed.col
+                const orden = ordenColumnas(us.map((u) => u.w), c.g0 + c.sign * (run.x0 + us[0].x), c.sign, c.bay)
+                let x = us[0].x
+                res.units = orden.map((k) => { const u = { ...us[k], x }; x += u.w; return u })
+              }
+            }
             for (const u of res.units) {
               const x0 = run.x0 + u.x, x1 = x0 + u.w
               rects.push({ f: run.frame, x0, x1, d: z.d })

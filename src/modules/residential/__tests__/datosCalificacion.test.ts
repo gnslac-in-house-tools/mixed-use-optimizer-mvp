@@ -54,14 +54,23 @@ describe('datosCalificacion', () => {
     expect(d.m2_brutos).toBeGreaterThan(0)
     expect(d.indice_usado).toBeCloseTo(d.m2_brutos! / (60 * 40), 6)
   })
-  it('los datos de la pieza 2 son null', () => {
+  it('los datos del estacionamiento y del tope salen de derivar', () => {
     const p = caso()
     const d = datosCalificacion(p, p.options[0].id)
-    expect(d.unidades_bajo_tope).toBeNull()
-    expect(d.costo_parking).toBeNull()
-    expect(d.sotanos).toBeNull()
+    const r = derivar(p, 'b1')!
+    expect(d.sotanos).toBe(r.estacionamiento.sotanos)
+    expect(d.costo_parking).toBeCloseTo(r.estacionamiento.costo, 6)
+    expect(d.unidades_bajo_tope).toBe(r.unidades.filter((u) => u.precio <= 250000).length)
+    // con un tope más alto que todos los precios, cuentan todos
+    const alto: Project = { ...p, residential: { ...p.residential!, edificios: { b1: { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, tope: 1e9 } } } }
+    expect(datosCalificacion(alto, alto.options[0].id).unidades_bajo_tope).toBe(r.unidades.length)
     expect(d.ajuste_mezcla).toBeGreaterThanOrEqual(0)
     expect(d.ajuste_mezcla).toBeLessThanOrEqual(1)
+  })
+  it('con una sola opción, las cinco palancas tienen calificación', () => {
+    const p = caso()
+    const c = calificacionDe(p, p.options[0].id)
+    for (const x of c.palancas) expect(x.rating, x.palanca).not.toBeNull()
   })
   it('sin masas residenciales todo es null y calificacionDe no lanza', () => {
     const p = { ...newProject('mixed-use'), masses: [] }

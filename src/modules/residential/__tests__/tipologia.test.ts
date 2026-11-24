@@ -48,6 +48,6 @@ describe('tipología Uso mixto', () => {
   })
 
   it('paramsDe da los valores por defecto de un edificio sin los suyos', () => {
-    expect(paramsDe(newProject('mixed-use'), 'b1')).toEqual({ fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1 })
+    expect(paramsDe(newProject('mixed-use'), 'b1')).toEqual({ fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, sotanos: null, tope: 250000 })
   })
 })

@@ -30,6 +30,10 @@ export const ParamsEdificioSchema = z.object({
   pasillo: z.number().positive(),
   mezcla: z.record(z.string(), z.number().nonnegative()),
   semilla: z.number().int(),
+  /** sótanos de estacionamiento; null o ausente: los que pide el programa (hasta 5) */
+  sotanos: z.number().int().min(0).max(6).nullable().optional(),
+  /** precio tope de una unidad (FAPRIVI) para la velocidad de venta */
+  tope: z.number().positive().optional(),
 })
 export type ParamsEdificio = z.infer<typeof ParamsEdificioSchema>
 

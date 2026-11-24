@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, test } from 'vitest'
 import { area, intersection, toShape } from '../src/model/geom.ts'
 import type { Pt, Ring, Shape } from '../src/model/geom.ts'
-import { avisosModulo, layoutLevel, setUnitModule, widthsOf } from '../src/layout/level.ts'
+import { avisosModulo, golpesColumna, layoutLevel, ordenColumnas, setUnitModule, widthsOf } from '../src/layout/level.ts'
 import type { LevelInput, LevelLayout } from '../src/layout/level.ts'
 import { UNIT_TEMPLATES } from '../src/model/program.ts'
 import type { UnitType } from '../src/model/program.ts'
@@ -79,5 +79,32 @@ describe('setUnitModule', () => {
     expect(L.units.length).toBeGreaterThan(0)
     expect(enMultiplo(enFachada(L, plate, [1, 0], [1, 0]), 2.7)).toBe(true)
     expect(avisosModulo().some((a) => a.includes('remanente'))).toBe(true)
+  })
+})
+
+// mixed-use-mvp patch: las columnas ajustan los anchos (el orden de los anchos de cada tramo, para que los muros caigan en las columnas)
+describe('ordenColumnas', () => {
+  test('reordena los anchos de un tramo para que más muros caigan en las líneas de columnas', () => {
+    const ws = [5.4, 8.1, 10.8]
+    expect(golpesColumna(ws, 0, 1, 8.1)).toBe(0)
+    const orden = ordenColumnas(ws, 0, 1, 8.1)
+    expect([...orden].sort()).toEqual([0, 1, 2])
+    expect(golpesColumna(orden.map((k) => ws[k]), 0, 1, 8.1)).toBe(1)
+  })
+
+  test('si el orden ya es el mejor, no lo cambia', () => {
+    expect(ordenColumnas([8.1, 5.4, 10.8], 0, 1, 8.1)).toEqual([0, 1, 2])
+  })
+
+  test('en la placa de 32.4 × 16.2, con la crujía, al menos tantos muros caen en columnas como sin ella', () => {
+    const plate = sq(0, 0, 32.4, 16.2)
+    const corre = (bay?: [number, number]) => {
+      setUnitModule({ origin: [0, 0], u: [1, 0], step: 2.7, ...(bay ? { bay } : {}) })
+      const L = layoutLevel(input(toShape([plate]), toShape([sq(12.15, 5.4, 20.25, 10.8)]), { mix: { studio: 40, br1: 30, br2: 30 } }))
+      const xs = enFachada(L, plate, [0, 0], [1, 0])
+      expect(enMultiplo(xs, 2.7)).toBe(true)
+      return xs.filter((x) => enMultiplo([x], 8.1)).length
+    }
+    expect(corre([8.1, 8.1])).toBeGreaterThanOrEqual(corre())
   })
 })
