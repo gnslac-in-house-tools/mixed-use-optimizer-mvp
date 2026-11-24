@@ -17,7 +17,7 @@ function Vista3d() {
   const caja = useMemo(() => cajaDePlan(plan), [plan])
   return (
     <Escena caja={caja} clave={plan?.id ?? ''}>
-      {plan && <Unidad3d plan={plan} alto={detalle === 'completo' ? ALTO_MURO : ALTO_CORTE} muebles={detalle !== 'esquema'} />}
+      {plan && <Unidad3d plan={plan} alto={detalle === 'completo' ? ALTO_MURO : ALTO_CORTE} detalle={detalle !== 'esquema'} />}
     </Escena>
   )
 }

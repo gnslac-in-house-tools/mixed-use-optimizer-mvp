@@ -5,9 +5,10 @@ import { Edges } from '@react-three/drei'
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import type { PlanCatalogo, Ring } from '../../engine/catalogo'
-import { CATALOGO, ROOM_FILL } from '../../engine/catalogo'
+import { CATALOGO, ROOM_FILL, huella } from '../../engine/catalogo'
 import { offset } from '../../engine/gfit/src/model/geom'
 import { extruir, type Punto } from './geometria3d'
+import { MAT_ARISTA, MAT_MUEBLE, modeloMueble } from './muebles3d'
 
 export const ALTO_MURO = 2.6
 const MEDIO_MURO = 0.06 // m: cada recinto pone la mitad de su muro, 12 cm entre dos recintos
@@ -40,7 +41,8 @@ function Geo({ g, color, opacidad = 1, bordes = true, sombra = true }: { g: THRE
   )
 }
 
-export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true }: { plan: PlanCatalogo; alto?: number; muebles?: boolean }) {
+/** `detalle`: muebles modelados (Presentación y Muros completos); si no, cajas a su altura (Esquema). */
+export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true, detalle = true }: { plan: PlanCatalogo; alto?: number; muebles?: boolean; detalle?: boolean }) {
   const losas = useMemo(() => plan.rooms.map((r) => ({ kind: r.kind, g: extruir(pts(r.shape), 0, LOSA) })), [plan])
   // muros: el recinto menos su contorno hacia adentro; la fachada (y = 0) va aparte, en vidrio
   const muros = useMemo(
@@ -59,6 +61,7 @@ export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true }: { plan: Pla
       {muros.map((g, i) => <Geo key={'m' + i} g={g} color="#fbfbfa" />)}
       <Geo g={vidrio} color="#9ec5e8" opacidad={0.28} bordes={false} sombra={false} />
       {muebles &&
+        !detalle &&
         plan.muebles.map((m) => {
           const c = CATALOGO[m.kind] ?? { w: 0.5, d: 0.5 }
           const h = ALTO_MUEBLE[m.kind] ?? 0.6
@@ -70,6 +73,80 @@ export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true }: { plan: Pla
             </mesh>
           )
         })}
+      {muebles && detalle && <MueblesDetalle plan={plan} />}
     </group>
+  )
+}
+
+const MESAS = new Set(['comedor-4', 'comedor-6', 'mesa-terraza', 'escritorio', 'mesa-centro'])
+
+/** El giro (rad, en three) de cada mueble: el de su regla, volteado si su frente quedó contra el muro (la tele, el
+ *  escritorio, el clóset del lado derecho), y las sillas mirando a la mesa más cercana de su recinto. */
+function giros(plan: PlanCatalogo): number[] {
+  return plan.muebles.map((m) => {
+    const base = (m.rot * Math.PI) / 180
+    if (m.kind === 'silla') {
+      let mejor: { dx: number; dy: number; d2: number } | null = null
+      for (const t of plan.muebles) {
+        if (t.room !== m.room || !MESAS.has(t.kind)) continue
+        const dx = t.x - m.x, dy = t.y - m.y, d2 = dx * dx + dy * dy
+        if (!mejor || d2 < mejor.d2) mejor = { dx, dy, d2 }
+      }
+      if (!mejor) return base
+      // frente local +z = −y del plano; θ tal que (sin θ, cos θ) apunte a (dx, −dy) en three, a múltiplos de 90°
+      const th = Math.atan2(mejor.dx, -mejor.dy)
+      return Math.round(th / (Math.PI / 2)) * (Math.PI / 2)
+    }
+    if (MESAS.has(m.kind) && m.kind !== 'escritorio') return base
+    const room = plan.rooms[m.room]
+    if (!room) return base
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity
+    for (const [x, y] of room.shape) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y) }
+    const c = CATALOGO[m.kind] ?? { w: 0.5, d: 0.5 }
+    const h = c.d / 2
+    // el respaldo mira a +y del plano girado por rot: 0 → +y, 90 → −x, 180 → −y, 270 → +x
+    const lado = (dir: number) => (dir === 0 ? y1 - (m.y + h) : dir === 90 ? m.x - h - x0 : dir === 180 ? m.y - h - y0 : x1 - (m.x + h))
+    const atras = lado(m.rot), frente = lado((m.rot + 180) % 360)
+    return frente < atras - 0.01 ? base + Math.PI : base
+  })
+}
+
+/** m: lo que debe quedar entre un mueble y el borde de su recinto: el medio muro más lo que sobresalen la cabecera
+ *  o el edredón, con un respiro */
+const HOLGURA = MEDIO_MURO + 0.03
+
+/** Las reglas ponen los muebles contra el borde del recinto, pero el muro come MEDIO_MURO hacia adentro: en 3D se
+ *  recorre cada mueble lo que le falte para no meterse al muro (si el recinto da para ello). Devuelve (x, y) del plano. */
+function centros(plan: PlanCatalogo): [number, number][] {
+  return plan.muebles.map((m) => {
+    const room = plan.rooms[m.room]
+    if (!room) return [m.x, m.y]
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity
+    for (const [x, y] of room.shape) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y) }
+    const [bx0, by0, bx1, by1] = huella(m)
+    const empuje = (bajo: number, alto: number, lo: number, hi: number) => {
+      const a = Math.max(0, HOLGURA - (bajo - lo)), b = Math.max(0, HOLGURA - (hi - alto))
+      if (a > 0 && b > 0) return 0 // no cabe con holgura de los dos lados: se deja
+      return a - b
+    }
+    return [m.x + empuje(bx0, bx1, x0, x1), m.y + empuje(by0, by1, y0, y1)]
+  })
+}
+
+function MueblesDetalle({ plan }: { plan: PlanCatalogo }) {
+  const rot = useMemo(() => giros(plan), [plan])
+  const pos = useMemo(() => centros(plan), [plan])
+  return (
+    <>
+      {plan.muebles.map((m, i) => {
+        const mod = modeloMueble(m.kind)
+        return (
+          <group key={m.id} position={[pos[i][0], LOSA, -pos[i][1]]} rotation={[0, rot[i], 0]}>
+            <mesh geometry={mod.geo} material={MAT_MUEBLE} castShadow receiveShadow />
+            <lineSegments geometry={mod.aristas} material={MAT_ARISTA} />
+          </group>
+        )
+      })}
+    </>
   )
 }
