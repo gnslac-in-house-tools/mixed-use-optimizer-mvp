@@ -34,6 +34,9 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/typologies/__tests__/typologies.test.ts` | «Toda tipología ofrece warehouse» excluye `mixed-use` | Uso mixto dibuja masas libres y solo ofrece `residential` |
 | `src/modules/__tests__/catalog.test.ts` | «Con todo, todo módulo está encendido» excluye `residential` | El proyecto de prueba es el demo industrial, que no ofrece `residential` |
 | `src/modules/__tests__/catalog.test.ts` | «Los KPIs y medidas encendidos son todo el catálogo» descuenta los `res-*` | En el demo industrial el módulo residencial está apagado (Tarea 6) |
+| `src/views/layout/ui.ts` | calificación: `SummaryTab` y `SUMMARY_TABS` ganan `calificacion` («Calificación», icono `sliders`); `Dialog` gana `calificacion` | La pestaña de la calificación por palancas en el Resumen; su botón «Editar reglas…» abre la ventana de reglas (Tarea 7 de la calificación) |
+| `src/views/panels/SummaryPanel.tsx` | calificación: la rama `tab === 'calificacion'` → `<Calificacion />` | La pestaña dibuja el componente del módulo, como Overview dibuja `<ResumenResidencial />` |
+| `src/views/layout/__tests__/areas.test.tsx`, `src/views/layout/__tests__/frame.test.tsx` | calificación: las pestañas del riel del Resumen terminan en «Calificación» | La pestaña nueva está en `SUMMARY_TABS` |
 
 ## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 

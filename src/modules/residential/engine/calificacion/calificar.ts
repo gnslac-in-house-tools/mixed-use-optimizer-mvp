@@ -37,7 +37,8 @@ const pctC = (x: number) =>
   (x > 0 ? '+' : x < 0 ? '−' : '') + (Math.abs(x * 100) % 1 ? Math.abs(x * 100).toFixed(1) : Math.abs(x * 100).toFixed(0)) + '%'
 const entero = (n: number) => Math.round(n).toLocaleString('es-MX')
 
-function fmtUmbral(v: Variable, s: number): string {
+/** Un umbral como se lee: % de la mediana, %, razón o número. */
+export function fmtUmbral(v: Variable, s: number): string {
   if (esMediana(v.mode)) return pctC(s)
   if (v.unit === '%') return Math.round(s * 100) + '%'
   if (v.unit === 'ratio') return s.toFixed(2)

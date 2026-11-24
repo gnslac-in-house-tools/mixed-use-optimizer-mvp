@@ -18,6 +18,7 @@ import { SUMMARY_TABS, useUi, type SummaryTab } from '../layout/ui.ts'
 import { BriefRows } from '../stats/BriefRows.tsx'
 import { Overview } from '../stats/Overview.tsx'
 import { IssuesTab } from './IssuesTab.tsx'
+import { Calificacion } from '../../modules/residential/views/calificacion/Calificacion.tsx' // mixed-use-mvp
 
 /** The tabs the rail shows (the core's), what the panel may show (those, and a plugin's while it is open), and the one open. */
 function useTabs(): { rail: RailTab<SummaryTab>[]; tabs: RailTab<SummaryTab>[]; tab: SummaryTab } {
@@ -56,6 +57,8 @@ export function SummaryPanel() {
       {tab === 'overview' && <Overview />}
       {tab === 'brief' && <BriefRows />}
       {tab === 'issues' && <IssuesTab />}
+      {/* mixed-use-mvp */}
+      {tab === 'calificacion' && <Calificacion />}
       {isPluginTab(tab) && <PluginTabPanel tab={tab} />}
     </div>
   )
