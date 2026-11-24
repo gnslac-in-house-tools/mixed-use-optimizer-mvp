@@ -42,6 +42,8 @@ describe('evaluarFormula', () => {
 
   it('la división entre cero no da un número', () => {
     expect(evaluarFormula('a / b', { a: 1, b: 0 })).toEqual({ err: 'no da un número' })
+    expect(evaluarFormula('a / (b / c)', { a: 1, b: 2, c: 0 })).toEqual({ err: 'no da un número' })
+    expect(evaluarFormula('0 / 0', {})).toEqual({ err: 'no da un número' })
   })
 })
 

@@ -130,10 +130,13 @@ function calcular(nodo: Nodo, datos: Datos): number {
     case 'bin': {
       const a = calcular(nodo.a, datos)
       const b = calcular(nodo.b, datos)
-      if (nodo.op === '+') return a + b
-      if (nodo.op === '-') return a - b
-      if (nodo.op === '*') return a * b
-      return a / b
+      let r: number
+      if (nodo.op === '+') r = a + b
+      else if (nodo.op === '-') r = a - b
+      else if (nodo.op === '*') r = a * b
+      else r = a / b
+      if (!Number.isFinite(r)) throw new ErrorFormula('no da un número')
+      return r
     }
   }
 }
