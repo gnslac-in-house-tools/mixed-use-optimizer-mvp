@@ -6,7 +6,7 @@ import type { Grid, Id, Point, Polygon, Project } from '../../../model/schema.ts
 import type { DerivedMass, MassingDerived } from '../../../engine/types.ts'
 import { deriveMassing } from '../../../engine/derive.ts'
 import { gridOf } from '../../../engine/grid/index.ts'
-import { paramsDe } from './defaults.ts'
+import { paramsDe, potDe } from './defaults.ts'
 import type { GeomObj, Ring } from './gfit/src/host/protocol.ts'
 import { calcOption } from './gfit/src/model/calc.ts'
 import type { LevelResult, Totals } from './gfit/src/model/calc.ts'
@@ -106,13 +106,16 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
   const g = gridOf(p, optionId)
   const params = paramsDe(p, buildingId)
   const entrepiso = (u: Uso, d: number) => Object.values(usos).find((x) => x.uso === u)?.entrepiso ?? d
+  // el POT del proyecto (índice y altura) y la ocupación máxima del sitio de GIM; el predio, para medirlos
+  const pot = potDe(p)
+  const norma = { far: pot.indice, height: pot.altura, cov: Math.round((p.site.rules.maxCoverage ?? 1) * 1000) / 10, predio: predioDe(p, optionId) }
   const firma = JSON.stringify([
     buildingId,
     [...solidos, ...nucleos].map((m) => [m.id, usoDe(m), m.polygon, m.holes, m.span]),
-    g, usos, params, p.residential!.tipos,
+    g, usos, params, p.residential!.tipos, norma,
   ])
   if (memo.has(firma)) return memo.get(firma)!
-  const d = calcular(solidos, nucleos, usoDe, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId)
+  const d = calcular(solidos, nucleos, usoDe, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId, norma)
   if (memo.size >= MAX) memo.delete(memo.keys().next().value!)
   memo.set(firma, d)
   return d
@@ -121,12 +124,14 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
 function calcular(
   solidos: DerivedMass[], nucleos: DerivedMass[], usoDe: (m: DerivedMass) => Uso | undefined, g: Grid | null,
   params: ReturnType<typeof paramsDe>, p: Project, fhViv: number, fhCom: number, buildingId: Id,
+  norma: { far: number; height: number; cov: number; predio: number | null },
 ): Derivado {
   const s = fresh()
   s.progs = PROGS0().map((x) => (x.id === 'res' ? { ...x, fh: fhViv } : x.id === 'ret' ? { ...x, fh: fhCom } : x))
   s.unitTypes = p.residential!.tipos.map((t) => ({ ...t, rooms: [...t.rooms] }))
   // el terreno es del edificio (millones en GFit); sin él, 0 (GFit traía 10 M para cualquier predio)
   s.cg = { ...s.cg, land: params.terreno / 1e6 }
+  s.zoning = { far: norma.far, height: norma.height, cov: norma.cov }
   const geom = new Map<string, GeomObj>()
   const obj = (m: DerivedMass, kind: GeomObj['kind'], rings: Ring[]): GeomObj => {
     const xs = m.polygon.map((q) => q.x), ys = m.polygon.map((q) => q.y)
@@ -175,7 +180,7 @@ function calcular(
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
     totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {
-      geom, sections, siteArea: null, stalls: new Map([[buildingId, Array.from({ length: sotanos }, () => porSotano)]]),
+      geom, sections, siteArea: norma.predio, stalls: new Map([[buildingId, Array.from({ length: sotanos }, () => porSotano)]]),
     })
     modulo = avisosModulo()
   } finally {
@@ -189,6 +194,13 @@ function calcular(
   const estacionamiento: Estacionamiento = { sotanos, porSotano, cajones: r.prov, requeridos: r.req, costo: r.costB.exc + r.costB.park, plano }
   if (sotanos > 0 && r.prov < r.req) avisos0.push(`Faltan ${r.req - r.prov} cajones: ${sotanos} sótanos dan ${r.prov} de ${r.req}`)
   // avisos: los de la masa, los de cada nivel (el remanente, agrupado por medida) y los del módulo
+  // el POT: lo que GFit midió contra él y no cumple
+  const POT: Record<string, (v: string) => string> = {
+    FAR: (v) => `POT: índice ${v} (máx. ${norma.far})`,
+    Height: (v) => `POT: altura ${v} (máx. ${norma.height} m)`,
+    Coverage: (v) => `POT: ocupación ${v} (máx. ${norma.cov} %)`,
+  }
+  for (const c of totals.checks) if (!c.ok && POT[c.k]) avisos0.push(POT[c.k](c.v))
   const avisos: string[] = [...avisos0]
   const add = (a: string) => { const e = enEspanol(a); if (!avisos.includes(e)) avisos.push(e) }
   r.issues.forEach(add)

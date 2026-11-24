@@ -7,6 +7,7 @@ import { NumberField, SelectField } from '../../../views/controls/fields.tsx'
 import { useModule } from '../../../views/modules.ts'
 import { paramsDe } from '../engine/defaults.ts'
 import type { ParamsEdificio } from '../engine/schema.ts'
+import { PotResidencial } from './PotResidencial.tsx'
 
 const cambia = (b: Id, parcial: Partial<ParamsEdificio>) => useApp.getState().apply((p) => actions.setParams(p, b, parcial))
 
@@ -34,6 +35,8 @@ export function PropiedadesResidencial({ buildingId }: { buildingId: Id }) {
       <NumberField key={`${buildingId}-tope`} label="Precio tope" unit="$" min={0} decimals={0} value={pr.tope} onCommit={(v) => cambia(buildingId, { tope: v })} />
       <NumberField key={`${buildingId}-terreno`} label="Terreno" unit="$" min={0} decimals={0} value={pr.terreno} onCommit={(v) => cambia(buildingId, { terreno: v })} />
       <NumberField key={`${buildingId}-semilla`} label="Semilla" min={0} decimals={0} value={pr.semilla} onCommit={(v) => cambia(buildingId, { semilla: Math.round(v) })} />
+      {/* el POT es del proyecto; aquí también, junto a lo demás de Uso mixto */}
+      <PotResidencial />
     </section>
   )
 }

@@ -66,6 +66,7 @@ export const LEFT_OUT: Record<string, string> = {
   setCalificacion: 'The residential module’s calificación rules (mixed-use MVP): set in the Reglas de calificación window; the agent is out of this piece',
   guardarPlan: 'A department plan of the residential module’s library (mixed-use MVP, piece 3): edited in the Departamento window; the agent is out of this piece',
   borrarPlan: 'Deletes a department plan from the residential module’s library (mixed-use MVP, piece 3): from the Departamentos tab; the agent is out of this piece',
+  setPot: 'The residential module’s POT (mixed-use MVP): set in the site’s Properties; the agent is out of this piece',
   setProjectUnits: 'Project data’s Units (Decision "Project units"): only CAD exports read it, and the agent has no export tool yet',
   // the streets (Decision "Streets"): addStreet, setStreetType, moveStreet, moveStreetNode and removeStreet are tools
   // (ST.3, the road tools'); these are the plan's gestures, and the types the Brief's until ST.9

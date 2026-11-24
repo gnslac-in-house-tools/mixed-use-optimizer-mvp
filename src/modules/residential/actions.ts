@@ -1,7 +1,7 @@
 // Los verbos del módulo residencial, puros: los views los llaman con apply((p) => actions.setParams(p, …)), así entran al
 // historial de deshacer de GIM (state/actions/index.ts los trae).
 import type { Id, Project } from '../../model/schema.ts'
-import { paramsDe } from './engine/defaults.ts'
+import { paramsDe, potDe } from './engine/defaults.ts'
 import type { Reglas } from './engine/calificacion/reglas.ts'
 import type { ParamsEdificio } from './engine/schema.ts'
 import type { PlanCatalogo } from './engine/catalogo.ts'
@@ -36,4 +36,11 @@ export function borrarPlan(p: Project, id: string): Project {
   const r = p.residential
   if (!r?.catalogo) return p
   return { ...p, residential: { ...r, catalogo: r.catalogo.filter((x) => x.id !== id) } }
+}
+
+/** El POT del proyecto (índice de edificabilidad, altura máxima), con lo que se cambió. */
+export function setPot(p: Project, parcial: Partial<{ indice: number; altura: number }>): Project {
+  const r = p.residential
+  if (!r) return p
+  return { ...p, residential: { ...r, pot: { ...potDe(p), ...parcial } } }
 }

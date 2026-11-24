@@ -35,3 +35,10 @@ export function paramsDe(p: Project, buildingId: Id): ParamsResueltos {
   const own = p.residential?.edificios[buildingId]
   return own ? { ...own, mezcla: { ...own.mezcla }, sotanos: own.sotanos ?? null, tope: own.tope ?? PARAMS0.tope, terreno: own.terreno ?? PARAMS0.terreno } : { ...PARAMS0, mezcla: { ...PARAMS0.mezcla } }
 }
+
+/** El POT de inicio: el índice de edificabilidad y la altura máxima que traía GFit. */
+export const POT0 = { indice: 9, altura: 90 }
+/** El POT del proyecto, o el de inicio. */
+export function potDe(p: Project): { indice: number; altura: number } {
+  return { ...POT0, ...(p.residential?.pot ?? {}) }
+}

@@ -65,6 +65,8 @@ export const ResidentialSchema = z.object({
   edificios: z.record(Id, ParamsEdificioSchema),
   /** las reglas de la calificación por palancas; sin ellas rigen `REGLAS_INICIO` */
   calificacion: CalificacionSchema.optional().catch(undefined),
+  /** el POT del proyecto: índice de edificabilidad y altura máxima (m); la ocupación es la de las reglas del sitio */
+  pot: z.object({ indice: z.number().positive(), altura: z.number().positive() }).optional().catch(undefined),
   /** Mi biblioteca: los planos de departamento del proyecto (pieza 3); uno mal guardado no rompe la carga */
   catalogo: z.array(PlanCatalogoSchema).optional().catch(undefined),
 })

@@ -20,6 +20,7 @@
 // whole there, a separated one's layers there too), so both are read. Several rows of one kind show a count (buildings: and their
 // floor area); mixed kinds, "N rows picked". The header is the row's name and what kind of row it is. Every section sends its verb
 // through `actions`, as in the tab it came from.
+import { PotResidencial } from '../../modules/residential/views/PotResidencial.tsx' // mixed-use-mvp
 import { useMemo } from 'react'
 import type { Id } from '../../model/schema.ts'
 import { isLayerLocked, parcelsLocked } from '../../model/drawings.ts'
@@ -264,6 +265,8 @@ function SiteSettings() {
       <LocationSection />
       <SiteFigures />
       <SiteRules />
+      {/* mixed-use-mvp: el POT de Uso mixto (índice, altura, ocupación) */}
+      <PotResidencial />
     </div>
   )
 }
