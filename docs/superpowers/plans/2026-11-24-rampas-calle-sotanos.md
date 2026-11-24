@@ -95,7 +95,7 @@
 - Produces: `ModelCtx.plantaBaja?: Map<string, Shape>`, obstáculos por id de edificio. En `calcOption`, después de `massBuilding` y antes de `calcBuilding`: cada nivel con `num === 1` del edificio recibe `cores = union([cores, obst])`, y `net`/`sell` se recalculan con la fórmula de `blocks.ts` (`net = lobby ? 0 : area(difference(shape, cores))`, `sell = net · eff / 100`). `fp`, `fpA`, `plateA` y `basements` no se tocan.
 
 - [ ] **Step 1: Write the failing tests:**
-  - `(r8)` el podio de comercio del test `(b)` (`masa('comercio', TORRE, 9)`, vivienda en `'l2'`, núcleo de 39) con calle al sur, contra el mismo sin calle: el `net` del nivel `num === 1` baja al menos `area(huella) − 0.5`; su `plateA` y `totals.fpA` son iguales.
+  - `(r8)` el podio de comercio del test `(b)` (`masa('comercio', TORRE, 9)`, vivienda en `'l2'`, núcleo de 39) con calle al sur, contra el mismo con `sotanos: 0` (sin rampa): el `net` del nivel `num === 1` baja al menos `area(huella) − 0.5`; su `plateA` y `totals.fpA` son iguales.
   - `(r8b)` torre `caso()` solo de vivienda con calle al sur: ninguna unidad del nivel `num === 1` (`layout.units[].shape`) se encima con `toShape([huella, ...bocaAlta])` (área < 0.01), y `totals.fpA` sigue siendo `32.4 × 16.2` (±0.5): la rampa no cambia la huella ni, por lo tanto, la excavación.
   - `(r9)` con `sotanos: 0` en los parámetros del edificio: `plano.rampa` es `null`, el `net` del nivel 1 es igual al de sin calle, y no sale el aviso de calle.
 - [ ] **Step 2:** Correr. Esperado: FAIL `(r8)` y `(r8b)`.
