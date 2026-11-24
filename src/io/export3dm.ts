@@ -16,6 +16,9 @@
 //   Circulation::Streets::Paving  its paving's outline in plan, at the site's mean ground
 //   Circulation::Truck courts  each docked wall's court (Decision "Truck court"; a court with a shape of its own: each of them) at its level;
 //                              User Text `gfit.court` (its mass and wall, `m1:0`), `gfit.part` (which of the wall's, with shapes), `gfit.depth`
+//   Residencial::<Building>::… mixed-use-mvp (exportResidencial.ts): Plantas, Núcleos, Departamentos (User Text
+//                              `gfit.tipo`, `gfit.area`, `gfit.nivel`, `gfit.unidad`), Recámaras, and Sótanos with its
+//                              Cajones and Rampa, each at its floor's z
 //   Terrain::Existing          the ground as it is, a mesh
 //   Terrain::Graded            the ground graded under the platforms, while they grade it
 //   Terrain::Contours          each contour whose height is known, at it
@@ -122,6 +125,29 @@ export async function export3dm(p: Project, d: Parameters<typeof modelOf>[1], pa
       for (const o of r.paving) add(line(o, r.z, true), ['Circulation', 'Streets', 'Paving'], r.name, text)
     }
     for (const c of model.courts) add(line(c.outline, c.z, true), ['Circulation', 'Truck courts'], c.name, { 'gfit.court': `${c.massId}:${c.wall}`, ...(c.part ? { 'gfit.part': String(c.part) } : {}), 'gfit.depth': String(c.depth) })
+
+    // mixed-use-mvp: lo residencial (exportResidencial.ts), una capa por edificio
+    for (const r of model.residential) {
+      const raiz = ['Residencial', names.get(r.buildingId) ?? '-']
+      const edificio = { 'gfit.building': r.buildingId }
+      for (const pl of r.plantas) {
+        const nivel = { ...edificio, 'gfit.nivel': pl.nombre, 'gfit.uso': pl.uso }
+        for (const c of pl.contorno) add(line(c, pl.z, true), [...raiz, 'Plantas'], pl.nombre, nivel)
+        for (const c of pl.nucleos) add(line(c, pl.z, true), [...raiz, 'Núcleos'], `Núcleo ${pl.nombre}`, nivel)
+        for (const u of pl.unidades) {
+          const texto = { ...nivel, 'gfit.unidad': u.id, 'gfit.tipo': u.tipo, 'gfit.area': String(Math.round(u.area * 100) / 100) }
+          for (const c of u.contorno) add(line(c, pl.z, true), [...raiz, 'Departamentos'], `${u.tipo} · ${pl.nombre}`, texto)
+          for (const rc of u.recamaras) for (const c of rc.contorno) add(line(c, pl.z, true), [...raiz, 'Recámaras'], rc.nombre, { ...texto, 'gfit.recamara': rc.nombre })
+        }
+      }
+      r.sotanos.forEach((s, k) => {
+        const nombre = `S${k + 1}`
+        const texto = { ...edificio, 'gfit.nivel': nombre }
+        for (const c of s.contorno) add(line(c, s.z, true), [...raiz, 'Sótanos'], nombre, texto)
+        for (const c of s.cajones) add(line(c, s.z, true), [...raiz, 'Sótanos', 'Cajones'], `Cajón ${nombre}`, texto)
+        if (s.rampa) add(line(s.rampa, s.z, true), [...raiz, 'Sótanos', 'Rampa'], `Rampa ${nombre}`, texto)
+      })
+    }
 
     for (const g of model.grounds) {
       const mesh = new rhino.Mesh()

@@ -13,6 +13,9 @@
 //     Circulation › Truck courts       each court (Decision "Truck court"): a DataObject, a slab under its level
 //     Terrain › Existing · Graded      the ground as a mesh, as it is and graded
 //     Terrain › Contours               each contour whose height is known, a polyline at it
+//     Residencial › <Building>         mixed-use-mvp (exportResidencial.ts): Departamentos (a DataObject each: Tipo,
+//                                      Área, Nivel, a prism its floor high), Núcleos (prisms), Sótanos › Cajones and
+//                                      Rampa (closed polylines at each basement's floor)
 // Serialised: each object's id is the md5 of its JSON; a collection's elements, a DataObject's displayValue and a mesh's
 // or polyline's lists are detached (the lists in chunks, as Speckle's own classes declare them), each parent keeping a
 // `__closure` of what hangs below it and how deep.
@@ -184,6 +187,37 @@ export function speckleTreeOf(model: ExportModel, colors: ReadonlyMap<string, st
     ),
   ])
 
+  // mixed-use-mvp: lo residencial de cada edificio
+  const nombres = new Map(model.buildings.map((b) => [b.id, b.name]))
+  const residencial = some(
+    'Residencial',
+    model.residential.flatMap((r) =>
+      some(nombres.get(r.buildingId) ?? r.buildingId, [
+        ...some(
+          'Departamentos',
+          r.plantas.flatMap((pl) =>
+            pl.unidades.flatMap((u) =>
+              u.contorno[0]
+                ? [{
+                    speckle_type: DATA_OBJECT,
+                    applicationId: `${r.buildingId}:${pl.nombre}:${u.id}`,
+                    name: `${u.tipo} · ${pl.nombre}`,
+                    properties: { Tipo: u.tipo, 'Área (m²)': round(u.area), Nivel: pl.nombre, Recámaras: u.recamaras.map((x) => x.nombre), 'gfit.building': r.buildingId },
+                    displayValue: [prism(u.contorno[0], u.contorno.slice(1), pl.z, pl.h)],
+                  }]
+                : [],
+            ),
+          ),
+        ),
+        ...some('Núcleos', r.plantas.flatMap((pl) => pl.nucleos.map((c) => ({ ...prism(c, [], pl.z, pl.h), name: `Núcleo ${pl.nombre}` })))),
+        ...some('Sótanos', [
+          ...some('Cajones', r.sotanos.flatMap((s, k) => s.cajones.map((c) => polyline(c, s.z, true, `Cajón S${k + 1}`)))),
+          ...some('Rampa', r.sotanos.flatMap((s, k) => (s.rampa ? [polyline(s.rampa, s.z, true, `Rampa S${k + 1}`)] : []))),
+        ]),
+      ]),
+    ),
+  )
+
   // a material per program, on its masses' meshes
   const byProgram = new Map<string, { name: string; ids: string[] }>()
   for (const m of model.masses) {
@@ -200,7 +234,7 @@ export function speckleTreeOf(model: ExportModel, colors: ReadonlyMap<string, st
   })
 
   return {
-    ...collection(model.name, [...some('Buildings', buildings), ...site, ...circulation, ...terrain]),
+    ...collection(model.name, [...some('Buildings', buildings), ...site, ...circulation, ...terrain, ...residencial]),
     ...(renderMaterialProxies.length ? { renderMaterialProxies } : {}),
   }
 }

@@ -61,7 +61,7 @@ export const RAMPA = 6
 /** m: el pasillo de autos del sótano, que también es lo que mide cada boca de la rampa */
 const PASILLO_SOTANO = 6
 /** m: el entrepiso de sótano con que el motor de cajones mide la rampa (el de `layoutBasement`) */
-const ENTREPISO_SOTANO = 3.3
+export const ENTREPISO_SOTANO = 3.3
 
 type Uso = 'vivienda' | 'comercio' | 'nucleo'
 const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])

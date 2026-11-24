@@ -45,6 +45,8 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `vitest.setup.ts` | Cada test arranca en inglés | Los tests de GIM leen los textos en inglés |
 | `src/plugins/__tests__/boundaries.test.ts` | Un plugin puede importar `src/i18n/` | Los plugins traducen sus textos |
 | `src/views/commands/__tests__/registry.test.ts`, `viewSiteDesignTools.test.tsx`, `src/views/layout/__tests__/{theme,workspace}.test.tsx` | El menú View trae Language | El submenú del idioma |
+| `src/io/exportModel.ts`, `export3dm.ts`, `exportPlan.ts`, `exportSpeckle.ts` (y el nuevo `src/io/exportResidencial.ts`) | `ExportModel.residential`: plantas, núcleos, departamentos con recámaras y sótanos con cajones y rampa de cada edificio residencial. El .3dm los escribe en `Residencial::<Edificio>::…` con User Text; el DXF dibuja la planta tipo en `A-FLOR-UNIT`, `A-FLOR-UNIT-IDEN`, `A-FLOR-ROOM` y `A-FLOR-CORE`; Speckle agrega la colección «Residencial» | Que lo que calcula Uso mixto llegue a Rhino, a CAD y a Speckle, no solo las masas |
+| `src/io/__tests__/exportPlan.test.ts` | La paleta de capas incluye las cuatro `A-FLOR-*` de la planta tipo residencial | La tabla de capas del DXF creció |
 | `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
 | `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
 | `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |

@@ -25,6 +25,7 @@ import { lanesOf } from '../engine/path/lanes.ts'
 import { stripOutlines } from '../engine/path/strip.ts'
 import { streetTypesOf } from '../engine/circulation/streets.ts'
 import { gradedSurfaceOf, heightsOf, meanHeight, platformOfMass, surfaceOf, type Surface } from '../modules/terrain/engine/index.ts'
+import { residencialDe, type ModelResidencial } from './exportResidencial.ts' // mixed-use-mvp
 
 /** What a model export takes: the buildings and the site, the terrain, or both. */
 export const MODEL_PARTS = ['geometry', 'terrain', 'all'] as const
@@ -137,6 +138,8 @@ export interface ExportModel {
   courts: ModelCourt[]
   grounds: ModelGround[]
   contours: { points: Point[]; closed: boolean; z: number }[]
+  /** mixed-use-mvp: lo residencial de cada edificio que lo tiene (exportResidencial.ts; Geometry) */
+  residential: ModelResidencial[]
 }
 
 /** Whether the project has a ground to export (a terrain that triangulates). */
@@ -271,5 +274,6 @@ export function modelOf(p: Project, d: Pick<Derived, 'site' | 'masses' | 'earthw
     courts,
     grounds,
     contours,
+    residential: buildings.flatMap((b) => residencialDe(p, b.id, option.id, b.base) ?? []),
   }
 }

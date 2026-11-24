@@ -96,6 +96,8 @@ describe('planOf', () => {
       'A-GRID': 153, 'A-GRID-IDEN': 153, 'A-GRID-MODL': 155, 'A-ANNO-DIMS': 51, 'A-ANNO-TEXT': 7, 'C-PROP': 11,
       'C-PROP-SETB': 13, 'C-PROP-LOTS': 213, 'C-TOPO-MAJR': 33, 'C-TOPO-MINR': 35, 'C-ROAD': 254, 'C-ROAD-CNTR': 253,
       'C-ROAD-EXST': 8, 'C-ROAD-STRP': 252, 'C-PKNG-STRP': 123, 'C-PKNG-OTLN': 123, 'A-ANNO-REFR': 8, 'A-ANNO-NOTE': 7,
+      // mixed-use-mvp: la planta tipo residencial
+      'A-FLOR-UNIT': 41, 'A-FLOR-UNIT-IDEN': 41, 'A-FLOR-ROOM': 43, 'A-FLOR-CORE': 7,
     })
     expect(PLAN_LAYERS['A-ROOF-OTLN']).toBeUndefined()
     expect(PLAN_LAYERS['A-GRID'].weight).toBe(0.13)

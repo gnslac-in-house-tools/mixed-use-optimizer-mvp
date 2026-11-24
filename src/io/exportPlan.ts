@@ -94,6 +94,11 @@ export const PLAN_LAYERS: Record<string, LayerStyle> = {
   'C-ROAD-STRP': style(0.13, 'DASHED', 252),
   'C-PKNG-STRP': style(0.13, 'CONTINUOUS', 123),
   'C-PKNG-OTLN': style(0.35, 'CONTINUOUS', 123),
+  // mixed-use-mvp: la planta tipo residencial (exportResidencial.ts): departamentos, su rótulo, recámaras y núcleos
+  'A-FLOR-UNIT': style(0.35, 'CONTINUOUS', 41),
+  'A-FLOR-UNIT-IDEN': style(0.18, 'CONTINUOUS', 41),
+  'A-FLOR-ROOM': style(0.13, 'CONTINUOUS', 43),
+  'A-FLOR-CORE': style(0.5, 'CONTINUOUS', 7),
 }
 
 /** An imported drawing's reference layer: thin, continuous, in its own colour (8 when its file gave none). */
@@ -422,6 +427,24 @@ export function planOf(p: Project, d: Derived, opts: { threeD: boolean }): PlanE
       const step = i * 1.5 * TEXT_M
       entities.push({ kind: 'text', layer: 'A-ANNO-NOTE', at: at({ x: n.at.x + down.x * step, y: n.at.y + down.y * step }), height: len(TEXT_M), text: s, align: 'left', angle, ...flatZ() })
     })
+  }
+
+  // mixed-use-mvp: de cada edificio residencial, su planta tipo (la más baja con departamentos), a la altura de su piso
+  // en 3D: cada departamento con su tipo y su área al centro, sus recámaras y los núcleos
+  for (const r of model.residential) {
+    const tipo = r.plantas.find((pl) => pl.unidades.length > 0)
+    if (!tipo) continue
+    const z = opts.threeD ? tipo.z : ground
+    for (const c of tipo.nucleos) ring('A-FLOR-CORE', c, z)
+    for (const u of tipo.unidades) {
+      for (const c of u.contorno) ring('A-FLOR-UNIT', c, z)
+      for (const rc of u.recamaras) for (const c of rc.contorno) ring('A-FLOR-ROOM', c, z)
+      if (!u.contorno[0]) continue
+      const c = centroid(u.contorno[0])
+      const area = `${(u.area / (k * k)).toFixed(1)} ${units === 'm' ? 'm²' : 'ft²'}`
+      text('A-FLOR-UNIT-IDEN', { x: c.x, y: c.y + 0.75 * TEXT_M }, u.tipo, z)
+      text('A-FLOR-UNIT-IDEN', { x: c.x, y: c.y - 0.75 * TEXT_M }, area, z)
+    }
   }
 
   return { name: p.name, units, threeD: opts.threeD, layers, entities }
