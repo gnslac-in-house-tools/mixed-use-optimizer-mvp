@@ -49,7 +49,7 @@ export function calificar(reglas: Reglas, enUso: Datos, otras: Datos[]): Calific
   const trazas = reglas.variables.map((v): Traza => {
     const r = evaluarFormula(v.formula, enUso)
     if ('err' in r) return { variable: v, valor: null, rating: null, porque: 'fórmula con error: ' + r.err, err: true }
-    if (r.v === null) return { variable: v, valor: null, rating: null, porque: 'sin datos: falta ' + r.falta.join(', ') }
+    if (r.v === null) return { variable: v, valor: null, rating: null, porque: 'sin datos: ' + (r.motivo ?? 'falta ' + r.falta.join(', ')) }
     const x = r.v
     if (!esMediana(v.mode)) {
       const rating = v.mode === 'higher' ? porMayor(x, v.steps) : porMenor(x, v.steps)

@@ -40,10 +40,15 @@ describe('evaluarFormula', () => {
     expect(evaluarFormula('a; alert(1)', { a: 1 })).toEqual({ err: 'solo + − × ÷ ( ) y nombres' })
   })
 
-  it('la división entre cero no da un número', () => {
-    expect(evaluarFormula('a / b', { a: 1, b: 0 })).toEqual({ err: 'no da un número' })
-    expect(evaluarFormula('a / (b / c)', { a: 1, b: 2, c: 0 })).toEqual({ err: 'no da un número' })
+  it('la división entre cero con los datos de hoy no da un número: sin dato, no error', () => {
+    expect(evaluarFormula('a / b', { a: 1, b: 0 })).toEqual({ v: null, falta: [], motivo: 'no da un número' })
+    expect(evaluarFormula('a / (b / c)', { a: 1, b: 2, c: 0 })).toEqual({ v: null, falta: [], motivo: 'no da un número' })
+    expect(evaluarFormula('a / b', { a: 0, b: 0 })).toEqual({ v: null, falta: [], motivo: 'no da un número' })
+  })
+
+  it('sin datos de por medio, una fórmula que no da un número es un error de la fórmula', () => {
     expect(evaluarFormula('0 / 0', {})).toEqual({ err: 'no da un número' })
+    expect(evaluarFormula('1 / (2 - 2)', {})).toEqual({ err: 'no da un número' })
   })
 })
 

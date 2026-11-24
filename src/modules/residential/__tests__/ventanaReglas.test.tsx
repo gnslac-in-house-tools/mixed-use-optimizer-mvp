@@ -12,7 +12,7 @@ import { NO_SELECTION, useApp } from '../../../state/store.ts'
 import { newProject } from '../../../typologies/index.ts'
 import { pickMenu } from '../../../views/__tests__/pickMenu.ts'
 import { useUi } from '../../../views/layout/ui.ts'
-import { calificacionDe } from '../engine/calificacion/datos.ts'
+import { calificacionDe, datosCalificacion } from '../engine/calificacion/datos.ts'
 import { PALANCAS, PALANCA_ES, REGLAS_INICIO, reglasDe } from '../engine/calificacion/reglas.ts'
 import { usePalancasAbiertas } from '../views/calificacion/useCalificacion.ts'
 
@@ -200,5 +200,24 @@ describe('la ventana Reglas de calificación', () => {
     expect(lista().querySelectorAll('[data-variable]')).toHaveLength(9)
     expect(within(editor()).getByRole('textbox', { name: 'Nombre de la variable' })).toHaveValue('Nueva variable')
     expect(within(editor()).getByRole('combobox', { name: 'Palanca' })).toHaveValue('plazo_riesgo')
+  })
+
+  it('con m² vendibles en 0 (no cabe ninguna unidad) las divisiones quedan «sin dato», sin ⚠, y Aplicar escribe un peso nuevo', () => {
+    // una franja de vivienda de 8.1 × 16.2 m: tiene m² brutos pero ninguna unidad, así que ingreso / m2_vendibles no da un número
+    abre({ ...newProject('mixed-use'), grid: G0, masses: [masa('m1', 'vivienda', rect(0, 0, 8.1, 16.2), 30)] })
+    expect(datosCalificacion(useApp.getState().project, useApp.getState().option).m2_vendibles).toBe(0)
+    abrir()
+    expect(lista()).not.toHaveTextContent('⚠')
+    expect(within(ventana()).queryByText(/con error/)).toBeNull()
+    elegir('Ingreso por m² vendible')
+    expect(editor()).toHaveTextContent('Sin dato hoy')
+    expect(within(editor()).getByRole('textbox', { name: 'Fórmula' })).not.toHaveAttribute('aria-invalid', 'true')
+    const g = within(lista()).getByRole('group', { name: PALANCA_ES.m2_vendibles })
+    fireEvent.click(within(g).getByRole('button', { name: `Subir el peso de ${PALANCA_ES.m2_vendibles}` }))
+    expect(aplicar()).toBeEnabled()
+    fireEvent.click(aplicar())
+    expect(screen.queryByRole('dialog', { name: 'Reglas de calificación' })).toBeNull()
+    expect(useApp.getState().project.residential!.calificacion!.weights.m2_vendibles).toBe(1.5)
+    expect(document.body.textContent).not.toMatch(/NaN|Infinity/)
   })
 })

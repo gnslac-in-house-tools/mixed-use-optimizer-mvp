@@ -120,3 +120,17 @@ describe('validarVariable', () => {
     expect(REGLAS_INICIO.variables.map(validarVariable)).toEqual(Array(8).fill(null))
   })
 })
+
+describe('calificar · datos de hoy que no dan un número', () => {
+  it('m² vendibles en 0: ingreso / m2_vendibles queda «sin datos», no «fórmula con error»', () => {
+    const datos = { m2_vendibles: 0, m2_brutos: 100, ingreso: 0, costo: 500 }
+    const r = calificar(REGLAS_INICIO, datos, [{ m2_vendibles: 10, m2_brutos: 100, ingreso: 100, costo: 50 }])
+    for (const id of ['precio_m2', 'costo_m2']) {
+      const t = traza(r, id)
+      expect(t.err).toBeFalsy()
+      expect(t.rating).toBeNull()
+      expect(t.valor).toBeNull()
+      expect(t.porque).toBe('sin datos: no da un número')
+    }
+  })
+})

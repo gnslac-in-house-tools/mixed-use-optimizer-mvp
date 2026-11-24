@@ -2,7 +2,12 @@
 // Tokenizador + descenso recursivo a mano; no usa eval ni Function.
 
 export type Datos = Record<string, number | null>
-export type ResultadoFormula = { v: number } | { v: null; falta: string[] } | { err: string }
+/**
+ * `{ v }` un número; `{ v: null }` sin dato hoy: faltan datos (`falta`) o, con los datos de hoy, la cuenta no da un número
+ * (`motivo`, p. ej. m² vendibles en 0); `{ err }` un defecto de la fórmula (sintaxis, un nombre ajeno, o no da un número
+ * sin ningún dato de por medio).
+ */
+export type ResultadoFormula = { v: number } | { v: null; falta: string[]; motivo?: string } | { err: string }
 
 type Token =
   | { t: 'num'; v: number }
@@ -16,6 +21,8 @@ type Nodo =
   | { k: 'bin'; op: '+' | '-' | '*' | '/'; a: Nodo; b: Nodo }
 
 class ErrorFormula extends Error {}
+/** Una cuenta que no da un número finito (÷ 0): con datos de por medio es «sin dato», no un error de la fórmula. */
+class SinNumero extends Error {}
 
 const CARACTERES_PERMITIDOS = /^[\w\s.+\-*/()]*$/
 
@@ -135,7 +142,7 @@ function calcular(nodo: Nodo, datos: Datos): number {
       else if (nodo.op === '-') r = a - b
       else if (nodo.op === '*') r = a * b
       else r = a / b
-      if (!Number.isFinite(r)) throw new ErrorFormula('no da un número')
+      if (!Number.isFinite(r)) throw new SinNumero()
       return r
     }
   }
@@ -154,6 +161,10 @@ export function nombresDe(formula: string): string[] {
   }
 }
 
+const NO_NUMERO = 'no da un número'
+/** Sin ningún nombre de dato: si no da un número, es la fórmula (`1 / 0`), no los datos de hoy. */
+const formulaSinDatos = (formula: string) => nombresDe(formula).length === 0
+
 export function evaluarFormula(formula: string, datos: Datos): ResultadoFormula {
   if (!CARACTERES_PERMITIDOS.test(formula)) return { err: 'solo + − × ÷ ( ) y nombres' }
   if (formula.trim() === '') return { err: 'vacía' }
@@ -167,9 +178,10 @@ export function evaluarFormula(formula: string, datos: Datos): ResultadoFormula 
     const falta = nombres.filter((n) => datos[n] === null)
     if (falta.length > 0) return { v: null, falta }
     const v = calcular(arbol, datos)
-    if (!Number.isFinite(v)) return { err: 'no da un número' }
+    if (!Number.isFinite(v)) throw new SinNumero()
     return { v }
   } catch (e) {
+    if (e instanceof SinNumero) return formulaSinDatos(formula) ? { err: NO_NUMERO } : { v: null, falta: [], motivo: NO_NUMERO }
     if (e instanceof ErrorFormula) return { err: e.message }
     throw e
   }

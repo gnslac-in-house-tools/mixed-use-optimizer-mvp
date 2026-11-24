@@ -87,7 +87,8 @@ export function EditorVariable({ v, traza, ev, msg, help, enfocar, cambiar, quit
 
   const err = 'err' in ev ? ev.err : null
   const falta = !err && 'falta' in ev ? ev.falta : null
-  const pieza2 = falta?.every((k) => DATOS_CALIFICACION.find((d) => d.k === k)?.pieza === 2)
+  const motivo = !err && 'motivo' in ev ? ev.motivo : undefined
+  const pieza2 = !!falta?.length && falta.every((k) => DATOS_CALIFICACION.find((d) => d.k === k)?.pieza === 2)
   const pct = enPct(v)
   const neg = v.mode === 'lower' || v.mode === 'vsMedianLower'
   const b = traza ? posicion(traza) : null
@@ -166,7 +167,12 @@ export function EditorVariable({ v, traza, ev, msg, help, enfocar, cambiar, quit
           </div>
         </div>
         <p className={`min-h-[1.25em] text-caption ${err ? 'text-status-over' : 'text-ink-secondary'}`}>
-          {err ?? (falta ? `Sin dato hoy: falta ${falta.join(', ')}${pieza2 ? ' (llega con la pieza 2)' : ''}.` : '')}
+          {err ??
+            (motivo
+              ? `Sin dato hoy: con los datos de hoy ${motivo}.`
+              : falta
+                ? `Sin dato hoy: falta ${falta.join(', ')}${pieza2 ? ' (llega con la pieza 2)' : ''}.`
+                : '')}
         </p>
         <div aria-label="Datos del proyecto" className="flex flex-wrap gap-1.5">
           {DATOS_CALIFICACION.map((d) => (
