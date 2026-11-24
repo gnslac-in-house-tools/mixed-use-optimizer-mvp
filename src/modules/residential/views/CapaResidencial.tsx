@@ -11,6 +11,7 @@ import { columnas, LADO_COLUMNA } from '../engine/columnas.ts'
 import type { Shape } from '../engine/gfit/src/model/geom.ts'
 import { solidosDe, useDerivado } from './useDerivado.ts'
 import { usePiso } from './piso.ts'
+import { ROOM_FILL, nombreRecinto } from '../engine/catalogo.ts'
 
 const PASILLO = '#ECEAE5'
 const NUCLEO = '#8C8C8C'
@@ -30,6 +31,7 @@ export function CapaResidencial() {
   const building = buildingOfLevel(project, level)
   const d = useDerivado(building?.id)
   const piso = usePiso((s) => s.piso)
+  const interiores = usePiso((s) => s.interiores)
   const dibujo = useMemo(() => {
     if (!d || !building) return null
     const aqui = new Set(project.masses.filter((m) => m.levelId === level).map((m) => m.id))
@@ -59,6 +61,20 @@ export function CapaResidencial() {
       {tipo?.layout?.units.map((u) => (
         <path key={u.id} d={trazo(u.shape)} data-tipo={u.type} fill={color.get(u.type) ?? '#ccc'} stroke="#ffffff" strokeWidth={1} vectorEffect="non-scaling-stroke" />
       ))}
+      {interiores && tipo?.layout?.units.map((u) =>
+        u.rooms.map((r, k) => {
+          const xs = r.shape.flatMap((q) => q.map((p) => p[0])), ys = r.shape.flatMap((q) => q.map((p) => p[1]))
+          const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2
+          const fs = Math.min(0.42, (Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys))) / 5)
+          return (
+            <g key={u.id + '-r' + k}>
+              <path data-recinto-unidad d={trazo(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} stroke="#8a8a8a" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
+              {fs > 0.12 && <text x={cx} y={-cy} fontSize={fs} textAnchor="middle" dominantBaseline="middle" fill="#3a3a3a">{nombreRecinto(r.kind, r.name)}</text>}
+            </g>
+          )
+        }),
+      )}
+      {interiores && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
       {tipo && <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />}
       {cols.map((c, i) => (
         <rect key={i} data-columna x={c.x - h} y={-c.y - h} width={LADO_COLUMNA} height={LADO_COLUMNA} fill={COLUMNA} transform={angulo ? `rotate(${-angulo} ${c.x} ${-c.y})` : undefined} />

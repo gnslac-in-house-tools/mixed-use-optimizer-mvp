@@ -24,7 +24,7 @@ const caso = (): Project => ({
 beforeEach(() => {
   const p = caso()
   useApp.setState({ project: p, derived: derive(p), history: emptyHistory(), dragStart: null, selection: NO_SELECTION, level: 'l1', showAll: false, option: 'o1' })
-  usePiso.setState({ piso: null })
+  usePiso.setState({ piso: null, interiores: false })
 })
 
 describe('pisos y estacionamiento de uso mixto', () => {
@@ -39,6 +39,20 @@ describe('pisos y estacionamiento de uso mixto', () => {
     expect(barra).toHaveTextContent(`${d.niveles[3].units} deptos`)
     const { container } = render(<svg><CapaResidencial /></svg>)
     expect(container.querySelectorAll('path[data-tipo]').length).toBe(d.niveles[3].layout!.units.length)
+  })
+
+  it('Interiores dibuja los recintos de cada departamento del piso, con su nombre', () => {
+    const d = derivar(caso(), 'b1')!
+    render(<BarraPisos />)
+    const barra = screen.getByRole('toolbar', { name: 'Pisos de uso mixto' })
+    fireEvent.click(within(barra).getByRole('button', { name: '4' }))
+    const { container } = render(<svg><CapaResidencial /></svg>)
+    expect(container.querySelectorAll('path[data-recinto-unidad]').length).toBe(0)
+    fireEvent.click(within(barra).getByRole('button', { name: 'Interiores' }))
+    const n = d.niveles[3].layout!.units.reduce((s, u) => s + u.rooms.length, 0)
+    expect(n).toBeGreaterThan(0)
+    expect(container.querySelectorAll('path[data-recinto-unidad]').length).toBe(n)
+    expect(container.querySelector('[data-capa="residencial"] text')).not.toBeNull()
   })
 
   it('el sótano dibuja sus cajones en planta y la barra dice cuántos', () => {
