@@ -38,6 +38,7 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/views/layout/ui.ts` | calificación: `SummaryTab` y `SUMMARY_TABS` ganan `calificacion` («Calificación», icono `sliders`); `Dialog` gana `calificacion` | La pestaña de la calificación por palancas en el Resumen; su botón «Editar reglas…» abre la ventana de reglas (Tarea 7 de la calificación) |
 | `src/views/panels/SummaryPanel.tsx` | calificación: la rama `tab === 'calificacion'` → `<Calificacion />` | La pestaña dibuja el componente del módulo, como Overview dibuja `<ResumenResidencial />` |
 | `src/views/layout/__tests__/areas.test.tsx`, `src/views/layout/__tests__/frame.test.tsx` | calificación: las pestañas del riel del Resumen terminan en «Calificación» | La pestaña nueva está en `SUMMARY_TABS` |
+| `src/views/stats/KpiStrip.tsx` | calificación: con el módulo residencial, el interruptor «KPIs: Calificación · Proyecto» al inicio de la barra; los ids según el juego (`idsDeLaBarra`); la celda de un `calif-*` la dibuja `<CeldaCalificacion />`, cuyo clic abre la pestaña con la palanca | La calificación siempre a la vista (spec §4 y §7.5); la lógica vive en `modules/residential/views/calificacion/`, como la celda de Issues abre su pestaña |
 
 ## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 

@@ -13,9 +13,13 @@
 // smaller figure), Compact (one line, the name and the figure side by side; what the app opens with, Decision "Compact
 // by default"); a look's ▲▼ shows at every size. Its bottom edge is a grip (KpiGrip):
 // dragged up it goes a size smaller per jump, down a size larger; ↑ ↓ on it, a double-click back to Full.
+// mixed-use-mvp (calificación): with the residential module, a switch «KPIs: Calificación · Proyecto» opens the strip and
+// picks the ids (modules/residential/views/calificacion/juegoKpis.ts); a `calif-*` cell is drawn by the module.
 import { createContext, useContext, useRef, type ReactNode } from 'react'
 import type { KpiValue } from '../../engine/kpis.ts'
-import { chosenKpis, readKpi, readKpis } from '../../modules/catalog.ts'
+import { readKpi } from '../../modules/catalog.ts'
+import { CeldaCalificacion, InterruptorJuego } from '../../modules/residential/views/calificacion/CeldaCalificacion.tsx' // mixed-use-mvp
+import { conJuego, esKpiCalificacion, idsDeLaBarra, useJuegoKpis } from '../../modules/residential/views/calificacion/juegoKpis.ts' // mixed-use-mvp
 import { useApp } from '../../state/store.ts'
 import { figure, formatFigure } from '../format.ts'
 import { useLook } from '../viewport/look.ts'
@@ -62,9 +66,13 @@ export function KpiStrip() {
   const iso = useIsolatedDerived()
   // a look's figures (or the isolated ones), in the design's choice of KPIs
   const shown = look ?? iso
-  const kpis = shown ? chosenKpis(project).flatMap((id) => readKpi(id, shown.project, shown.derived) ?? []) : readKpis(project, derived)
-  const mine = look ? new Map(readKpis(project, derived).map((k) => [k.id, k])) : null
-  const columns = kpis.length ? `minmax(0,1.3fr) repeat(${kpis.length - 1}, minmax(0,1fr)) auto` : 'minmax(0,1fr) auto'
+  const juego = useJuegoKpis((s) => s.juego) // mixed-use-mvp
+  const ids = idsDeLaBarra(project, juego) // mixed-use-mvp: the project's choice, or the calificación's set
+  const switcher = conJuego(project) // mixed-use-mvp
+  const from = shown ?? { project, derived }
+  const kpis = ids.flatMap((id) => readKpi(id, from.project, from.derived) ?? [])
+  const mine = look ? new Map(ids.flatMap((id) => readKpi(id, project, derived) ?? []).map((k) => [k.id, k])) : null
+  const columns = (switcher ? 'auto ' : '') + (kpis.length ? `minmax(0,1.3fr) repeat(${kpis.length - 1}, minmax(0,1fr)) auto` : 'minmax(0,1fr) auto')
   const size = useUi((s) => s.kpiSize)
   const compact = size === 'compact'
 
@@ -75,11 +83,13 @@ export function KpiStrip() {
           className="grid items-center divide-x divide-separator phone:no-scrollbar phone:flex phone:snap-x phone:snap-mandatory phone:overflow-x-auto"
           style={{ gridTemplateColumns: columns }}
         >
+          {switcher && <InterruptorJuego />}
           {kpis.length === 0 && <p className="px-panel-pad text-body text-ink-secondary">No KPIs chosen: pick some with Customize.</p>}
           {kpis.map((k, i) => {
             const f = figure(k.value, k.unit)
             const sub = note(k)
             const vs = mine ? against(k, mine.get(k.id), look?.better?.[k.id]) : null
+            if (esKpiCalificacion(k.id)) return <CeldaCalificacion key={k.id} kpi={k} grande={i === 0} /> // mixed-use-mvp
             const Wrap = k.id === 'issues' && derived.issues.length > 0 && !look ? IssuesCell : Cell
             return (
               <Wrap key={k.id} label={k.label}>
