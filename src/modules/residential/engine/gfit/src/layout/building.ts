@@ -5,7 +5,7 @@ import type { Shape } from '../model/geom.ts'
 import type { Massed } from '../model/massing.ts'
 import type { SRule } from '../model/program.ts'
 import type { Building, State } from '../model/state.ts'
-import { layoutLevel } from './level.ts'
+import { layoutLevel, moduloUnidad } from './level.ts'
 import type { LevelLayout } from './level.ts'
 
 const MAX = 400
@@ -51,7 +51,8 @@ export function layoutBuilding(m: Massed, b: Building, s: State): Map<number, Le
   const stack = live.some((r) => r.kind === 'stack')
   // only what moves units: a price, a stall count or a colour must not lay a 30-level tower out again
   const types = s.unitTypes.map((t) => [t.id, t.name, t.rooms, t.wMin, t.wMax])
-  const fixed = JSON.stringify([b.unitDepth, b.corridor, b.seed, types, s.rooms, live.filter((r) => !PRICE.includes(r.kind)), b.mix])
+  // mixed-use-mvp patch: the unit module too (the same plate on a moved grid lays out anew)
+  const fixed = JSON.stringify([b.unitDepth, b.corridor, b.seed, types, s.rooms, live.filter((r) => !PRICE.includes(r.kind)), b.mix, moduloUnidad()])
   // a typical floor repeats the plate below it in the same block
   const prevBy = new Map<string, { plate: string; cores: string; levelRules: string; key: string; L: LevelLayout }>()
   m.levels.forEach((lv, i) => {

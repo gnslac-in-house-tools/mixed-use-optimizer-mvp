@@ -75,6 +75,9 @@ export function setUnitModule(m: ModuloUnidad | null): void {
   AVISOS = []
 }
 
+/** The module set now (layoutBuilding keys its cache by it). */
+export const moduloUnidad = (): ModuloUnidad | null => MOD
+
 /** What the last runs with a module said: a type with no width in modules, the leftover of each level. */
 export function avisosModulo(): string[] {
   return [...new Set(AVISOS)]
@@ -182,7 +185,15 @@ export function layoutLevel(i: LevelInput): LevelLayout {
   }
 }
 
+// mixed-use-mvp patch: what the module said while a level was solved goes in its issues too, so a cached level keeps it
 function solveLevel(i: LevelInput): LevelLayout {
+  const a0 = AVISOS.length
+  const L = solveLevel0(i)
+  const extra = [...new Set(AVISOS.slice(a0))].filter((a) => !L.issues.includes(a))
+  return extra.length ? { ...L, issues: [...L.issues, ...extra] } : L
+}
+
+function solveLevel0(i: LevelInput): LevelLayout {
   const issues: string[] = []
   const cores = i.cores.length ? i.cores : autoCore(i.plate)
   const z = zones(i.plate, cores, i.d, i.cw)
