@@ -1,11 +1,11 @@
 // The panel's whole state. The plugin keeps it in the .3dm (plug-in document data) as JSON with schema 1.
-import { CG0, PROGS0 } from './programs'
-import type { Globals, Program } from './programs'
-import { normMix, ROOM_KINDS, ROOMS0, RULE_KINDS, RULES0, UNIT_TEMPLATES, UNITS0 } from './program'
-import type { RoomType, SRule, UnitType } from './program'
-import { VIEWS } from '../host/protocol'
-import type { View3D } from '../host/protocol'
-import type { ParkingFlow, ParkingLayout } from '../parking/adapter'
+import { CG0, PROGS0 } from './programs.ts'
+import type { Globals, Program } from './programs.ts'
+import { normMix, ROOM_KINDS, ROOMS0, RULE_KINDS, RULES0, UNIT_TEMPLATES, UNITS0 } from './program.ts'
+import type { RoomType, SRule, UnitType } from './program.ts'
+import { VIEWS } from '../host/protocol.ts'
+import type { View3D } from '../host/protocol.ts'
+import type { ParkingFlow, ParkingLayout } from '../parking/adapter.ts'
 
 export type Kind = 'footprint' | 'core' | 'parking' | 'mass'
 

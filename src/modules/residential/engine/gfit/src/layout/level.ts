@@ -2,15 +2,15 @@
 // the plate, the band WFC per run (longest chords first, each run only where earlier units left room), units
 // clipped to the unit zone, small leftovers merged, rooms from the room WFC, rules as weights, a required rule
 // that fails reseeds the level.
-import { area, autoCore, difference, inside, intersection, offset, signedArea, union } from '../model/geom'
-import type { Pt, Shape } from '../model/geom'
-import type { RoomKind, RoomType, SRule, UnitType } from '../model/program'
-import { Q, solveBand } from './band'
-import type { BandRules, BandType } from './band'
-import { candidates, reachOf, runsOf, toWorld, zones } from './plate'
-import type { Frame, Run } from './plate'
-import { generateRooms } from './rooms'
-import { rng } from './rng'
+import { area, autoCore, difference, inside, intersection, offset, signedArea, union } from '../model/geom.ts'
+import type { Pt, Shape } from '../model/geom.ts'
+import type { RoomKind, RoomType, SRule, UnitType } from '../model/program.ts'
+import { Q, solveBand } from './band.ts'
+import type { BandRules, BandType } from './band.ts'
+import { candidates, reachOf, runsOf, toWorld, zones } from './plate.ts'
+import type { Frame, Run } from './plate.ts'
+import { generateRooms } from './rooms.ts'
+import { rng } from './rng.ts'
 
 export type Dir = 'N' | 'S' | 'E' | 'W'
 export interface PlacedRoom { name: string; kind: RoomKind; shape: Shape }

@@ -1,8 +1,8 @@
 // (app) Medidas de cada rampa y su alineación a un pasillo (spec circulaciones §6.1 y §6.2). El motor portado usa
 // una sola medida para todas las rampas; aquí cada una trae la suya y, si su largo es null, se calcula con la
 // pendiente y las transiciones.
-import type { FlechaAcceso, Rampa } from '../../modelo/tipos'
-import { aristas, rampa, type Lazo, type Punto2 } from './acomodo'
+import type { FlechaAcceso, Rampa } from '../../modelo/tipos.ts'
+import { aristas, rampa, type Lazo, type Punto2 } from './acomodo.ts'
 
 /** Pendiente de la parte central por omisión (fracción): parámetro, no norma. */
 export const PENDIENTE_RAMPA = 0.15

@@ -105,7 +105,7 @@ describe('Home', { timeout: 15_000 }, () => {
     expect(within(dialog()).getAllByRole('button', { pressed: false }).map((b) => b.textContent)).toEqual([expect.stringMatching(/^Project/), expect.stringMatching(/^Block/)])
     expect(within(dialog()).queryByRole('button', { name: 'Start blank' })).toBeNull()
     fireEvent.click(within(dialog()).getByRole('button', { name: /^Project/ }))
-    expect(within(within(dialog()).getByRole('list', { name: 'Project types' })).getAllByRole('button').map((b) => [b.getAttribute('aria-label'), b.getAttribute('aria-pressed')])).toEqual([['Industrial', 'true']])
+    expect(within(within(dialog()).getByRole('list', { name: 'Project types' })).getAllByRole('button').map((b) => [b.getAttribute('aria-label'), b.getAttribute('aria-pressed')])).toEqual([['Industrial', 'true'], ['Uso mixto', 'false']]) // mixed-use-mvp
     expect(within(within(dialog()).getByRole('list', { name: 'Terrains' })).getByRole('button', { name: 'No terrain' })).toHaveAttribute('aria-pressed', 'true')
     fireEvent.click(within(dialog()).getByRole('button', { name: 'Start blank' }))
     expect(screen.queryByRole('dialog', { name: 'Create new' })).toBeNull()

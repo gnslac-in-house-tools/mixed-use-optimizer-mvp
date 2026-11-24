@@ -1,8 +1,8 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { priceFactor, ruleStatus, ruleText, RULE_CATALOG } from '../src/model/rules'
-import { RULE_KINDS, UNITS0 } from '../src/model/program'
-import type { SRule } from '../src/model/program'
-import type { LevelLayout, PlacedUnit } from '../src/layout/level'
+import { priceFactor, ruleStatus, ruleText, RULE_CATALOG } from '../src/model/rules.ts'
+import { RULE_KINDS, UNITS0 } from '../src/model/program.ts'
+import type { SRule } from '../src/model/program.ts'
+import type { LevelLayout, PlacedUnit } from '../src/layout/level.ts'
 
 const types = UNITS0()
 const unit = (type: string, patch: Partial<PlacedUnit> = {}): PlacedUnit => ({

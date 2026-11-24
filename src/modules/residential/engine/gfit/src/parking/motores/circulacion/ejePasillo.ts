@@ -1,6 +1,6 @@
 // El eje de un pasillo (spec circulaciones §8 e interacción §16.5): lo usan el dibujo (ejes y flechas) y las flechas
 // de sentido puestas a mano.
-import type { Punto } from '../../modelo/tipos'
+import type { Punto } from '../../modelo/tipos.ts'
 
 const resta = (a: Punto, b: Punto): Punto => ({ x: a.x - b.x, y: a.y - b.y })
 const largo = (v: Punto) => Math.hypot(v.x, v.y)

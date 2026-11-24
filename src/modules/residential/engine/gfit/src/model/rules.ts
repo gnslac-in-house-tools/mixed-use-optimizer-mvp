@@ -1,8 +1,8 @@
 // Sentence rules (spec 2026-11-04-program-wfc §6): the sentence with its parameter chips, the status a rule has
 // against the solved layouts, and the price factor the price rules give a unit.
-import { area, intersection, offset } from './geom'
-import type { LevelLayout, PlacedUnit } from '../layout/level'
-import type { RuleKind, SRule, UnitType } from './program'
+import { area, intersection, offset } from './geom.ts'
+import type { LevelLayout, PlacedUnit } from '../layout/level.ts'
+import type { RuleKind, SRule, UnitType } from './program.ts'
 
 export type Chip = { k: 'types' | 'a' | 'b' | 'n' | 'p' | 'dir' | 'type'; v: string }
 export interface RuleStatus { ok: boolean | null; text: string }

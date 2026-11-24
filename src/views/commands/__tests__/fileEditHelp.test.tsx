@@ -70,7 +70,7 @@ const masses = () => s().project.masses.length
 describe('File', () => {
   it('its commands, in the order of the top bar’s ⋯ and Export: one New per typology, Load, Save, Export ▸, data, Autosave, demo, Home', () => {
     const keys = menuEntries(['File']).map((e) => (e === 'separator' ? e : e.key))
-    expect(keys.filter((k) => k !== 'separator')).toEqual(['file.new.industrial', 'file.new.blank', 'file.load', 'file.save', 'Export', 'file.data', 'file.autosave', 'file.demo', 'file.home'])
+    expect(keys.filter((k) => k !== 'separator')).toEqual(['file.new.industrial', 'file.new.mixed-use', 'file.new.blank', 'file.load', 'file.save', 'Export', 'file.data', 'file.autosave', 'file.demo', 'file.home'])
     expect(menuEntries(['File', 'Export']).map((e) => (e === 'separator' ? e : e.key))).toEqual([
       'file.export.project',
       'file.export.model',

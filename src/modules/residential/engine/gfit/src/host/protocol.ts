@@ -1,4 +1,4 @@
-import type { SharePackage } from '../share/types'
+import type { SharePackage } from '../share/types.ts'
 // Bridge protocol v1 (spec §5.1). C# mirrors these shapes in plugin/Bridge.cs; change both together.
 export type Pt = [number, number]
 export type Ring = Pt[]

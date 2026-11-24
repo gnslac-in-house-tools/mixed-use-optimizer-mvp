@@ -3,9 +3,9 @@
 // ring of the plate (holes too: a courtyard is a facade) is simplified into chords; each chord is a band with a
 // local frame (x along the chord, y into the plate). Chords are taken longest first, and a band only covers what
 // earlier bands left, so a corner square goes to the longer side and wraps there.
-import { area, difference, inside, offset, simplify } from '../model/geom'
-import type { Pt, Ring, Shape } from '../model/geom'
-import { Q } from './band'
+import { area, difference, inside, offset, simplify } from '../model/geom.ts'
+import type { Pt, Ring, Shape } from '../model/geom.ts'
+import { Q } from './band.ts'
 
 export interface Frame { o: Pt; u: Pt; v: Pt }
 export const toWorld = (f: Frame, x: number, y: number): Pt => [f.o[0] + f.u[0] * x + f.v[0] * y, f.o[1] + f.u[1] * x + f.v[1] * y]

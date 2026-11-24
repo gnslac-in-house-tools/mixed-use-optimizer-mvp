@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import type { ParamsCajones, Punto, Rampa } from '../../../modelo/tipos'
-import { puntoEnRegion } from '../../geom/poligono'
-import { calcularCajones } from '../index'
-import { largoCalculado, medidaDeRampa } from '../rampas'
+import type { ParamsCajones, Punto, Rampa } from '../../../modelo/tipos.ts'
+import { puntoEnRegion } from '../../geom/poligono.ts'
+import { calcularCajones } from '../index.ts'
+import { largoCalculado, medidaDeRampa } from '../rampas.ts'
 
 const rect = (w: number, h: number): Punto[] => [
   { x: 0, y: 0 },

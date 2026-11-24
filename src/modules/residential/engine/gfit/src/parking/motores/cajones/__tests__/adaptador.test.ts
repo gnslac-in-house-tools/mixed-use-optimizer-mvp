@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { ParamsCajones, Punto } from '../../../modelo/tipos'
-import { calcularCajones } from '../index'
+import type { ParamsCajones, Punto } from '../../../modelo/tipos.ts'
+import { calcularCajones } from '../index.ts'
 
 const rect = (w: number, h: number, x = 0, y = 0): Punto[] => [
   { x, y },

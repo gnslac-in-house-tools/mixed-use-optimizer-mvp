@@ -19,7 +19,10 @@ const sources = import.meta.glob<string>(['/src/views/**/*.{ts,tsx}', '/src/modu
  * The files that may call `actions.addMass`, each with its reason. None: even the dry run of `checkMasses` and the search of `packMasses` try
  * blocks (`tryMasses` draws them on a copy), so what they say is what the layout placed says.
  */
-const EXCEPTIONS: Record<string, string> = {}
+const EXCEPTIONS: Record<string, string> = {
+  // mixed-use-mvp: Uso mixto draws free masses, its tower, podium and core in one building (VENDOR.md)
+  '/src/views/plan/tools/DrawMass.tsx': 'addMass while the typology offers the residential module',
+}
 
 /** The files that call a verb that copies or cuts a plain mass, each with what keeps a block's hall away from it. */
 const MASS_COPIERS: Record<string, string> = {

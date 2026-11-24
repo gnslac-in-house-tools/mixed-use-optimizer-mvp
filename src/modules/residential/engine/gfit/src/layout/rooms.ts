@@ -5,8 +5,8 @@
 // strip depth; forward checking keeps the rest fillable; the next room is drawn by weighted roulette (×2 next to
 // a room it likes, ×2 under one across the strips, never two halls in a row). A hall absorbs what the interior
 // strip has left and the entry sits on it. A layout that fails the checks is thrown away and the seed moves on.
-import type { RoomKind, RoomType } from '../model/program'
-import { rng } from './rng'
+import type { RoomKind, RoomType } from '../model/program.ts'
+import { rng } from './rng.ts'
 
 const Q = 0.3
 export type Rect = [number, number, number, number]

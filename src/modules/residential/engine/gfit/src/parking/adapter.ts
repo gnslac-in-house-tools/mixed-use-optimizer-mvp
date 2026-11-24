@@ -1,11 +1,11 @@
 // GFit's door into the Plaza-Practiko stall engine (motores/cajones, copied unchanged from
 // 202609_Plaza-Practiko@258a5b4, circuito.ts included). Shapes in meters in, stall rings out.
-import { calcularCajones } from './motores/cajones'
-import type { ResultadoCajones } from './motores/cajones'
-import { AVISO_CIRCUITO_ANGOSTO, AVISO_CIRCUITO_OBSTACULOS, cajonesEnCircuito } from './motores/cajones/circuito'
-import type { ParamsCajones, Punto } from './modelo/tipos'
-import { signedArea } from '../model/geom'
-import type { Ring, Shape } from '../model/geom'
+import { calcularCajones } from './motores/cajones/index.ts'
+import type { ResultadoCajones } from './motores/cajones/index.ts'
+import { AVISO_CIRCUITO_ANGOSTO, AVISO_CIRCUITO_OBSTACULOS, cajonesEnCircuito } from './motores/cajones/circuito.ts'
+import type { ParamsCajones, Punto } from './modelo/tipos.ts'
+import { signedArea } from '../model/geom.ts'
+import type { Ring, Shape } from '../model/geom.ts'
 
 /** Grid: parallel rows with cross aisles at the ends. Circuit: a ring aisle along the perimeter, the centre in grid. */
 export type ParkingLayout = 'auto' | 'grid' | 'circuit'

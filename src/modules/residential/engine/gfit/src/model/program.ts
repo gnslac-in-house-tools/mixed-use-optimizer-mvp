@@ -1,6 +1,6 @@
 // The Program phase (spec 2026-11-04-program-wfc §2, §6, §8): room types, unit types built from them, and the
 // sentence rules the layout and the calculator follow. All of it is project-wide, like programs and assumptions.
-import type { State } from './state'
+import type { State } from './state.ts'
 
 export type RoomKind = 'living' | 'dining' | 'kitchen' | 'bath' | 'halfbath' | 'master' | 'bed' | 'study' | 'laundry' | 'storage' | 'hall' | 'terrace'
 export const ROOM_KINDS: RoomKind[] = ['living', 'dining', 'kitchen', 'bath', 'halfbath', 'master', 'bed', 'study', 'laundry', 'storage', 'hall', 'terrace']

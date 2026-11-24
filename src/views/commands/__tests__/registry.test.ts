@@ -171,7 +171,7 @@ describe('menuEntries', () => {
  *  (the typologies' New, the options, the plugins) is written out for it. */
 const EXPECTED: Record<string, string[]> = {
   File: [
-    ...['industrial', 'blank'].map((t) => `file.new.${t}`),
+    ...['industrial', 'mixed-use', 'blank'].map((t) => `file.new.${t}`), // mixed-use-mvp
     'file.load',
     'file.save',
     ...['project', 'model', 'cad', 'cad3d', 'image', 'log'].map((x) => `file.export.${x}`),

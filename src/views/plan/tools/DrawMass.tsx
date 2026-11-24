@@ -16,6 +16,7 @@ import { polygonFootprint, rectFootprint } from '../../../engine/geom/draw.ts'
 import { footprintContour, footprintPolygon } from '../../../engine/geom/footprint.ts'
 import { gridOf, gridRect, gridRectCorners } from '../../../engine/grid/index.ts'
 import { actions } from '../../../state/actions/index.ts'
+import { isOffered } from '../../../modules/catalog.ts'
 import { useApp } from '../../../state/store.ts'
 import { useToast } from '../../layout/toast.ts'
 import { useCommand } from '../command/commandState.ts'
@@ -95,6 +96,13 @@ export function DrawMass({ camera, hole = false }: { camera: ToolCamera; hole?: 
       let id: string | null = null
       let said = ''
       apply((p) => {
+        // mixed-use-mvp: Uso mixto draws free masses on the picked level's building (its tower and its core in one building), not blocks
+        if (isOffered(p, 'residential')) {
+          const m = actions.addMass(p, { programId: newMassProgram(p), footprint: f, levelId: useApp.getState().level })
+          id = m.id
+          said = `${m.project.masses.find((x) => x.id === m.id)?.name}: a mass.`
+          return m.project
+        }
         const r = actions.drawBlock(p, { programId: newMassProgram(p), footprint: f, levelId: useApp.getState().level, optionId: useApp.getState().option })
         if (!r) return p
         id = r.id

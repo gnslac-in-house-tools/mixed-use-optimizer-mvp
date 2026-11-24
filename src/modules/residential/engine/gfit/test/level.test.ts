@@ -1,10 +1,10 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { area, difference, inside, intersection, offset, toShape } from '../src/model/geom'
-import type { Pt, Ring, Shape } from '../src/model/geom'
-import { layoutLevel } from '../src/layout/level'
-import type { LevelInput, LevelLayout } from '../src/layout/level'
-import { fresh } from '../src/model/state'
-import type { SRule } from '../src/model/program'
+import { area, difference, inside, intersection, offset, toShape } from '../src/model/geom.ts'
+import type { Pt, Ring, Shape } from '../src/model/geom.ts'
+import { layoutLevel } from '../src/layout/level.ts'
+import type { LevelInput, LevelLayout } from '../src/layout/level.ts'
+import { fresh } from '../src/model/state.ts'
+import type { SRule } from '../src/model/program.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 const circle = (R: number, step = 0.05): Ring => {

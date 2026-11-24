@@ -1,5 +1,5 @@
 // The mockup's sample scene (docs/mockup, option 9) as host objects, so the panel runs without Rhino.
-import type { GeomObj, Ring, Role } from './protocol'
+import type { GeomObj, Ring, Role } from './protocol.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 export const FP_A: Ring = [[0, 0], [42, 0], [42, 18], [20, 18], [20, 40], [0, 40]]

@@ -1,10 +1,10 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { layoutBuilding, layoutComputed, layoutStats } from '../src/layout/building'
+import { layoutBuilding, layoutComputed, layoutStats } from '../src/layout/building.ts'
 // layoutBuilding keys plates by their index in m.levels; in a footprint tower that is the level number − 1
-import { massBuilding } from '../src/model/massing'
-import { fresh } from '../src/model/state'
-import type { Building, State } from '../src/model/state'
-import type { GeomObj, Ring } from '../src/host/protocol'
+import { massBuilding } from '../src/model/massing.ts'
+import { fresh } from '../src/model/state.ts'
+import type { Building, State } from '../src/model/state.ts'
+import type { GeomObj, Ring } from '../src/host/protocol.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 const obj = (id: string, ring: Ring): GeomObj => ({ id, kind: 'curve', name: id, layer: 'Default', closed: true, planar: true, z: 0, rings: [ring], bbox: [0, 0, 0, 0, 0, 0] })

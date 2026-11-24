@@ -1,13 +1,13 @@
 // A 3D-mass tower from its blocks (spec 2026-11-04-blocks §5.3–5.6): each Rhino solid is cut at its program's floor
 // height into plates; plates at one elevation (5 cm) form a level band, L01… above ground and B1… below. Solid cores
 // and a parking solid are cut at the same elevations. Pure: the host's sections come in, missing ones go out in `needs`.
-import type { GeomObj, Ring } from '../host/protocol'
-import { area, autoCore, difference, intersection, toShape, union } from './geom'
-import type { Shape } from './geom'
-import { sectionZ } from './massing'
-import type { MassLevel, Massed } from './massing'
-import type { Program } from './programs'
-import type { Building } from './state'
+import type { GeomObj, Ring } from '../host/protocol.ts'
+import { area, autoCore, difference, intersection, toShape, union } from './geom.ts'
+import type { Shape } from './geom.ts'
+import { sectionZ } from './massing.ts'
+import type { MassLevel, Massed } from './massing.ts'
+import type { Program } from './programs.ts'
+import type { Building } from './state.ts'
 
 const r2 = (v: number) => Math.round(v * 100) / 100
 const band = (z: number) => Math.round(z * 20) / 20

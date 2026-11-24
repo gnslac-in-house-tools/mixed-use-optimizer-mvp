@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import casos from '../../__oro__/casos/cajones.json'
 import oro from '../../__oro__/resultados/cajones.json'
-import { acomodar } from '../acomodo'
+import { acomodar } from '../acomodo.ts'
 
 type Caso = (typeof casos)[number]
 type Num = number[]

@@ -2,10 +2,10 @@
 // es la del suyo más su altura (o al de abajo). En cada masa de cajones de ese nivel que cubre su huella, la app
 // deriva una llegada que no se guarda: la huella es un obstáculo (el hueco en la losa) y la boca del extremo
 // alto (o bajo) es un acceso. Así la rampa se diseña una vez y su llegada se mueve con ella.
-import type { Id, Masa, Nivel, Programa, Proyecto, Punto } from '../../modelo/tipos'
-import { puntoEnPerimetro } from '../cajones'
-import { geometriaDeRampa, medidaDeRampa } from '../cajones/rampas'
-import { areaRegiones, interseccion } from '../geom/booleanos'
+import type { Id, Masa, Nivel, Programa, Proyecto, Punto } from '../../modelo/tipos.ts'
+import { puntoEnPerimetro } from '../cajones/index.ts'
+import { geometriaDeRampa, medidaDeRampa } from '../cajones/rampas.ts'
+import { areaRegiones, interseccion } from '../geom/booleanos.ts'
 
 /** Lo que una rampa de otro nivel deja en una masa de cajones. */
 export interface Llegada {

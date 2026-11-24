@@ -16,7 +16,8 @@ describe('typologies', () => {
   })
 
   it('every typology offers the warehouse module (its buildings are blocks, Phase D.2); only the industrial offers its docks', () => {
-    for (const t of TYPOLOGIES) expect(t.modules, t.id).toContain('warehouse')
+    // mixed-use-mvp: Uso mixto draws free masses (DrawMass's hook) and offers only the residential module
+    for (const t of TYPOLOGIES.filter((x) => x.id !== 'mixed-use')) expect(t.modules, t.id).toContain('warehouse')
     expect(TYPOLOGIES.find((t) => t.id === 'blank')!.modules).toEqual(['warehouse', 'terrain', 'parking'])
     expect(TYPOLOGIES.filter((t) => t.modules.includes('docks')).map((t) => t.id)).toEqual(['industrial'])
   })

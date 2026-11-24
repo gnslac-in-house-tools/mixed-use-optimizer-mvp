@@ -1,7 +1,7 @@
 // A typology is a TEMPLATE, not a separate app: the programs and site rules a new project starts with.
 // The engine never imports typologies; it only sees the programs copied into the project.
 // Later a typology may also switch on typology-specific engines (e.g. truck courts for industrial).
-import type { Program, Rule, SiteRules, Standards } from '../model/schema.ts'
+import type { Program, Project, Rule, SiteRules, Standards } from '../model/schema.ts'
 
 export interface Typology {
   id: string
@@ -31,4 +31,6 @@ export interface Typology {
    * the plugin with its own schema through `plugins/host.ts` (the optimizer's templates and stage plans: plans.ts).
    */
   plugins?: Record<string, unknown>
+  /** mixed-use-mvp: the fields a module adds to a new project (Uso mixto: `residential`), from its programs. */
+  extra?(programs: Program[]): Partial<Project>
 }

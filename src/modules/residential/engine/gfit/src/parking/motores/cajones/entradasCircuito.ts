@@ -2,9 +2,9 @@
 // otro nivel y accesos desde la calle. Cada una ocupa su lugar en la crujía (quita solo los cajones que pisa) y, si su
 // boca no da al pasillo del circuito, una liga la lleva hasta él. Aquí también se arma la red del circuito: qué
 // pasillos se tocan, a qué entradas llegan y qué cajones dan a cada pasillo.
-import type { Punto } from '../../modelo/tipos'
-import { distanciaPuntoSegmento, caja, puntoEnPoligono, puntoEnRegion } from '../geom/poligono'
-import type { ComponenteRed } from './index'
+import type { Punto } from '../../modelo/tipos.ts'
+import { distanciaPuntoSegmento, caja, puntoEnPoligono, puntoEnRegion } from '../geom/poligono.ts'
+import type { ComponenteRed } from './index.ts'
 
 /** Una entrada del circuito: su llave de red (`r{k}`, `l{j}`, `c{j}`) y la boca por donde se llega a los pasillos. */
 export interface EntradaCircuito {

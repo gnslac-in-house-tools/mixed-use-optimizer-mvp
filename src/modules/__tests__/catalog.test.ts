@@ -207,7 +207,8 @@ describe('the KPIs', () => {
     const ids = kpiCatalog(p).map((k) => k.id)
     expect(new Set(ids).size).toBe(ids.length)
     // with everything on, the lists meet: nothing is offered twice and nothing is left out
-    for (const m of MODULES) expect(isOn(p, m.id)).toBe(true)
+    // mixed-use-mvp: the residential module is offered by Uso mixto only, never by the industrial demo
+    for (const m of MODULES.filter((x) => x.id !== 'residential')) expect(isOn(p, m.id)).toBe(true)
     expect(kpisOn(p).map((k) => k.id)).toEqual(ids)
   })
 

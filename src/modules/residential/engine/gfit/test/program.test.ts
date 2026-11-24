@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { normMix, removeRoomType, removeUnitType } from '../src/model/program'
-import { fresh, parseSaved } from '../src/model/state'
+import { normMix, removeRoomType, removeUnitType } from '../src/model/program.ts'
+import { fresh, parseSaved } from '../src/model/state.ts'
 
 const j = (v: unknown) => JSON.stringify(v)
 

@@ -1,5 +1,5 @@
 // Polígonos simples: anillos de puntos sin repetir el primero, en metros.
-import type { Punto } from '../../modelo/tipos'
+import type { Punto } from '../../modelo/tipos.ts'
 
 export const EPS = 1e-9
 

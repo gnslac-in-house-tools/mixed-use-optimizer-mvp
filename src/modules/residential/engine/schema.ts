@@ -1,0 +1,42 @@
+// Los datos del módulo residencial en el proyecto (`Project.residential`), como bodegas guarda `warehouseTypes`. Solo
+// importa zod: `model/schema.ts` lo importa para su línea de `ProjectSchema`, y así no hay ciclo.
+import { z } from 'zod'
+
+const Id = z.string().min(1)
+
+/** Qué es cada programa para el motor de GFit: vivienda o comercio (dan niveles) o núcleo; y su altura de entrepiso. */
+export const UsoSchema = z.object({
+  uso: z.enum(['vivienda', 'comercio', 'nucleo']),
+  entrepiso: z.number().positive(),
+})
+export type Uso = z.infer<typeof UsoSchema>
+
+/** Un tipo de departamento, con la forma del `UnitType` de GFit. */
+export const TipoSchema = z.object({
+  id: Id,
+  name: z.string(),
+  color: z.string(),
+  rooms: z.array(z.string()),
+  wMin: z.number().positive(),
+  wMax: z.number().positive(),
+  price: z.number().nonnegative(),
+  stalls: z.number().nonnegative(),
+})
+
+/** Los parámetros de GFit de un edificio: fondo de unidad, ancho de pasillo (m), mezcla objetivo (%) y semilla. */
+export const ParamsEdificioSchema = z.object({
+  fondo: z.number().positive(),
+  pasillo: z.number().positive(),
+  mezcla: z.record(z.string(), z.number().nonnegative()),
+  semilla: z.number().int(),
+})
+export type ParamsEdificio = z.infer<typeof ParamsEdificioSchema>
+
+export const ResidentialSchema = z.object({
+  /** por id de programa */
+  usos: z.record(Id, UsoSchema),
+  tipos: z.array(TipoSchema),
+  /** por id de edificio; un edificio sin los suyos usa los de `paramsDe` */
+  edificios: z.record(Id, ParamsEdificioSchema),
+})
+export type Residential = z.infer<typeof ResidentialSchema>

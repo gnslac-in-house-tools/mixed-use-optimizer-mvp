@@ -2,10 +2,10 @@
 // masa —la exterior y la de cada hueco—, un pasillo de circuito junto a cada crujía y, si entre los pasillos sobra
 // lugar, otra crujía de frente al circuito (si es delgado) o la retícula de siempre (si es grueso). Es un paso
 // aparte, encima de `acomodar`: el oro no cambia.
-import type { FlechaAcceso, ParamsCajones, Punto } from '../../modelo/tipos'
-import { ejeDePasillo } from '../circulacion/ejePasillo'
-import type { Llegada } from '../circulacion/llegadas'
-import { areaRegiones, desplazar, diferencia, interseccion } from '../geom/booleanos'
+import type { FlechaAcceso, ParamsCajones, Punto } from '../../modelo/tipos.ts'
+import { ejeDePasillo } from '../circulacion/ejePasillo.ts'
+import type { Llegada } from '../circulacion/llegadas.ts'
+import { areaRegiones, desplazar, diferencia, interseccion } from '../geom/booleanos.ts'
 import {
   area,
   areaConSigno,
@@ -14,8 +14,8 @@ import {
   distanciaPuntoSegmento,
   puntoEnPoligono,
   puntoEnRegion,
-} from '../geom/poligono'
-import type { Punto2 } from './acomodo'
+} from '../geom/poligono.ts'
+import type { Punto2 } from './acomodo.ts'
 import {
   barrer,
   gruposDePasillos,
@@ -24,7 +24,7 @@ import {
   redDelCircuito,
   seTocan,
   type EntradaCircuito,
-} from './entradasCircuito'
+} from './entradasCircuito.ts'
 import {
   calcularCajones,
   pendienteDeRampas,
@@ -32,8 +32,8 @@ import {
   type OpcionesCajones,
   type CalleDerivada,
   type ResultadoCajones,
-} from './index'
-import { filaDeAcceso, flechaDeAcceso, medidaDeRampa, rampaSobre } from './rampas'
+} from './index.ts'
+import { filaDeAcceso, flechaDeAcceso, medidaDeRampa, rampaSobre } from './rampas.ts'
 
 /** Un tramo de orilla se parte en las esquinas que giran más que esto (grados): ahí no cabe un cajón de corrido. */
 const QUIEBRE = 20

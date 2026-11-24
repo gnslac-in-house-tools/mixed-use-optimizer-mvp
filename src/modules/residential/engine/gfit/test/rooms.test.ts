@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { generateRooms, minWidth } from '../src/layout/rooms'
-import { ROOMS0, UNITS0 } from '../src/model/program'
-import type { RoomType } from '../src/model/program'
+import { generateRooms, minWidth } from '../src/layout/rooms.ts'
+import { ROOMS0, UNITS0 } from '../src/model/program.ts'
+import type { RoomType } from '../src/model/program.ts'
 
 const R = ROOMS0()
 const prog = (id: string): RoomType[] => UNITS0().find((t) => t.id === id)!.rooms.map((r) => R.find((x) => x.id === r)!)

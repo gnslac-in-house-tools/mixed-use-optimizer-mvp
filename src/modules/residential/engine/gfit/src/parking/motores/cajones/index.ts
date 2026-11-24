@@ -1,12 +1,12 @@
 // Adaptador del motor de cajones: reemplaza la capa Rhino / Grasshopper de
 // "gh files/estacionamiento.py" (líneas 880-1103). Recibe el polígono de la masa,
 // los obstáculos y ParamsCajones; llama a `acomodar` y arma las salidas de la app.
-import type { EjesEstructurales, FlechaAcceso, ParamsCajones, Punto } from '../../modelo/tipos'
-import type { GiroFallido } from '../circulacion/giros'
-import type { Llegada } from '../circulacion/llegadas'
-import { avisosDeModulo, filasConEjes } from '../circulacion/reticula'
-import { aBase, acomodar, medidasBateria, type Bateria, type Lazo, type Punto2 } from './acomodo'
-import { conAccesibles } from './accesibles'
+import type { EjesEstructurales, FlechaAcceso, ParamsCajones, Punto } from '../../modelo/tipos.ts'
+import type { GiroFallido } from '../circulacion/giros.ts'
+import type { Llegada } from '../circulacion/llegadas.ts'
+import { avisosDeModulo, filasConEjes } from '../circulacion/reticula.ts'
+import { aBase, acomodar, medidasBateria, type Bateria, type Lazo, type Punto2 } from './acomodo.ts'
+import { conAccesibles } from './accesibles.ts'
 import {
   coordenadaV,
   faseParaPasillo,
@@ -16,7 +16,7 @@ import {
   medidaDeRampa,
   pasilloDeRampa,
   type MedidaRampa,
-} from './rampas'
+} from './rampas.ts'
 
 export interface Punto3D {
   x: number

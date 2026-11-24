@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { area, centroid, difference, inflatePath, intersection, isSimple, offset, pathLength, subPath, toShape, union } from '../src/model/geom'
-import type { Ring, Shape } from '../src/model/geom'
+import { area, centroid, difference, inflatePath, intersection, isSimple, offset, pathLength, subPath, toShape, union } from '../src/model/geom.ts'
+import type { Ring, Shape } from '../src/model/geom.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 const close = (a: number, b: number, eps = 1e-3) => expect(Math.abs(a - b)).toBeLessThan(eps)

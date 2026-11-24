@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { solveBand } from '../src/layout/band'
-import type { BandRules, BandSpec } from '../src/layout/band'
-import { rng } from '../src/layout/rng'
+import { solveBand } from '../src/layout/band.ts'
+import type { BandRules, BandSpec } from '../src/layout/band.ts'
+import { rng } from '../src/layout/rng.ts'
 
 const W = { studio: [4.2, 4.8, 5.4, 6.0], br1: [6.0, 6.6, 7.2, 7.8, 8.4], br2: [9.6, 10.2, 10.8, 11.4] }
 const rules = (patch: Partial<BandRules> = {}): BandRules => ({

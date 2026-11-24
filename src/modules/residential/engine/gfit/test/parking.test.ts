@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { layoutBasement } from '../src/parking/adapter'
-import { area, intersection, toShape } from '../src/model/geom'
-import type { Ring } from '../src/model/geom'
+import { layoutBasement } from '../src/parking/adapter.ts'
+import { area, intersection, toShape } from '../src/model/geom.ts'
+import type { Ring } from '../src/model/geom.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 

@@ -10,9 +10,9 @@
 //   cumplir cx ≥ p, cy ≥ q, cx ≤ Rint, cy ≤ Rint y, si los dos son positivos, cx² + cy² ≤ Rint² (el círculo
 //   interior abraza la esquina). Hay centro si p ≤ Rint, q ≤ Rint y (p ≤ 0, q ≤ 0 o p² + q² ≤ Rint²).
 //   Con pasillos de 6 m y radios de 7.5 / 4.5 m pasa; con dos de 4 m no.
-import type { Punto } from '../../modelo/tipos'
-import { desplazar, unionDeExteriores } from '../geom/booleanos'
-import { puntoEnRegion } from '../geom/poligono'
+import type { Punto } from '../../modelo/tipos.ts'
+import { desplazar, unionDeExteriores } from '../geom/booleanos.ts'
+import { puntoEnRegion } from '../geom/poligono.ts'
 
 /** Radios de giro por omisión (m): provisionales, según parámetro y no norma (§12). */
 export const GIRO_POR_OMISION = { exterior: 7.5, interior: 4.5 }

@@ -3,7 +3,7 @@
 // clipper2-js 1.2.4's PolyTree is broken (see Plaza-Practiko booleanos.ts), so booleans return flat paths and the
 // orientation carries outer/hole.
 import { ClipType, Clipper, Clipper64, EndType, FillRule, JoinType, Path64, Paths64 } from 'clipper2-js'
-import type { Pt, Ring } from '../host/protocol'
+import type { Pt, Ring } from '../host/protocol.ts'
 
 export type { Pt, Ring }
 export type Shape = Ring[]

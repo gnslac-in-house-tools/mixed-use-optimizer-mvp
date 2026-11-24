@@ -1,11 +1,11 @@
 import { test, expect } from 'vitest' // mixed-use-mvp patch: GIM corre Vitest sin globals
-import { massBuilding } from '../src/model/massing'
-import { calcBuilding, calcOption } from '../src/model/calc'
-import { priceFactor } from '../src/model/rules'
-import { removeUnitType } from '../src/model/program'
-import { fresh } from '../src/model/state'
-import type { Building, State } from '../src/model/state'
-import type { GeomObj, Ring } from '../src/host/protocol'
+import { massBuilding } from '../src/model/massing.ts'
+import { calcBuilding, calcOption } from '../src/model/calc.ts'
+import { priceFactor } from '../src/model/rules.ts'
+import { removeUnitType } from '../src/model/program.ts'
+import { fresh } from '../src/model/state.ts'
+import type { Building, State } from '../src/model/state.ts'
+import type { GeomObj, Ring } from '../src/host/protocol.ts'
 
 const sq = (x0: number, y0: number, x1: number, y1: number): Ring => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 const obj = (id: string, ring: Ring): GeomObj => ({ id, kind: 'curve', name: id, layer: 'Default', closed: true, planar: true, z: 0, rings: [ring], bbox: [0, 0, 0, 0, 0, 0] })

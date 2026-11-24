@@ -1,13 +1,13 @@
 // The calculator (spec §6.4): units, stalls by program, areas, revenue, cost and zoning, per building and option.
-import type { GeomObj, Ring } from '../host/protocol'
-import { area } from './geom'
-import type { Shape } from './geom'
-import { massBuilding, parkingOutline } from './massing'
-import type { Massed, MassLevel } from './massing'
-import { layoutBuilding } from '../layout/building'
-import type { LevelLayout } from '../layout/level'
-import { priceFactor } from './rules'
-import type { Building, Option, State } from './state'
+import type { GeomObj, Ring } from '../host/protocol.ts'
+import { area } from './geom.ts'
+import type { Shape } from './geom.ts'
+import { massBuilding, parkingOutline } from './massing.ts'
+import type { Massed, MassLevel } from './massing.ts'
+import { layoutBuilding } from '../layout/building.ts'
+import type { LevelLayout } from '../layout/level.ts'
+import { priceFactor } from './rules.ts'
+import type { Building, Option, State } from './state.ts'
 
 export interface ProgResult { gfa: number; sell: number; circ: number; stallsRaw: number; rev: number; annual: number; cost: number; units: number; levels: number }
 /** units and c (count per type, aligned with s.unitTypes) come from the WFC layout on residential levels */

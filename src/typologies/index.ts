@@ -5,11 +5,12 @@ import { PROJECT_VERSION, type Project } from '../model/schema.ts'
 import { uuid } from '../model/uuid.ts'
 import { blank } from './blank.ts'
 import { industrial } from './industrial.ts'
+import { mixedUse } from './mixedUse.ts'
 import type { Typology } from './types.ts'
 
 export type { Typology } from './types.ts'
 
-export const TYPOLOGIES: Typology[] = [industrial, blank]
+export const TYPOLOGIES: Typology[] = [industrial, mixedUse, blank]
 
 /** A new structural grid's bays and modules for a project's typology (Decision "Structural grid"). */
 export function gridSizeOf(typologyId: string): { x: number; y: number; modules: number } {
@@ -56,5 +57,6 @@ export function newProject(typologyId: string, name = 'Untitled'): Project {
     kpis: [...t.kpis],
     ...(t.rules?.length ? { rules: structuredClone(t.rules) } : {}),
     ...(t.standards ? { standards: structuredClone(t.standards) } : {}),
+    ...(t.extra ? t.extra(t.programs) : {}), // mixed-use-mvp
   })
 }

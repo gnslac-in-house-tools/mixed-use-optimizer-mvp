@@ -1,12 +1,12 @@
 // Every residential level of a building laid out (spec 2026-11-04-program-wfc §5): a level whose plate, cores and
 // level rules equal the level below takes the below layout as is (typical floors), and solved levels are memoised
 // so an edit that leaves a plate alone does not solve it again.
-import type { Shape } from '../model/geom'
-import type { Massed } from '../model/massing'
-import type { SRule } from '../model/program'
-import type { Building, State } from '../model/state'
-import { layoutLevel } from './level'
-import type { LevelLayout } from './level'
+import type { Shape } from '../model/geom.ts'
+import type { Massed } from '../model/massing.ts'
+import type { SRule } from '../model/program.ts'
+import type { Building, State } from '../model/state.ts'
+import { layoutLevel } from './level.ts'
+import type { LevelLayout } from './level.ts'
 
 const MAX = 400
 const cache = new Map<string, LevelLayout>()

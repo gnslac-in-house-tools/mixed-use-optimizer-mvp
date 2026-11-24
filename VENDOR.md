@@ -20,6 +20,13 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 |---|---|---|
 | `vite.config.ts` | `server: { port: 5180, strictPort: true }` | El puerto del proyecto; con `strictPort` falla en vez de tomar otro |
 | `.gitignore` | Las entradas de GIM (`.env`, `.gfit-usage/`, `.gfit-bridge/`) más `evidence/` | Llaves locales y capturas fuera de git |
+| `src/model/schema.ts` | `residential: ResidentialSchema.optional()` en `ProjectSchema`, y su import de `modules/residential/engine/schema.ts` | Los datos del módulo (usos de programa, tipos, parámetros por edificio), como `warehouseTypes`. Opcional: sin migración. El esquema va en `engine/` porque las fronteras de GIM solo dejan importar el `engine/` de un módulo, y solo importa zod (sin ciclo) |
+| `src/typologies/types.ts` | Campo opcional `extra?(programs): Partial<Project>` | Lo que un módulo agrega a un proyecto nuevo (Uso mixto: `residential`) |
+| `src/typologies/index.ts` | `mixedUse` en `TYPOLOGIES`; `newProject` agrega `t.extra?.(programs)` | Registro de la tipología |
+| `src/modules/index.ts` | `residential` en `MODULES` | Registro del módulo |
+| `src/views/plan/tools/DrawMass.tsx` | Si la tipología ofrece `residential`, Dibujar llama a `addMass` (masa libre en el edificio del nivel elegido) en vez de `drawBlock` | En GIM, «Draw makes a block»: cada trazo sería un block de bodega con su propio edificio. Uso mixto necesita la torre, el podio y el núcleo en un mismo edificio. Decisión de Ramón, 2026-11-24 |
+| `src/typologies/__tests__/typologies.test.ts` | «Toda tipología ofrece warehouse» excluye `mixed-use` | Uso mixto dibuja masas libres y solo ofrece `residential` |
+| `src/modules/__tests__/catalog.test.ts` | «Con todo, todo módulo está encendido» excluye `residential` | El proyecto de prueba es el demo industrial, que no ofrece `residential` |
 
 ## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 
@@ -32,6 +39,7 @@ ya traía `mixed-use-optimizer`. Reemplaza la copia parcial (solo cuartos, con s
 | Archivo | Cambio | Razón |
 |---|---|---|
 | `test/*.test.ts` | Primera línea: `import { test, expect, … } from 'vitest'` | GIM corre Vitest sin `globals`; así no se toca su configuración |
+| `src/**/*.ts`, `test/*.test.ts` | Los imports relativos llevan `.ts` (154 imports en 41 archivos, cambio mecánico) | `tsconfig.node.json` de GIM (nodenext, incluye `mcp/`) llega a GFit por la tipología y exige extensiones |
 
 ## Del MVP anterior (catálogo de unidades)
 
@@ -61,3 +69,15 @@ fueron las piezas de Praktico que solo usaba el visor del catálogo: `Escena.tsx
 Tras la Tarea 1: 5634 tests en 486 archivos. Del módulo residencial, 155 (150 de GFit y 5 del catálogo).
 Con la suite completa en esta máquina, tres tests de GIM con interfaz (`shortcutsWindow`, `saveReview`,
 `shapeHandles`) pueden pasar de su límite de 5 s por carga; solos pasan (92/92).
+
+### Más tests de GIM que enumeran tipologías, comandos o campos (Tarea 2)
+
+| Test | Cambio |
+|---|---|
+| `src/views/editing/__tests__/noPlainMass.test.ts` | `DrawMass.tsx` en sus excepciones de `addMass`, con su razón |
+| `src/views/commands/__tests__/registry.test.ts`, `fileEditHelp.test.tsx` | El comando `file.new.mixed-use` |
+| `src/views/home/__tests__/home.test.tsx` | «Uso mixto» en los tipos de proyecto de Create new |
+| `src/model/__tests__/schema.test.ts` | `residential` en las claves del JSON Schema |
+
+La tipología lleva `plugins.optimizer` vacío (`templates: []`, `stages: []`): GIM exige datos del optimizador en
+toda tipología (`circulation.test.ts`) y el optimizador queda fuera de esta pieza.

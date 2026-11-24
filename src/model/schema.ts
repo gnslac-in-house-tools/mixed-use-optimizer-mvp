@@ -10,6 +10,7 @@
 //
 // Units: metres and degrees. Plan coordinates: x to the east, y to the north.
 import { z } from 'zod'
+import { ResidentialSchema } from '../modules/residential/engine/schema.ts'
 
 export const IdSchema = z.string().min(1)
 export type Id = z.infer<typeof IdSchema>
@@ -1090,6 +1091,8 @@ export const ProjectSchema = z.object({
   grid: GridSchema.optional(),
   // The warehouse types the project's warehouses are copies of (absent: none; Decision "Warehouse type").
   warehouseTypes: z.array(WarehouseTypeSchema).optional(),
+  // mixed-use-mvp: the residential module's data (its programs' uses, unit types, each building's GFit parameters)
+  residential: ResidentialSchema.optional(),
   // Each plugin's own data, by plugin id (absent = none; Decision "Optimizer plugin"). The core never reads it: each
   // plugin checks its own with its own zod schema, and it is kept and saved as it is, even when the plugin is off.
   plugins: z.record(z.string(), z.unknown()).optional(),

@@ -1,6 +1,6 @@
 // The client viewer's data (spec §9 Share). Built by the panel, gzipped and AES-GCM encrypted in the browser,
 // uploaded by the plugin, decrypted by the viewer with the key in the link's #fragment. Meters, Rhino XY, z up.
-import type { Ring } from '../host/protocol'
+import type { Ring } from '../host/protocol.ts'
 
 export interface ShareLevel {
   name: string

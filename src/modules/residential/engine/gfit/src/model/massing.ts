@@ -1,10 +1,10 @@
 // Levels of one building from its linked footprint (or 3D mass sections), spec §6.2–6.3.
-import type { GeomObj, Ring } from '../host/protocol'
-import { area, difference, isSimple, offset, toShape, union } from './geom'
-import type { Shape } from './geom'
-import type { Program } from './programs'
-import type { Building } from './state'
-import { cutBlocks, parkingCuts } from './blocks'
+import type { GeomObj, Ring } from '../host/protocol.ts'
+import { area, difference, isSimple, offset, toShape, union } from './geom.ts'
+import type { Shape } from './geom.ts'
+import type { Program } from './programs.ts'
+import type { Building } from './state.ts'
+import { cutBlocks, parkingCuts } from './blocks.ts'
 
 export interface MassLevel {
   num: number

@@ -3,9 +3,9 @@
 // eligen los más cercanos a un núcleo del nivel (o, si no hay, a una entrada: rampa, llegada o acceso). Cada
 // accesible usa el cajón vecino de la misma fila como franja; dos accesibles comparten franja: dos ocupan tres
 // cajones normales.
-import type { ParamsAccesibles, ParamsCajones, Punto } from '../../modelo/tipos'
-import { distanciaAPoligono } from '../nucleos'
-import type { ResultadoCajones } from './index'
+import type { ParamsAccesibles, ParamsCajones, Punto } from '../../modelo/tipos.ts'
+import { distanciaAPoligono } from '../nucleos/index.ts'
+import type { ResultadoCajones } from './index.ts'
 
 /** Por omisión: 1 de cada 25, al menos 1, franja de 1.5 m (provisionales, §12). */
 export const ACCESIBLES_POR_OMISION: ParamsAccesibles = { cada: 25, minimo: 1, franja: 1.5 }

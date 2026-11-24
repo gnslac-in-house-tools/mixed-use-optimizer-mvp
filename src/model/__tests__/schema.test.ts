@@ -179,6 +179,6 @@ describe('ProjectSchema', () => {
 
   it('exports a JSON Schema (what an MCP tool will publish)', () => {
     const json = z.toJSONSchema(ProjectSchema) as { properties: Record<string, unknown> }
-    expect(Object.keys(json.properties)).toEqual(['version', 'id', 'name', 'units', 'typology', 'site', 'programs', 'buildings', 'options', 'masses', 'kpis', 'dimensions', 'referenceLines', 'notes', 'rules', 'standards', 'grid', 'warehouseTypes', 'plugins', 'log'])
+    expect(Object.keys(json.properties)).toEqual(['version', 'id', 'name', 'units', 'typology', 'site', 'programs', 'buildings', 'options', 'masses', 'kpis', 'dimensions', 'referenceLines', 'notes', 'rules', 'standards', 'grid', 'warehouseTypes', 'residential', 'plugins', 'log']) // mixed-use-mvp
   })
 })

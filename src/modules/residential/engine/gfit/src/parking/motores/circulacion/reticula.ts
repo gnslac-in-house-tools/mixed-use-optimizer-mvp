@@ -1,9 +1,9 @@
 // Ejes estructurales del proyecto (spec circulaciones §5.3): sus líneas con número y letra, las columnas en sus
 // cruces y cómo caen las filas de cajones entre ellas. Los ejes numerados (1, 2, 3…) van a escuadra con `angulo`,
 // uno cada `ex` desde el origen; los de letra (A, B, C…) van en la dirección de `angulo`, uno cada `ey`.
-import type { EjesEstructurales, Punto } from '../../modelo/tipos'
-import { areaRegiones, interseccion } from '../geom/booleanos'
-import { puntoEnPoligono } from '../geom/poligono'
+import type { EjesEstructurales, Punto } from '../../modelo/tipos.ts'
+import { areaRegiones, interseccion } from '../geom/booleanos.ts'
+import { puntoEnPoligono } from '../geom/poligono.ts'
 
 /**
  * Medidas por omisión de unos ejes nuevos: 8.1 m a lo largo de las filas (3 cajones de 2.5 m y una columna de

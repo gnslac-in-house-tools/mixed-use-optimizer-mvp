@@ -7,8 +7,8 @@
 // exteriores con área positiva y los huecos con área negativa; cada hueco va con el exterior más chico que lo
 // contiene.
 import { ClipType, Clipper, Clipper64, EndType, FillRule, JoinType, Path64, Paths64 } from 'clipper2-js'
-import type { Punto } from '../../modelo/tipos'
-import { area, areaConSigno, caja, distanciaPuntoSegmento, puntoEnPoligono } from './poligono'
+import type { Punto } from '../../modelo/tipos.ts'
+import { area, areaConSigno, caja, distanciaPuntoSegmento, puntoEnPoligono } from './poligono.ts'
 
 const ESCALA = 1e4
 

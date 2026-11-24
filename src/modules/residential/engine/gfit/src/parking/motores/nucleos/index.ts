@@ -1,6 +1,6 @@
 // Núcleos de circulación vertical (spec circulaciones §7): medidas por tipo, su polígono y los que pasan por un
 // nivel. Sin React.
-import type { Id, Nivel, Nucleo, Proyecto, Punto, TipoNucleo } from '../../modelo/tipos'
+import type { Id, Nivel, Nucleo, Proyecto, Punto, TipoNucleo } from '../../modelo/tipos.ts'
 
 /** Medidas por omisión de cada tipo (largo × ancho, m): provisionales, editables en la tarjeta. */
 export const MEDIDAS_NUCLEO: Record<TipoNucleo, { largo: number; ancho: number; nombre: string }> = {
