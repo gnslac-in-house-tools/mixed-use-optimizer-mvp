@@ -18,7 +18,7 @@ import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { layoutBasement } from './gfit/src/parking/adapter.ts'
 import { flechasPorPasillo } from './flechas.ts'
-import { intersection, signedArea, type Pt, type Shape } from './gfit/src/model/geom.ts'
+import { intersection, signedArea, union, type Pt, type Shape } from './gfit/src/model/geom.ts'
 import { medidaDeRampa } from './gfit/src/parking/motores/cajones/rampas.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
 
@@ -248,8 +248,13 @@ function calcular(
       plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, rampa, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
+    // sin sótanos no hay rampa; con ellos, la del S1 sube a la calle por la planta baja: su huella y su boca alta
+    // le quitan el lugar a los departamentos y locales de ese nivel
+    if (sotanos === 0) plano = { ...plano, rampa: null }
+    const rp = plano.rampa
     totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {
       geom, sections, siteArea: norma.predio, stalls: new Map([[buildingId, Array.from({ length: sotanos }, () => porSotano)]]),
+      ...(rp ? { plantaBaja: new Map([[buildingId, union([[rp.huella], rp.bocaAlta])]]) } : {}),
     })
     modulo = avisosModulo()
   } finally {

@@ -223,6 +223,43 @@ describe('derivar', () => {
       expect(rp.bocaAlta.length).toBeGreaterThan(0)
       expect(altos.every(toca)).toBe(true)
     })
+    const conSotanos = (p: Project, sotanos: number): Project => ({
+      ...p, residential: { ...p.residential!, edificios: { b1: { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, sotanos } } },
+    })
+    const podio = (): Project => {
+      const p0 = newProject('mixed-use')
+      const b = p0.buildings[0]
+      return {
+        ...p0, grid: G0,
+        buildings: [{ ...b, levels: [...b.levels, { id: 'l2', name: 'L2', elevation: 9, height: 3, repeat: 1 }] }],
+        masses: [masa('comercio', TORRE, 9), masa('vivienda', TORRE, 30, 'l2'), masa('nucleo', NUCLEO, 39)],
+      }
+    }
+    const planta1 = (d: Derivado) => d.niveles.find((l) => l.num === 1)!
+
+    it('(r8) en un podio de comercio, la rampa le quita área neta a la planta baja pero no su placa ni la huella', () => {
+      const con = derivar(conSotanos(conCalle(podio(), SUR), 2), 'b1')!
+      const sin = derivar(conSotanos(conCalle(podio(), SUR), 0), 'b1')!
+      const huella = area(toShape([con.estacionamiento.plano.rampa!.huella]))
+      expect(planta1(con).net).toBeLessThan(planta1(sin).net - huella + 0.5)
+      expect(planta1(con).plateA).toBeCloseTo(planta1(sin).plateA, 1)
+      expect(con.totals.fpA).toBeCloseTo(sin.totals.fpA, 1)
+    })
+    it('(r8b) ningún departamento de planta baja queda sobre la rampa o su boca alta, y la huella no cambia', () => {
+      const d = derivar(conSotanos(conCalle(caso(), SUR), 2), 'b1')!
+      const rp = d.estacionamiento.plano.rampa!
+      const ocupa = toShape([rp.huella, ...rp.bocaAlta])
+      const unidades = planta1(d).layout!.units
+      expect(unidades.length).toBeGreaterThan(0)
+      for (const u of unidades) expect(area(intersection(u.shape, ocupa))).toBeLessThan(0.01)
+      expect(d.totals.fpA).toBeCloseTo(32.4 * 16.2, 0)
+    })
+    it('(r9) con 0 sótanos no hay rampa, no se resta nada y no se pide la calle', () => {
+      const cero = derivar(conSotanos(caso(), 0), 'b1')!
+      expect(cero.estacionamiento.plano.rampa).toBeNull()
+      expect(cero.avisos).not.toContain(AVISO)
+      expect(planta1(cero).net).toBeCloseTo(planta1(derivar(conSotanos(conCalle(caso(), SUR), 0), 'b1')!).net, 1)
+    })
     it('(r6) sin calle, el aviso pide dibujarla; con calle, no', () => {
       expect(derivar(caso(), 'b1')!.avisos).toContain(AVISO)
       expect(derivar(conCalle(caso(), SUR), 'b1')!.avisos).not.toContain(AVISO)

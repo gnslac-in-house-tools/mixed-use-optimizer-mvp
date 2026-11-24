@@ -1,6 +1,6 @@
 // The calculator (spec §6.4): units, stalls by program, areas, revenue, cost and zoning, per building and option.
 import type { GeomObj, Ring } from '../host/protocol.ts'
-import { area } from './geom.ts'
+import { area, difference, union } from './geom.ts'
 import type { Shape } from './geom.ts'
 import { massBuilding, parkingOutline } from './massing.ts'
 import type { Massed, MassLevel } from './massing.ts'
@@ -86,6 +86,22 @@ export interface ModelCtx {
   /** stalls laid out on each basement, per building id (parking engine) */
   stalls?: Map<string, number[]>
   siteArea?: number | null
+  /** mixed-use-mvp patch: obstacles on each building's street level (num 1), per building id: the parking ramp. They
+   *  join the level's cores, so units avoid them and the net area drops; the plate, the footprint and the basements stay. */
+  plantaBaja?: Map<string, Shape>
+}
+
+/** mixed-use-mvp patch: the street-level obstacles joined to the cores of every level num 1 (net and sell again). */
+function conPlantaBaja(m: Massed, obst: Shape | undefined, progs: State['progs']): Massed {
+  if (!m.ok || !obst?.length) return m
+  const levels = m.levels.map((l) => {
+    if (l.num !== 1) return l
+    const cores = union([l.cores, obst])
+    const net = l.lobby ? 0 : Math.max(0, area(difference(l.shape, cores)))
+    const eff = progs.find((q) => q.id === l.prog)?.eff ?? 100
+    return { ...l, cores, net, sell: (net * eff) / 100 }
+  })
+  return { ...m, levels }
 }
 
 const zeroProg = (): ProgResult => ({ gfa: 0, sell: 0, circ: 0, stallsRaw: 0, rev: 0, annual: 0, cost: 0, units: 0, levels: 0 })
@@ -171,7 +187,7 @@ export function calcBuilding(m: Massed, b: Building, s: State, stalls?: number |
 }
 
 export function calcOption(o: Option, s: State, ctx: ModelCtx): Totals {
-  const bs = o.buildings.map((b) => calcBuilding(massBuilding(b, ctx.geom, s.progs, ctx.sections), b, s, ctx.stalls?.get(b.id), ctx.geom))
+  const bs = o.buildings.map((b) => calcBuilding(conPlantaBaja(massBuilding(b, ctx.geom, s.progs, ctx.sections), ctx.plantaBaja?.get(b.id), s.progs), b, s, ctx.stalls?.get(b.id), ctx.geom))
   const sum = (k: 'gfa' | 'gfaAbove' | 'nsa' | 'circ' | 'units' | 'revenue' | 'cost' | 'prov' | 'req' | 'visitors' | 'fpA') => bs.reduce((t, r) => t + (r.ok ? r[k] : 0), 0)
   const fpA = sum('fpA')
   const land = s.cg.land * 1e6
