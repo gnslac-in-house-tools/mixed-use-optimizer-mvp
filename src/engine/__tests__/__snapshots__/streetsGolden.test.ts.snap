@@ -1,0 +1,835 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`the streets, as they are drawn today > meeting: a street T-joined to an existing street from the north 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        50,
+        250,
+      ],
+      [
+        650,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        350,
+        100,
+      ],
+      [
+        350,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: a street T-joined to an existing street from the south 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        50,
+        250,
+      ],
+      [
+        650,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        350,
+        400,
+      ],
+      [
+        350,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: a street end on an existing street’s end, at 90° 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        50,
+        250,
+      ],
+      [
+        300,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        300,
+        250,
+      ],
+      [
+        300,
+        450,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: a street end on an existing street’s end, in line 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        50,
+        250,
+      ],
+      [
+        300,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        300,
+        250,
+      ],
+      [
+        600,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: an existing street of stretches 3 + 3, 0 + 9, a street T-joined to its second 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        50,
+        250,
+      ],
+      [
+        350,
+        250,
+      ],
+    ],
+    "width": 6,
+  },
+  {
+    "id": "existing:e1:2",
+    "points": [
+      [
+        345.5,
+        245.5,
+      ],
+      [
+        650,
+        245.5,
+      ],
+    ],
+    "width": 9,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        500,
+        100,
+      ],
+      [
+        500,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: an existing street through the site crossed by a street 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        350,
+        20,
+      ],
+      [
+        350,
+        480,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        100,
+        250,
+      ],
+      [
+        600,
+        250,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > meeting: streets of every side at one node 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        150,
+        246,
+      ],
+      [
+        350,
+        246,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        350,
+        250,
+      ],
+      [
+        350,
+        100,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s3",
+    "points": [
+      [
+        350,
+        254,
+      ],
+      [
+        550,
+        254,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s4",
+    "points": [
+      [
+        350,
+        250,
+      ],
+      [
+        350,
+        400,
+      ],
+    ],
+    "width": 12,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a T-junction 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        100,
+        196,
+      ],
+      [
+        250,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        250,
+        196,
+      ],
+      [
+        400,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s3",
+    "points": [
+      [
+        254,
+        200,
+      ],
+      [
+        254,
+        80,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a centred street switching to a mass’s edge at a 10° bend 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        78.03,
+        149.653,
+      ],
+      [
+        198.03,
+        149.653,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        194.786,
+        145.019,
+      ],
+      [
+        336.598,
+        170.024,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a centred street switching to a mass’s edge at a 30° bend 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        78.268,
+        149,
+      ],
+      [
+        198.268,
+        149,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        196.804,
+        143.536,
+      ],
+      [
+        321.512,
+        215.536,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a loop round a mass 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        216,
+        206,
+      ],
+      [
+        380,
+        206,
+      ],
+      [
+        381.531,
+        206.304,
+      ],
+      [
+        382.828,
+        207.172,
+      ],
+      [
+        383.696,
+        208.469,
+      ],
+      [
+        384,
+        210,
+      ],
+      [
+        384,
+        290,
+      ],
+      [
+        383.696,
+        291.531,
+      ],
+      [
+        382.828,
+        292.828,
+      ],
+      [
+        381.531,
+        293.696,
+      ],
+      [
+        380,
+        294,
+      ],
+      [
+        220,
+        294,
+      ],
+      [
+        218.469,
+        293.696,
+      ],
+      [
+        217.172,
+        292.828,
+      ],
+      [
+        216.304,
+        291.531,
+      ],
+      [
+        216,
+        290,
+      ],
+      [
+        216,
+        206,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a switch of side at a right angle between two masses 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        150,
+        196,
+      ],
+      [
+        346,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        346,
+        196,
+      ],
+      [
+        346,
+        400,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a widened segment, 2° bends 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        100,
+        196,
+      ],
+      [
+        180,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        180.209,
+        194.004,
+      ],
+      [
+        260.161,
+        196.796,
+      ],
+    ],
+    "width": 12,
+  },
+  {
+    "id": "street:s3",
+    "points": [
+      [
+        259.951,
+        198.792,
+      ],
+      [
+        339.951,
+        198.792,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: a widened segment, in line 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        100,
+        196,
+      ],
+      [
+        180,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s2",
+    "points": [
+      [
+        180,
+        194,
+      ],
+      [
+        260,
+        194,
+      ],
+    ],
+    "width": 12,
+  },
+  {
+    "id": "street:s3",
+    "points": [
+      [
+        260,
+        196,
+      ],
+      [
+        340,
+        196,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > sided: an end at a lot’s entrance 1`] = `
+[
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        224,
+        138.5,
+      ],
+      [
+        224,
+        269.5,
+      ],
+      [
+        224.288,
+        272.426,
+      ],
+      [
+        225.142,
+        275.24,
+      ],
+      [
+        226.528,
+        277.834,
+      ],
+      [
+        228.393,
+        280.107,
+      ],
+      [
+        230.666,
+        281.972,
+      ],
+      [
+        233.26,
+        283.358,
+      ],
+      [
+        236.074,
+        284.212,
+      ],
+      [
+        239,
+        284.5,
+      ],
+      [
+        420,
+        284.5,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;
+
+exports[`the streets, as they are drawn today > the sample 1`] = `
+[
+  {
+    "id": "existing:e1",
+    "points": [
+      [
+        60,
+        -7.5,
+      ],
+      [
+        380,
+        -7.5,
+      ],
+    ],
+    "width": 15,
+  },
+  {
+    "id": "street:s1",
+    "points": [
+      [
+        151,
+        170,
+      ],
+      [
+        151,
+        221,
+      ],
+      [
+        89,
+        221,
+      ],
+      [
+        89,
+        170,
+      ],
+    ],
+    "width": 6,
+  },
+  {
+    "id": "street:s3",
+    "points": [
+      [
+        89,
+        170,
+      ],
+      [
+        151,
+        170,
+      ],
+    ],
+    "width": 6,
+  },
+  {
+    "id": "street:s5",
+    "points": [
+      [
+        239,
+        59,
+      ],
+      [
+        401,
+        59,
+      ],
+      [
+        401,
+        194,
+      ],
+      [
+        239,
+        194,
+      ],
+      [
+        239,
+        59,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s9",
+    "points": [
+      [
+        211,
+        170,
+      ],
+      [
+        151,
+        170,
+      ],
+    ],
+    "width": 6,
+  },
+  {
+    "id": "street:s10",
+    "points": [
+      [
+        89,
+        170,
+      ],
+      [
+        29,
+        170,
+      ],
+    ],
+    "width": 6,
+  },
+  {
+    "id": "street:s11",
+    "points": [
+      [
+        29,
+        170,
+      ],
+      [
+        29,
+        26,
+      ],
+      [
+        211,
+        26,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s13",
+    "points": [
+      [
+        211,
+        26,
+      ],
+      [
+        211,
+        59,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s16",
+    "points": [
+      [
+        211,
+        59,
+      ],
+      [
+        211,
+        170,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s14",
+    "points": [
+      [
+        225,
+        0,
+      ],
+      [
+        225,
+        8,
+      ],
+      [
+        211,
+        26,
+      ],
+    ],
+    "width": 8,
+  },
+  {
+    "id": "street:s17",
+    "points": [
+      [
+        239,
+        59,
+      ],
+      [
+        211,
+        59,
+      ],
+    ],
+    "width": 8,
+  },
+]
+`;

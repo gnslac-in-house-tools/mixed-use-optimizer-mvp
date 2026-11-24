@@ -1,4 +1,21 @@
-node_modules
-dist
-.vite
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+.DS_Store
 *.log
+
+# Brainstorm mockups and plan workspaces
+.superpowers/
+
+# GIM: Revit bridge versions and shared-key usage (server/)
+.gfit-bridge/
+.gfit-usage/
+
+# Local secrets
+.env
+.env.local
+.env.*.local
+
+# Recorridos en el navegador (capturas)
+evidence/

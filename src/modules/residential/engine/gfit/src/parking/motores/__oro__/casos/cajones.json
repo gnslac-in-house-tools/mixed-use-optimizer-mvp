@@ -1,0 +1,675 @@
+[
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "rect 60x40 sin rampa",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": 0,
+  "cabeceras": true,
+  "nombre": "rect 60x40 angulo 0",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": 110,
+  "cabeceras": true,
+  "nombre": "rect 60x40 angulo 110",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "poligono parking del 3dm",
+  "borde": [
+   [
+    [
+     85.31330292569919,
+     25.964086079955564
+    ],
+    [
+     79.07400524741593,
+     44.96595873718911
+    ],
+    [
+     0.0,
+     19.001872657233548
+    ],
+    [
+     6.239297678283265,
+     0.0
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "L",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     20
+    ],
+    [
+     30,
+     20
+    ],
+    [
+     30,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [
+   [
+    [
+     19,
+     9
+    ],
+    [
+     20.5,
+     9
+    ],
+    [
+     20.5,
+     10.5
+    ],
+    [
+     19,
+     10.5
+    ]
+   ],
+   [
+    [
+     41,
+     24
+    ],
+    [
+     42.5,
+     24
+    ],
+    [
+     42.5,
+     25.5
+    ],
+    [
+     41,
+     25.5
+    ]
+   ]
+  ],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "rect con dos columnas",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [
+   [
+    30,
+    0
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "rampa paralela",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [
+   [
+    30,
+    0
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": false,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "rampa perpendicular",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 5,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "cruce cada 5 con cabeceras",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "rect 8x8",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     0,
+     8
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [
+   [
+    0,
+    20
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 5,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": 0,
+  "cabeceras": false,
+  "nombre": "cruce 5 sin cabeceras con rampa",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [
+   [
+    10,
+    0
+   ],
+   [
+    60,
+    30
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 1,
+  "cruce_n": 4,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "retiro 1 con hueco y dos rampas",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ],
+   [
+    [
+     25,
+     15
+    ],
+    [
+     35,
+     15
+    ],
+    [
+     35,
+     25
+    ],
+    [
+     25,
+     25
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [],
+  "rampa_pts": [
+   [
+    40,
+    20
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "parking con rampa",
+  "borde": [
+   [
+    [
+     85.31330292569919,
+     25.964086079955564
+    ],
+    [
+     79.07400524741593,
+     44.96595873718911
+    ],
+    [
+     0.0,
+     19.001872657233548
+    ],
+    [
+     6.239297678283265,
+     0.0
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [
+   [
+    [
+     10,
+     10
+    ],
+    [
+     12,
+     10
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     10,
+     12
+    ]
+   ]
+  ],
+  "rampa_pts": [
+   [
+    0,
+    10
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 6,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": false,
+  "angulo": null,
+  "cabeceras": true,
+  "nombre": "L con rampa y columnas",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     20
+    ],
+    [
+     30,
+     20
+    ],
+    [
+     30,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ },
+ {
+  "obst": [
+   [
+    [
+     28,
+     -1
+    ],
+    [
+     32,
+     -1
+    ],
+    [
+     32,
+     41
+    ],
+    [
+     28,
+     41
+    ]
+   ]
+  ],
+  "rampa_pts": [
+   [
+    0,
+    20
+   ]
+  ],
+  "W": 2.5,
+  "L": 5,
+  "A": 6,
+  "r": 0,
+  "cruce_n": 0,
+  "rampa_ancho": 3.5,
+  "rampa_largo": 20,
+  "rampa_paralela": true,
+  "angulo": 0,
+  "cabeceras": true,
+  "nombre": "muro divide, rampa a un lado",
+  "borde": [
+   [
+    [
+     0,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     0,
+     40
+    ]
+   ]
+  ]
+ }
+]

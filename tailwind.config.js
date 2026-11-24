@@ -9,7 +9,7 @@
  * @type {import('tailwindcss').Config}
  */
 export default {
-  content: ['./index.html', './ui/**/*.{ts,tsx}'],
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     fontSize: {
       title: ['var(--text-title)', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '600' }],

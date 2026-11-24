@@ -1,34 +1,63 @@
-# VENDOR · código copiado
+# VENDOR · código copiado y cambios a lo copiado
 
-## De mixed-use-optimizer (`C:\dev\mixed-use-optimizer@e6b1a81`)
+La integración futura a GIM depende de que los cambios al núcleo sean pocos. Cada uno se anota aquí con su razón.
 
-| Origen | Destino | Cambios |
+## La base: GFit GIM (`gfit-generative-information-modeler@b7909184`)
+
+Se copió tal cual: `src/`, `public/`, `server/`, `mcp/`, `index.html`, `state-graph.html`, `vite.config.ts`,
+`vitest.setup.ts`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`, `tailwind.config.js`,
+`postcss.config.js`, `commitlint.config.js`, `package.json` y `package-lock.json`.
+
+No se copiaron `node_modules`, `dist`, `graphify-out`, `.git`, `docs`, `resources` (archivos de muestra
+confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
+
+`server/` y `mcp/` se quedan: `vite.config.ts` importa `server/sharedKeys.ts`, `server/usage.ts` y
+`server/versions.ts`, y los tests de GIM (`src/api/**`) importan `server/` y `mcp/`.
+
+### Cambios al núcleo de GIM
+
+| Archivo | Cambio | Razón |
 |---|---|---|
-| `engine/gfit/src/model/{geom,program}.ts`, `engine/gfit/src/layout/{rooms,rng}.ts` | igual | Ninguno |
-| `engine/gfit/test/rooms.test.ts` | igual | Ninguno (11 tests en verde) |
-| `engine/muebles.ts` (CATALOGO, amueblar, huella, planNuevo, coincidencia), `engine/plantaEditada.ts#recintos`, `ui/presets.ts`, `ui/marca.ts` | `engine/catalogo.ts` | Solo lo que usa el catálogo. `limpio` usa una versión local en lugar de `tidy` de GIM. La Biblioteca GFit prueba +0.3 y +0.6 m cuando el WFC no llena un ancho (antes, el 3 rec. compacto de 12.0 m quedaba como un solo recinto) |
-| `ui/Catalogo.tsx#PlanMini`, `ui/Furniture.tsx` | `ui/PlanMini.tsx` | Sin interacción (arrastrar o elegir) |
-| `ui/Catalogo.tsx` | `ui/Catalogo.tsx` | Sin planta: no hay asignar, arrastrar ni coincidencia con una unidad |
+| `vite.config.ts` | `server: { port: 5180, strictPort: true }` | El puerto del proyecto; con `strictPort` falla en vez de tomar otro |
+| `.gitignore` | Las entradas de GIM (`.env`, `.gfit-usage/`, `.gfit-bridge/`) más `evidence/` | Llaves locales y capturas fuera de git |
 
-Shims, que no vienen de GFit: `engine/gfit/src/host/protocol.ts` (solo `Pt` y `Ring`) y `engine/gfit/src/model/state.ts` (la forma mínima de `State`).
+## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 
-## De Plaza Praktico (`202609_Plaza-Practiko@258a5b4`, `app/src/vistas/tresd`)
+Copia completa de `src/` y `test/` en `src/modules/residential/engine/gfit/`, con el parche `setLevelOverride` que
+ya traía `mixed-use-optimizer`. Reemplaza la copia parcial (solo cuartos, con shims de `host/protocol.ts` y
+`model/state.ts`) de la pieza anterior.
 
-| Origen | Destino | Cambios |
+### Parches (`mixed-use-mvp patch`)
+
+| Archivo | Cambio | Razón |
 |---|---|---|
-| `Luces.tsx`, `useEncuadre.ts` | `ui/tresd/` | Ninguno |
-| `geometria3d.ts` | `ui/tresd/geometria3d.ts` | Solo `extruir` y sus ayudas |
-| `Suelo.tsx` | `ui/tresd/Suelo.tsx` | Sin el mapa de fondo |
-| `Escena.tsx` | `ui/tresd/Escena.tsx` | Solo el visor: Canvas, luces, suelo, órbita y encuadre. Encuadrar lo pide el marco (`encuadre.ir`). No trae soltar, captura ni «ir a». El tamaño mínimo baja de 50 m a 12 m |
+| `test/*.test.ts` | Primera línea: `import { test, expect, … } from 'vitest'` | GIM corre Vitest sin `globals`; así no se toca su configuración |
 
-Las versiones de React (19), R3F (9), drei (10) y three (0.186) son las de Praktico.
+## Del MVP anterior (catálogo de unidades)
 
-## De GFit GIM (`gfit-generative-information-modeler@b7909184`): el marco de la interfaz
+Se mudaron al módulo residencial y no se usan hasta la pieza 3:
 
-| Origen | Destino | Cambios |
-|---|---|---|
-| `src/styles/tokens.css`, `src/styles/global.css`, `tailwind.config.js`, `postcss.config.js` | `ui/styles/`, raíz | Solo `content` de Tailwind apunta a `ui/` |
-| Los íconos (los trazos de cada `<svg>` de 16 × 16), copiados del DOM de GIM en ejecución | `ui/marco/iconos.ts` | Ninguno |
-| `App.tsx` (rejilla), `layout/TopBar.tsx` + `MenuBar.tsx`, `stats/KpiStrip.tsx`, `layout/PanelColumn.tsx`, `layout/PanelTabs.tsx`, `layout/PanelRail.tsx`, `tools/ToolStrip.tsx`, `viewport/DraftingBar.tsx`, `viewport/Viewport.tsx`, `panels/SummaryPanel.tsx`, `controls/{Icon,BarButtons,Segmented}.tsx`, `layout/ui.ts` | `ui/App.tsx`, `ui/marco/*` | Se reescribieron con las mismas clases y la misma estructura, pero sin el registro de comandos, el arrastre de barras, las hojas para pantallas angostas ni el teléfono. Los menús y las herramientas son los de GIM, traducidos. Los que todavía no aplican se ven atenuados («por decidir») |
+| Antes | Ahora |
+|---|---|
+| `engine/catalogo.ts`, `engine/catalogo.test.ts` | `src/modules/residential/engine/catalogo.ts`, `src/modules/residential/__tests__/catalogo.test.ts` (con el import de `vitest`) |
+| `ui/tresd/Unidad3d.tsx`, `ui/tresd/geometria3d.ts`, `ui/tresd/muebles3d.ts` | `src/modules/residential/views/` |
+| `ui/PlanMini.tsx` | `src/modules/residential/views/PlanMini.tsx` |
 
-Ojo: en los tokens de GIM, la escala de espaciado `1–8` son tokens (4, 8, 12, 16, 24, 32, 48 y 64 px), no la escala de Tailwind. Por ejemplo, `h-7` mide 48 px. Para la altura de una fila se usa `h-row`.
+`catalogo.ts` vino de `mixed-use-optimizer@e6b1a81` (`engine/muebles.ts`, `engine/plantaEditada.ts#recintos`,
+`ui/presets.ts`, `ui/marca.ts`). `geometria3d.ts` (solo `extruir`) vino de Plaza Praktico
+(`202609_Plaza-Practiko@258a5b4`, `app/src/vistas/tresd`).
+
+Se borró el marco recreado (`ui/marco`, `ui/App.tsx`, los estilos y el estado) porque GIM trae el real. Con él se
+fueron las piezas de Praktico que solo usaba el visor del catálogo: `Escena.tsx`, `Luces.tsx`, `Suelo.tsx` y
+`useEncuadre.ts`.
+
+## Documentos de GIM
+
+`docs/ARCHITECTURE.md`, `docs/tour.md` y `docs/mcp.md` se copiaron de GIM porque sus tests los leen
+(`src/kinds/__tests__/registry.test.ts`, `src/views/tour/__tests__/texts.test.tsx`). El resto de `docs/` de GIM no se copió.
+
+## Tests
+
+Tras la Tarea 1: 5634 tests en 486 archivos. Del módulo residencial, 155 (150 de GFit y 5 del catálogo).
+Con la suite completa en esta máquina, tres tests de GIM con interfaz (`shortcutsWindow`, `saveReview`,
+`shapeHandles`) pueden pasar de su límite de 5 s por carga; solos pasan (92/92).

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GFit · State graph</title>
+    <script>
+      // The app's saved theme before the first paint (as index.html); main.tsx follows it when the app changes it.
+      try {
+        const t = JSON.parse(localStorage.getItem('gfit.layout') || '{}').theme
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <!-- Dev tool: served by `npm run dev` at /state-graph, never part of the build (vite.config.ts builds index.html only). -->
+    <div id="root"></div>
+    <script type="module" src="/src/devtools/state-graph/main.tsx"></script>
+  </body>
+</html>

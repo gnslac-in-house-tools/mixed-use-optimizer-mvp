@@ -1,12 +1,20 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Catálogo de unidades</title>
+    <title>GFit</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // The saved theme before the first paint (views/layout/theme.ts does the same), so a dark choice never flashes light.
+      try {
+        const t = JSON.parse(localStorage.getItem('gfit.layout') || '{}').theme
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch {}
+    </script>
   </head>
   <body class="select-none">
     <div id="root"></div>
-    <script type="module" src="/ui/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
