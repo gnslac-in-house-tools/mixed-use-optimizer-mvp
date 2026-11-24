@@ -19,6 +19,7 @@ import { STREET_PARKING } from '../../../views/layers/keys.ts'
 import { useHidden } from '../../../views/layers/layerView.ts'
 import { useShown } from '../../../views/viewport/look.ts'
 import { hasSide, parkingOf, roadSides, segmentSides, withSide } from '../engine/parking.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** px: the pill, and its gap past the stalls. */
 const PILL_W_PX = 30
@@ -132,7 +133,7 @@ export function StreetParkingSection({ road, muted }: { road: DerivedRoad; muted
   const side = useOptionSide()
   if (!offered) return null
   if (road.vehicles === 'trucks' && streets.length === 0)
-    return <p className={`select-text text-caption ${muted}`}>A trucks’ street has no car stalls along it.</p>
+    return <p className={`select-text text-caption ${muted}`}>{tr("A trucks’ street has no car stalls along it.")}</p>
   if (streets.length === 0) return null
   const all = streets.flatMap((r) => roadSides(r, side))
   const own = streets.some((r) => r.parking?.some((x) => x !== null))

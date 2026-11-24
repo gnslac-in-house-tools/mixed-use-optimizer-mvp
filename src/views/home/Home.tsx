@@ -26,6 +26,7 @@ import { freshSample, homeRows } from './rows.ts'
 import { useScreen, type HomeView } from './screen.ts'
 import { TerrainLibraryView } from './TerrainLibraryView.tsx'
 import { startZero } from '../tour/zero/run.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** A sidebar item; `detail`: a line under its name (its accessible name stays the name). */
 function NavItem({ icon, onClick, pressed, detail, tour, children }: { icon: string; onClick: () => void; pressed?: boolean; detail?: string; tour?: string; children: string }) {
@@ -92,7 +93,7 @@ export function Home() {
           <span aria-hidden className="grid h-[2rem] w-[2rem] place-items-center rounded-[0.625rem] bg-ink text-on-ink">
             <Icon path={HOME_ICONS.mark} className="h-[1.125rem] w-[1.125rem]" />
           </span>
-          GFit
+          {tr("GFit")}
         </div>
         <button
           type="button"
@@ -102,25 +103,25 @@ export function Home() {
           className="pressable flex h-[2.375rem] items-center gap-2.5 rounded-[0.625rem] bg-ink px-3 text-body font-semibold text-on-ink hover:opacity-90"
         >
           <Icon path={HOME_ICONS.create} className="h-[1.125rem] w-[1.125rem]" />
-          Create new
+          {tr("Create new")}
         </button>
         <nav aria-label="Home" className="flex flex-col gap-0.5">
           <NavItem icon={HOME_ICONS.list} pressed={view === 'projects'} onClick={() => show('projects')}>
-            Projects
+            {tr("Projects")}
           </NavItem>
           <NavItem icon={HOME_ICONS.library} pressed={view === 'blocks'} onClick={() => show('blocks')}>
-            Blocks
+            {tr("Blocks")}
           </NavItem>
           <NavItem icon={HOME_ICONS.terrain} pressed={view === 'terrains'} onClick={() => show('terrains')}>
-            Terrain
+            {tr("Terrain")}
           </NavItem>
           <span aria-hidden className="mx-2.5 my-2 h-px bg-separator" />
           {/* From zero (Decision "From zero tutorial"): in place of the sample's guided tour, which stays on the sample's card and the top bar's Tour */}
           <NavItem icon={HOME_ICONS.tour} tour="home-zero" detail="Build a project of your own, from a site drawing to a CAD plan." onClick={() => void startZero()}>
-            Learn GFit from zero
+            {tr("Learn GFit from zero")}
           </NavItem>
           <NavItem icon={HOME_ICONS.about} pressed={view === 'about'} onClick={() => show('about')}>
-            About
+            {tr("About")}
           </NavItem>
         </nav>
         <input ref={fileInput} type="file" accept=".gft,.json,application/json" aria-label="Open .gft" className="hidden" onChange={onFile} />
@@ -141,7 +142,7 @@ export function Home() {
 
       <main className="flex min-w-0 flex-col gap-4 overflow-hidden px-6 pb-5 pt-4 phone:overflow-y-auto phone:px-gutter">
         <div className="-mr-2 flex shrink-0 items-center justify-between gap-3">
-          <h1 className="text-headline text-ink">Welcome to GFit</h1>
+          <h1 className="text-headline text-ink">{tr("Welcome to GFit")}</h1>
           <div className="flex items-center gap-1">
             <IconButton icon={theme.dark ? 'sun' : 'moon'} label="Dark mode" title={theme.title} pressed={theme.dark} onClick={theme.toggle} />
             {fullScreenAvailable() && (

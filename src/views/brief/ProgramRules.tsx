@@ -12,6 +12,7 @@ import { CellField } from '../controls/fields.tsx'
 import { m2 } from '../format.ts'
 import { useModule } from '../modules.ts'
 import { ProgramDocks } from './columns.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** A new grid's figures when a program has none: a 12 m bay each way in 4 modules. */
 const NEW_GRID = { x: 12, y: 12, modules: 4 }
@@ -40,7 +41,7 @@ export function ProgramRules({ program: g, row }: { program: Program; row: Brief
   return (
     <div aria-label={`${g.name}'s rule set`} role="group" className="flex flex-wrap items-center gap-x-6 gap-y-1.5 py-1.5 pl-1 text-caption text-ink-secondary">
       <span className="flex items-center gap-1" title={typed ? 'Its warehouse type’s grid (step 1): the bay along the hall’s length and width, and the modules a bay is split in' : 'Its own grid: a bay each way and the modules a bay is split in. Empty: none'}>
-        <span className="text-ink">Grid</span>
+        <span className="text-ink">{tr("Grid")}</span>
         <span className="w-10">
           <CellField label={`${g.name} grid bay x`} value={grid?.x ?? null} number={{ min: 1 }} step={1} optional={!typed} placeholder="—" onCommit={(v) => setGrid('x', v)} />
         </span>
@@ -56,7 +57,7 @@ export function ProgramRules({ program: g, row }: { program: Program; row: Brief
       </span>
 
       <span className="flex items-center gap-1" title="The sizes its masses may take, low to high: what the optimizer may search. Empty: its size as it is">
-        <span className="text-ink">Range</span>
+        <span className="text-ink">{tr("Range")}</span>
         {(['width', 'depth'] as const).map((side) => (
           <span key={side} className="flex items-center gap-1">
             <span>{(side === 'width' ? long : short).toLowerCase()}</span>
@@ -81,19 +82,19 @@ export function ProgramRules({ program: g, row }: { program: Program; row: Brief
             checked={g.built}
             onChange={(e) => apply((p) => actions.updateProgram(p, g.id, { built: e.target.checked }))}
           />
-          <span className="text-ink">Built</span>
+          <span className="text-ink">{tr("Built")}</span>
         </label>
       )}
 
       {docks && (
         <span className="flex items-center gap-1" title="Whether its masses have loading docks (on the building’s front, turning with it) and how many doors: one per so many m² of floor, or one every so many m of wall. On a structural grid, under it the doors’ pattern">
-          <span className="text-ink">Docks</span>
+          <span className="text-ink">{tr("Docks")}</span>
           <ProgramDocks program={g} />
         </span>
       )}
 
       <span title="The target area shared by the target masses: what each one should be">
-        <span className="text-ink">Per mass</span> <span className="tabular-nums">{row.unitArea === null ? '—' : m2(row.unitArea)}</span>
+        <span className="text-ink">{tr("Per mass")}</span> <span className="tabular-nums">{row.unitArea === null ? '—' : m2(row.unitArea)}</span>
       </span>
     </div>
   )

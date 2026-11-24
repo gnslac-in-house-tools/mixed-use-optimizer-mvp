@@ -9,6 +9,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { DIMENSIONS } from '../layers/keys.ts'
 import { useLayerView } from '../layers/layerView.ts'
 import { useToast } from './toast.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const INFO_MS = 5000
 const ACTION_MS = 9000
@@ -105,7 +106,7 @@ function Confirmation() {
         </p>
         <div className="flex shrink-0 gap-2">
           <button ref={cancelRef} type="button" className="pressable rounded-control px-3 py-1.5 text-label font-medium hover:bg-hover" onClick={closeConfirmation}>
-            Cancel
+            {tr("Cancel")}
           </button>
           {confirmation.other && (
             <button

@@ -5,6 +5,7 @@
 import { NumberField } from '../controls/fields.tsx'
 import { Segmented } from '../controls/Segmented.tsx'
 import { MAX_COPIES, MAX_COUNT, MAX_ROWS, useGeneralTools, type AlignHow } from '../plan/tools/generalSettings.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const HOW: { key: AlignHow; label: string; title: string }[] = [
   { key: 'edges', label: 'Edges', title: 'The side of each thing nearest the line is put on it' },
@@ -20,7 +21,7 @@ export function GeneralOptions() {
   return (
     <div className="flex w-56 flex-col gap-1.5">
       <label className="flex items-center justify-between gap-2 text-label text-ink-secondary" title="Mirror makes a mirrored copy and leaves the original; off, the thing itself is reflected">
-        Mirror keeps the original
+        {tr("Mirror keeps the original")}
         <input type="checkbox" className="h-4 w-4 accent-ink" checked={keep} onChange={(e) => set().setKeep(e.target.checked)} />
       </label>
       <NumberField
@@ -40,7 +41,7 @@ export function GeneralOptions() {
         onCommit={(v) => set().setRows(v)}
       />
       <div className="flex items-center justify-between gap-2 text-label text-ink-secondary">
-        Align on
+        {tr("Align on")}
         <Segmented kind="toggle" label="Align on" options={HOW} value={how} onChange={(h) => set().setHow(h)} />
       </div>
     </div>

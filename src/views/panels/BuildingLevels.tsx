@@ -15,6 +15,7 @@ import { m2 } from '../format.ts'
 import { Icon } from '../controls/Icon.tsx'
 import { deleteLevels, offerSameFloor } from './buildingCommands.ts'
 import { Note } from '../layout/Note.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function BuildingLevels({ building }: { building: Building }) {
   const levels = building.levels
@@ -32,18 +33,18 @@ export function BuildingLevels({ building }: { building: Building }) {
       <table className="w-full table-fixed border-separate border-spacing-y-1 text-body">
         <thead>
           <tr className="text-left text-caption text-ink-secondary">
-            <th className="w-[22%] font-medium">Name</th>
+            <th className="w-[22%] font-medium">{tr("Name")}</th>
             <th className="font-medium" title="Its floor, from the site's ground (m)">
-              Elev.
+              {tr("Elev.")}
             </th>
             <th className="font-medium" title="Floor to floor (m)">
-              Height
+              {tr("Height")}
             </th>
             <th className="w-[13%] font-medium" title="Repeats: a typical floor, N times">
               ×N
             </th>
             <th className="w-[10%]">
-              <span className="sr-only">Delete</span>
+              <span className="sr-only">{tr("Delete")}</span>
             </th>
           </tr>
         </thead>
@@ -119,11 +120,11 @@ export function BuildingLevels({ building }: { building: Building }) {
           )
         })}
         <div className="mt-1 flex items-center justify-between gap-3 border-t border-separator px-2 pt-2 text-body">
-          <span className="text-label text-ink-secondary">Floor area (GFA)</span>
+          <span className="text-label text-ink-secondary">{tr("Floor area (GFA)")}</span>
           <span className="font-medium tabular-nums">{m2(gfa)}</span>
         </div>
       </div>
-      <Note>Changing a height or ×N moves the levels above it. A mass without a height of its own takes its level’s.</Note>
+      <Note>{tr("Changing a height or ×N moves the levels above it. A mass without a height of its own takes its level’s.")}</Note>
     </section>
   )
 }

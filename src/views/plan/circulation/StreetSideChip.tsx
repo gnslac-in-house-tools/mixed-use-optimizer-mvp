@@ -6,6 +6,7 @@
 import type { StreetSide } from '../../../model/schema.ts'
 import { Segmented } from '../../controls/Segmented.tsx'
 import { useStreetSide } from './roadState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const KEY = 'Space (or Tab) cycles them with Street in hand, Shift back'
 const OPTIONS: { key: StreetSide; label: string; title: string }[] = [
@@ -22,7 +23,7 @@ export function StreetSideChip({ onPick }: { /** Told after a side is picked her
       className="flex w-56 items-center justify-between gap-2 text-label text-ink-secondary"
       title="A segment that would run over a building takes the side that keeps it outside on its own"
     >
-      Side
+      {tr("Side")}
       <Segmented kind="toggle" label="Street side" options={OPTIONS} value={side} onChange={(s) => {
           setSide(s)
           onPick?.()

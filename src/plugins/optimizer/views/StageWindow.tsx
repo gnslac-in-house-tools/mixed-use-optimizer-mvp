@@ -19,6 +19,7 @@ import { MainButton } from './button.tsx'
 import { selectClass } from './kit.ts'
 import { askAgentFor, circled, editPlan, runStage, saveAsTemplate, startByHand, useStages } from './stage/commands.ts'
 import { Budget, Margin, MayChange, MustHold, Objectives, Small, useSummary, type Edit } from './stage/sections.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 type Draft = Pick<Stage, 'name' | 'by' | 'aim' | 'template' | 'margin'>
 
@@ -34,7 +35,7 @@ export default function StageWindow() {
   const project = useProject()
   const plan = data && editing ? planIn(data, editing.option, project) : null
   const stage = plan?.stages.find((s) => s.id === editing?.stage)
-  if (!editing || !plan || !stage) return <p className="panel h-full p-panel-pad text-caption text-ink-secondary">This stage is not in the plan any more.</p>
+  if (!editing || !plan || !stage) return <p className="panel h-full p-panel-pad text-caption text-ink-secondary">{tr("This stage is not in the plan any more.")}</p>
   return <Window key={`${plan.id}/${stage.id}`} option={editing.option} plan={plan} stage={stage} />
 }
 
@@ -88,14 +89,14 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
           {draft.by !== 'hand' ? (
             <MayChange template={draft.template} edit={edit} summary={summary} kinds={kinds} own={ownKinds} />
           ) : (
-            <p className="text-caption text-ink-secondary">By hand: you edit a copy of the stage before’s option, then approve it. What it must hold and how far it may move earlier stages are still checked.</p>
+            <p className="text-caption text-ink-secondary">{tr("By hand: you edit a copy of the stage before’s option, then approve it. What it must hold and how far it may move earlier stages are still checked.")}</p>
           )}
         </div>
         <div className="flex flex-col gap-5">
           {draft.by === 'optimizer' && <Objectives template={draft.template} edit={edit} measures={measures} aimable={aimable} first={first} figures={summary.figures} />}
           {draft.by === 'agent' && (
             <section aria-label="Aim" className="flex flex-col gap-1.5">
-              <h2 className="text-label text-ink-secondary">What the agent is asked for</h2>
+              <h2 className="text-label text-ink-secondary">{tr("What the agent is asked for")}</h2>
               <textarea
                 aria-label="The agent’s aim"
                 rows={3}
@@ -116,10 +117,10 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Small title="These parameters as a template of the project’s, to start other stages from" onClick={() => saveAsTemplate(draft.template, `${draft.name} template`)}>
-              Save as template
+              {tr("Save as template")}
             </Small>
             <Small title="Close without saving (Esc)" onClick={close}>
-              Cancel
+              {tr("Cancel")}
             </Small>
           </div>
         </div>
@@ -144,7 +145,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
             close()
           }}
         >
-          Save
+          {tr("Save")}
         </Small>
         {draft.by === 'optimizer' && (
           <MainButton
@@ -156,7 +157,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
               runStage(option, stage.id)
             }}
           >
-            <span aria-hidden>▶</span> Run
+            <span aria-hidden>▶</span> {tr("Run")}
           </MainButton>
         )}
         {draft.by === 'hand' && (
@@ -168,7 +169,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
               startByHand(option, stage.id)
             }}
           >
-            Start by hand
+            {tr("Start by hand")}
           </MainButton>
         )}
         {draft.by === 'agent' && (
@@ -180,7 +181,7 @@ function Window({ option, plan, stage }: { option: string; plan: ReturnType<type
               if (!askAgentFor(project, drafted, drafted.stages.find((s) => s.id === stage.id)!)) notify('error', 'The Agent is off in this browser: View → Plugins turns it on.')
             }}
           >
-            Ask the agent
+            {tr("Ask the agent")}
           </MainButton>
         )}
       </footer>

@@ -6,6 +6,7 @@ import { useEffect, type ReactNode } from 'react'
 import { signsInHere, SPECKLE_APP } from '../../io/speckleAuth.ts'
 import { inputClass } from '../controls/fields.tsx'
 import { loadProjects, NEW_MODEL, pickModel, pickProject, speckleSignOut, startSpeckleSignIn, startSpeckleSso, useSpeckle } from './speckle.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const field = `${inputClass} w-full min-w-0`
 
@@ -30,7 +31,7 @@ export function SpeckleSection({ projectName }: { projectName: string }) {
   const busy = status.kind === 'busy'
   return (
     <section aria-label="Speckle" className="flex flex-col gap-3 border-t border-separator pt-3">
-      <span className="text-label font-medium text-ink">Speckle</span>
+      <span className="text-label font-medium text-ink">{tr("Speckle")}</span>
       {!account ? (
         <div className="flex flex-col items-start gap-1.5">
           <button
@@ -59,13 +60,13 @@ export function SpeckleSection({ projectName }: { projectName: string }) {
               {account.server.replace(/^https?:\/\//, '')} · <span className="text-ink">{account.user}</span>
             </span>
             <button type="button" onClick={speckleSignOut} className="pressable shrink-0 rounded-control px-2 py-1 text-label hover:bg-hover">
-              Sign out
+              {tr("Sign out")}
             </button>
           </div>
           <Labelled label="Project">
             <select className={field} value={projectId} disabled={!projects || busy} onChange={(e) => void pickProject(e.target.value)}>
-              {!projects && <option value={projectId}>Loading…</option>}
-              {projects?.length === 0 && <option value="">No projects: make one in Speckle</option>}
+              {!projects && <option value={projectId}>{tr("Loading…")}</option>}
+              {projects?.length === 0 && <option value="">{tr("No projects: make one in Speckle")}</option>}
               {projects?.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}

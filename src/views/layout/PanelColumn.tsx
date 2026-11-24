@@ -14,6 +14,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { usePhone, useWide } from './media.ts'
 import { MAX_PANEL_PX, MIN_PANEL_PX, PANEL_NAMES, useUi, type Side } from './ui.ts'
 import { beginDrag } from '../controls/beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const DISMISS_PX = 80
 /** The arrow keys on a panel's edge move it by this much. */
@@ -95,7 +96,7 @@ export function PanelColumn({ side, title, rail, tabs, children }: { side: Side;
           <div className="flex min-h-0 min-w-0 flex-1 flex-col">
             {tabsOnTop && tabs}
             <div className="flex shrink-0 items-center justify-between gap-3 px-panel-pad pt-3">
-              <h2 className="text-headline">{title ?? name}</h2>
+              <h2 className="text-headline">{tr(title ?? name)}</h2>
               <button
                 ref={closeRef}
                 type="button"

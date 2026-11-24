@@ -27,6 +27,7 @@ import { Properties } from '../panels/Properties.tsx'
 import { BlocksPanel } from '../../modules/warehouse/views/BlocksPanel.tsx'
 import { usePhone } from './media.ts'
 import { useUi, type RailItem } from './ui.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** What the panel shows: its tab as picked; a plugin's tab while its plugin shows it. A tab that cannot be shown (a plugin's that is gone
  *  or that a phone does not draw, the Blocks without the warehouse module, a tab of before) shows Layers. */
@@ -147,13 +148,13 @@ function Tab(props: {
       disabled={props.disabled}
       onClick={props.onClick}
       className={`pressable relative flex h-7 items-center rounded-control text-label leading-none phone:h-11 ${
-        props.iconOnly ? 'w-6 shrink-0 justify-center' : 'min-w-0 gap-1 px-1 phone:shrink-0 phone:gap-1.5 phone:px-3'
+        props.iconOnly ? 'w-6 shrink-0 justify-center' : 'min-w-0 gap-1 px-0.5 phone:shrink-0 phone:gap-1.5 phone:px-3'
       } ${
         on ? 'bg-fill font-semibold text-ink shadow-control' : 'text-ink-segment hover:bg-hover hover:text-ink'
       } disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ink-segment`}
     >
       <Icon {...(typeof props.icon === 'string' ? { name: props.icon } : props.icon)} className="h-4 w-4 shrink-0" />
-      {!props.iconOnly && <span className="truncate">{props.label}</span>}
+      {!props.iconOnly && <span className="truncate">{tr(props.label)}</span>}
       {props.badge}
     </button>
   )

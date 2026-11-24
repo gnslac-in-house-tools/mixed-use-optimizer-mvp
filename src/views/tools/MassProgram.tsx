@@ -10,6 +10,7 @@ import { newMassProgram, useMassProgram } from '../plan/tools/toolState.ts'
 import { SHOW_SELECT } from '../show/ShowControls.tsx'
 import { take } from './hand.ts'
 import { planToolsRefusal } from './pickTool.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The select's value for *＋ New block…* (another option's is a program's id). */
 const NEW_PROGRAM = 'new-program'
@@ -49,7 +50,7 @@ export function MassProgram() {
         }}
         className={SHOW_SELECT}
       >
-        <option value="">No program</option>
+        <option value="">{tr("No program")}</option>
         {programs.map((g) => (
           <option key={g.id} value={g.id}>
             {typed(g.id) ? `▦ ${g.name}` : g.name}

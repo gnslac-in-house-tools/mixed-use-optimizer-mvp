@@ -38,6 +38,7 @@ import { followStretchEnd, startBump, startChamferEnd, startCorner, startHoleMov
 import { holeOfRef, siteHost, type ShapeHost, type ShapePart } from './host.ts'
 import { chamferText, fmt, METRES, pastRange, stretchText, wallText } from './labels.ts'
 import { canTake, removeShapeCorner, siteStretch, useShapeGhost, useStretch, type Stretch } from './shapeState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** px: the sizes of a mass's handles, and of a hole's (smaller: it stands inside). */
 const SIZES = {
@@ -332,7 +333,7 @@ function Handles(props: { target: Ref; host: ShapeHost; just: boolean }) {
         onPointerLeave={() => setOver((h) => (h === i ? null : h))}
         onDoubleClick={takes('insert') || takes('bump') ? doubleClick(hole ? null : i) : undefined}
       >
-        {hole && <title>Drag to move this wall of the hole; a double click adds a corner</title>}
+        {hole && <title>{tr("Drag to move this wall of the hole; a double click adds a corner")}</title>}
         <rect x={(-hit / 2) * px} y={(-hit / 2) * px} width={hit * px} height={hit * px} fill="transparent" />
         {!bare && <rect x={(-sz.long / 2) * px} y={(-sz.short / 2) * px} width={sz.long * px} height={sz.short * px} rx={(sz.short / 2) * px} fill={fill} stroke={ink} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />}
       </g>
@@ -405,7 +406,7 @@ function Handles(props: { target: Ref; host: ShapeHost; just: boolean }) {
     // a corner that does not drag (a block's): it picks, and a double click takes it out
     return takes('remove') ? (
       <g key={k} data-corner={i} {...(ghostMode && { 'data-handle': k })} style={{ cursor: 'pointer' }} onPointerDown={(e) => e.stopPropagation()} onClick={() => host.pick(target, i)} onDoubleClick={dropCorner(i)}>
-        <title>Click: pick this corner (Delete takes it out); double click: take it out, its step filled in or cut away</title>
+        <title>{tr("Click: pick this corner (Delete takes it out); double click: take it out, its step filled in or cut away")}</title>
         {look}
       </g>
     ) : null
@@ -495,7 +496,7 @@ function Handles(props: { target: Ref; host: ShapeHost; just: boolean }) {
           takes('bump') &&
           walls.map(({ i }) => (
             <path key={`b${i}`} data-bay-line={i} d={edgePath(c, i)} fill="none" stroke="transparent" strokeWidth={sz.line} vectorEffect="non-scaling-stroke" pointerEvents="stroke" style={{ cursor: 'default' }} onPointerDown={(e) => { e.stopPropagation(); if (e.button === 0) dockPressUnder.current?.(e) }} onDoubleClick={doubleClick(i)}>
-              <title>Double click: this bay, to pull out or push in</title>
+              <title>{tr("Double click: this bay, to pull out or push in")}</title>
             </path>
           ))}
 
@@ -531,14 +532,14 @@ function Handles(props: { target: Ref; host: ShapeHost; just: boolean }) {
               const at = stretchPills[end]
               return (
                 <g key={end} {...bind(end, undefined, 'bump', followStretchEnd(target, mine.wall, end, host, scale))} transform={`translate(${at.x} ${at.y}) rotate(${stretchPills.angle + 90})`} style={{ cursor: 'move', touchAction: 'none' }}>
-                  <title>Drag: the stretch longer or shorter, onto a module line when near one (Shift: free)</title>
+                  <title>{tr("Drag: the stretch longer or shorter, onto a module line when near one (Shift: free)")}</title>
                   <rect x={(-stretchPills.hit / 2) * px} y={(-stretchPills.hit / 2) * px} width={stretchPills.hit * px} height={stretchPills.hit * px} fill="transparent" />
                   <rect x={(-SIZES.mass.long / 2) * px} y={(-SIZES.mass.short / 2) * px} width={SIZES.mass.long * px} height={SIZES.mass.short * px} rx={(SIZES.mass.short / 2) * px} fill="var(--panel)" stroke="var(--ink)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
                 </g>
               )
             })}
             <g {...bind('face', undefined, 'bump', startBump(target, mine.wall, mine.from, mine.to, scale, setMoved, host))} transform={`translate(${stretchPills.face.x} ${stretchPills.face.y}) rotate(${stretchPills.angle})`} style={{ cursor: Math.abs(stretchPills.w.n.x) > Math.abs(stretchPills.w.n.y) ? 'ew-resize' : 'ns-resize', touchAction: 'none' }}>
-              <title>Drag: out of the wall (a bump) or into it (a notch), onto a module line when near one (Shift: free)</title>
+              <title>{tr("Drag: out of the wall (a bump) or into it (a notch), onto a module line when near one (Shift: free)")}</title>
               <rect x={(-FACE_OUT_PX * 1.5 * px) / 2} y={(-FACE_OUT_PX * 1.5 * px) / 2} width={FACE_OUT_PX * 1.5 * px} height={FACE_OUT_PX * 1.5 * px} fill="transparent" />
               <rect x={(-SIZES.mass.long / 2) * px} y={(-SIZES.mass.short / 2) * px} width={SIZES.mass.long * px} height={SIZES.mass.short * px} rx={(SIZES.mass.short / 2) * px} fill={faceDrag ? 'var(--ink)' : 'var(--panel)'} stroke="var(--ink)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
             </g>

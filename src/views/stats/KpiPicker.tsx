@@ -10,6 +10,7 @@ import { TYPOLOGIES } from '../../typologies/index.ts'
 import { Icon } from '../controls/Icon.tsx'
 import { useCloseOutside } from '../controls/useCloseOutside.ts'
 import { Note } from '../layout/Note.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const ROW_BUTTON = 'pressable grid h-6 w-6 shrink-0 place-items-center rounded-control text-ink-segment hover:bg-hover hover:text-ink disabled:opacity-30'
 
@@ -47,8 +48,8 @@ export function KpiPicker() {
       </button>
       {open && (
         <div role="dialog" aria-label="Customize KPIs" className="panel absolute right-0 top-full z-40 mt-2 select-text max-h-[calc(100dvh-6rem)] w-[20rem] overflow-y-auto overscroll-contain p-3 shadow-sheet">
-          <h2 className="text-label text-ink-secondary">Shown, in order</h2>
-          <Note>Drag to reorder. Saved with the project, so the client sees the same strip.</Note>
+          <h2 className="text-label text-ink-secondary">{tr("Shown, in order")}</h2>
+          <Note>{tr("Drag to reorder. Saved with the project, so the client sees the same strip.")}</Note>
           <ul aria-label="Shown KPIs" className="mt-2 flex flex-col gap-0.5">
             {shown.map((id, i) => (
               <li
@@ -93,7 +94,7 @@ export function KpiPicker() {
           </ul>
           {hidden.length > 0 && (
             <>
-              <h2 className="mt-3 text-label text-ink-secondary">Available</h2>
+              <h2 className="mt-3 text-label text-ink-secondary">{tr("Available")}</h2>
               <ul aria-label="Available KPIs" className="mt-1 flex flex-col gap-0.5">
                 {hidden.map((k) => (
                   <li key={k.id} className="flex items-center gap-1 rounded-control px-1 py-1 text-body hover:bg-hover">
@@ -115,7 +116,7 @@ export function KpiPicker() {
               className="pressable mt-3 rounded-control px-2 py-1 text-label font-medium text-ink-secondary hover:bg-hover hover:text-ink disabled:opacity-40"
               onClick={() => apply((p) => actions.setKpis(p, typologyDefault))}
             >
-              Back to the typology’s default
+              {tr("Back to the typology’s default")}
             </button>
           )}
         </div>

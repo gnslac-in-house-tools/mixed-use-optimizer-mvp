@@ -12,6 +12,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { placeInWindow } from './place.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** How a menu closed: a row picked, Escape, or away from it (a press outside, a scroll, a resize). A pick and Escape are the keyboard's paths: the focus goes back to where it was; away is not. */
 export type CloseHow = 'pick' | 'escape' | 'away'
@@ -332,7 +333,7 @@ function Panel({
             onClick={(e) => onActivate(item, e.currentTarget)}
             className={`pressable flex h-row w-full items-center gap-3 rounded-control px-2.5 text-left text-body hover:bg-hover focus:bg-hover focus:outline-none disabled:opacity-40 disabled:hover:bg-transparent ${expanded ? 'bg-hover' : ''}`}
           >
-            <span className="flex-1 truncate">{item.label}</span>
+            <span className="flex-1 truncate">{tr(item.label)}</span>
             {!sub && item.checked && <span aria-hidden>✓</span>}
             {!sub && item.detail && <span className="text-label text-ink-secondary">{item.detail}</span>}
             {sub && <span aria-hidden>▸</span>}

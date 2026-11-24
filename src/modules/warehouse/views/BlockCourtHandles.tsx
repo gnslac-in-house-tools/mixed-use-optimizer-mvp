@@ -24,6 +24,7 @@ import { copyGenerated, copyOnPlan } from '../engine/copies.ts'
 import { typeWith } from '../engine/generate.ts'
 import { courtsOf } from './handleMath.ts'
 import { useSiteBlockOf } from './siteBlockState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /**
  * The id of a court's ref: `<owner>/<edgeId>`, and `/<courtId>` only for a wall with several courts. A wall's only court is named by its wall, so its handles stay the same ones when a rectangle takes
@@ -126,7 +127,7 @@ export function BlockCourtHandles({ drag, scale, toWorld, pick, part }: { drag: 
                 useCourtPick.getState().setPick({ ref: r, vertex: null })
               }}
             >
-              <title>Truck court: click it to edit its shape</title>
+              <title>{tr("Truck court: click it to edit its shape")}</title>
             </path>
           )
         })}

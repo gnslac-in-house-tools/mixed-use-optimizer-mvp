@@ -20,6 +20,7 @@ import { runsOf, streetIdOf, useRoads } from '../plan/circulation/roadState.ts'
 import { Lockable } from './Lockable.tsx'
 import { lanesOf } from '../../engine/path/lanes.ts'
 import { lanesRead, sidesRead } from './sidesRead.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const VEHICLES: Record<string, string> = { trucks: 'Trucks', cars: 'Cars', all: 'Trucks and cars' }
 const pct = (v: number) => `${(v * 100).toLocaleString('en-US', { maximumFractionDigits: 1 })} %`
@@ -74,7 +75,7 @@ export function StreetProperties({ road, muted }: { road: DerivedRoad; muted: st
 
   return (
     <Lockable locked={lockState === 'locked'} muted={muted}>
-      {lockState === 'mixed' && <p className={`select-text text-caption ${muted}`}>Some of its segments are locked: an edit changes the others.</p>}
+      {lockState === 'mixed' && <p className={`select-text text-caption ${muted}`}>{tr("Some of its segments are locked: an edit changes the others.")}</p>}
       <SelectField
         label="Type"
         value={type.id}
@@ -93,13 +94,13 @@ export function StreetProperties({ road, muted }: { road: DerivedRoad; muted: st
       {graded && (
         <dl aria-label="Road grading" className="flex flex-col gap-1.5">
           <div className="flex justify-between gap-3 text-body">
-            <dt className={`text-label ${muted}`}>Steepest grade</dt>
+            <dt className={`text-label ${muted}`}>{tr("Steepest grade")}</dt>
             <dd className={`select-text font-medium tabular-nums ${graded.grade > maxGrade + 1e-6 ? 'text-status-over' : ''}`}>
               {pct(graded.grade)} <span className={`font-normal ${muted}`}>of {pct(maxGrade)} max.</span>
             </dd>
           </div>
           <div className="flex justify-between gap-3 text-body">
-            <dt className={`text-label ${muted}`}>Cut · Fill</dt>
+            <dt className={`text-label ${muted}`}>{tr("Cut · Fill")}</dt>
             <dd className="select-text font-medium tabular-nums">
               ≈ {m3(graded.cut)} · {m3(graded.fill)} m³
             </dd>
@@ -110,7 +111,7 @@ export function StreetProperties({ road, muted }: { road: DerivedRoad; muted: st
         <div key={c.node} className="flex items-center justify-between gap-3 text-body">
           <span>Connected to {c.name}</span>
           <Button title={`Let go of ${c.name}: the end stays where it is, the lot moves without it`} onClick={() => apply((p) => actions.disconnectStreetEnd(p, option, c.node))}>
-            Disconnect
+            {tr("Disconnect")}
           </Button>
         </div>
       ))}

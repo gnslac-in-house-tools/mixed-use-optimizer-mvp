@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { isSiteFile, SITE_FILE_ACCEPT } from '../../io/site/siteFile.ts'
 import { importSiteFile } from '../plan/site/importState.ts'
 import { openGft } from './files.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const carriesFiles = (e: DragEvent) => !!e.dataTransfer && [...e.dataTransfer.types].includes('Files')
 
@@ -61,8 +62,8 @@ export function FileDrop() {
   return (
     <div role="status" aria-label="Open a project" className="pointer-events-none fixed inset-0 z-50 grid place-items-center bg-black/20 p-gutter">
       <div className="panel flex flex-col items-center gap-1 px-8 py-6 shadow-sheet">
-        <p className="text-headline">Drop the .gft to open it</p>
-        <p className="text-caption text-ink-secondary">It takes the current project’s place (asking first if that one has changes this browser has not kept).</p>
+        <p className="text-headline">{tr("Drop the .gft to open it")}</p>
+        <p className="text-caption text-ink-secondary">{tr("It takes the current project’s place (asking first if that one has changes this browser has not kept).")}</p>
         <p className="text-caption text-ink-secondary">A site’s file ({SITE_FILE_ACCEPT.split(',').join(' ')}) is imported into the site: its boundary, its ground.</p>
       </div>
     </div>

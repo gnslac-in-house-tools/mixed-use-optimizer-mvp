@@ -2,6 +2,7 @@
 // Fields keep a local draft while typing and commit on Enter or blur: one undo step per edit, not per keystroke.
 import { useState, type ReactNode, type Ref } from 'react'
 import { Icon } from './Icon.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export const inputClass =
   'h-row select-text rounded-control border border-separator bg-panel-sunken px-2 text-body text-ink outline-none focus:border-ink'
@@ -9,7 +10,7 @@ export const inputClass =
 function Row({ label, children, narrow = false }: { label: string; children: ReactNode; narrow?: boolean }) {
   return (
     <label className={`flex min-w-0 items-center justify-between ${narrow ? 'gap-1.5' : 'gap-3'}`}>
-      <span className="text-label text-ink-secondary">{label}</span>
+      <span className="text-label text-ink-secondary">{tr(label)}</span>
       {children}
     </label>
   )
@@ -220,7 +221,7 @@ export function SelectField(props: {
       >
         {props.options.map((o) => (
           <option key={o.value} value={o.value}>
-            {o.label}
+            {tr(o.label)}
           </option>
         ))}
       </select>

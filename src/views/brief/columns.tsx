@@ -29,6 +29,7 @@ import { CellField } from '../controls/fields.tsx'
 import { Icon } from '../controls/Icon.tsx'
 import { m2, sides } from '../format.ts'
 import { useModule } from '../modules.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export interface BriefColumn {
   key: string
@@ -148,7 +149,7 @@ export const BRIEF_COLUMNS: BriefColumn[] = [
         onClick={() => editProgram(g)}
         className="pressable rounded-control px-1.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
       >
-        Edit…
+        {tr("Edit…")}
       </button>
     ),
   },

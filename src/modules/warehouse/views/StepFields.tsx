@@ -12,6 +12,7 @@ import { MorphologyFields } from './MorphologyFields.tsx'
 import { ElementsFields } from './ElementsFields.tsx'
 import { Note as HelpNote } from '../../../views/layout/Note.tsx'
 import { baysInWords } from './summary.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 interface Props {
   t: WarehouseType
@@ -41,10 +42,10 @@ function JoinField({ t, editable }: Pick<Props, 't' | 'editable'>) {
         <Note>{`Two thirds of a bay${width}: a shorter end bay joins the bay next to it.`}</Note>
       ) : (
         <span className="flex items-center justify-between gap-2">
-          <Note>An end bay shorter joins the bay next to it.</Note>
+          <Note>{tr("An end bay shorter joins the bay next to it.")}</Note>
           {editable && (
             <button type="button" className="ml-auto shrink-0 whitespace-nowrap text-caption text-ink-secondary underline hover:text-ink" onClick={() => setJoin(t.id, null)}>
-              Two thirds of a bay
+              {tr("Two thirds of a bay")}
             </button>
           )}
         </span>
@@ -67,7 +68,7 @@ function GridFields({ t, g, editable }: Props) {
     <>
       {editable && (
         <span className="flex items-center justify-between gap-3">
-          <span className="text-label text-ink-secondary">Set by</span>
+          <span className="text-label text-ink-secondary">{tr("Set by")}</span>
           <Segmented
             kind="toggle"
             label="Set the grid by"
@@ -98,16 +99,16 @@ function GridFields({ t, g, editable }: Props) {
       <JoinField t={t} editable={editable} />
       {editable && (
         <button type="button" className="h-row self-start whitespace-nowrap rounded-control border border-separator px-2 text-body text-ink hover:bg-fill" onClick={() => endsAutomatically(t.id)}>
-          Set end bays automatically
+          {tr("Set end bays automatically")}
         </button>
       )}
       <HelpNote>{`Along the length: ${baysInWords(g.runs.x, unit)}. Along the width: ${baysInWords(g.runs.y, unit)}. The button lays them once; after it, move the column lines by hand on the plan.`}</HelpNote>
       {t.grid.lines && (
         <span className="flex items-center justify-between gap-2">
-          <Note>Lines of its own: moved or deleted on the plan, by their bubbles.</Note>
+          <Note>{tr("Lines of its own: moved or deleted on the plan, by their bubbles.")}</Note>
           {editable && (
             <button type="button" className="h-row shrink-0 whitespace-nowrap rounded-control border border-separator px-2 text-body text-ink hover:bg-fill" onClick={() => regularGridAgain(t.id)}>
-              Regular grid again
+              {tr("Regular grid again")}
             </button>
           )}
         </span>
@@ -122,7 +123,7 @@ function HallFields({ t, editable }: Props) {
     <>
       <LengthField label="Length" min={1} max={2000} value={t.hall.length} disabled={!editable} onCommit={(length) => set({ length })} />
       <LengthField label="Width" min={1} max={2000} value={t.hall.width} disabled={!editable} onCommit={(width) => set({ width })} />
-      <span className="text-label text-ink-secondary">What the optimizer may try (empty: two bays either way)</span>
+      <span className="text-label text-ink-secondary">{tr("What the optimizer may try (empty: two bays either way)")}</span>
       {(['length', 'width'] as const).map((k) => {
         const range = t.hall.range?.[k]
         const setRange = (i: 0 | 1, v: number) => {
@@ -162,7 +163,7 @@ function EnvelopeFields({ t, editable }: Props) {
     <>
       <LengthField label="Height" min={1} max={60} value={t.envelope.height} disabled={!editable} onCommit={(height) => set({ height })} />
       <LengthField label="Wall thickness" min={0.05} max={2} value={t.envelope.thickness} disabled={!editable} onCommit={(thickness) => set({ thickness })} />
-      <Note>The wall stands outside the column lines: its inner face on them (or on an edge’s facade offset, step 5). An edge may have its own (step 5).</Note>
+      <Note>{tr("The wall stands outside the column lines: its inner face on them (or on an edge’s facade offset, step 5). An edge may have its own (step 5).")}</Note>
     </>
   )
 }

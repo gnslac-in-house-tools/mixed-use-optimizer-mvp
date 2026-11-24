@@ -18,6 +18,7 @@ import { useLengths } from './units.ts'
 import { runAlongEdge as runAlong } from '../engine/dockRule.ts'
 import { courtsOf, edgeName } from './handleMath.ts'
 import { useWarehouse, type Picked } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 interface Props {
   t: WarehouseType
@@ -70,7 +71,7 @@ export function ElementsFields({ t, g, editable }: Props) {
       {doors.length > 0 && <KindRow label="Level doors" of={doors} pickedHere={pickedHere} some={some} wider={doors.some((e) => e.width > moduleLength(e) + WIDER)} t={t} editable={editable} />}
       {names.length > 0 && (
         <div role="group" aria-label="Patterns" className="flex flex-col gap-1.5">
-          <span className="text-label font-semibold text-ink">Patterns</span>
+          <span className="text-label font-semibold text-ink">{tr("Patterns")}</span>
           <div className="flex flex-col gap-1.5 pl-3">
             {names.map((name) => {
               const of = els.filter((e) => e.kind === 'pattern' && (e.name ?? '') === name)
@@ -80,7 +81,7 @@ export function ElementsFields({ t, g, editable }: Props) {
         </div>
       )}
       {(docks.length > 0 || courts.length > 0) && <CourtsRow t={t} g={g} courts={courts} standard={standard} editable={editable} some={some} picked={courtsPicked} />}
-      {!els.length && !courts.length && <p className="select-text text-caption text-ink-secondary">Nothing placed yet: Dock, Door and Pattern in the toolbar above the plan place them.</p>}
+      {!els.length && !courts.length && <p className="select-text text-caption text-ink-secondary">{tr("Nothing placed yet: Dock, Door and Pattern in the toolbar above the plan place them.")}</p>}
       <Note>
         The tools place them, one a module anchored on the module lines (Dock, Door and Pattern on the plan: a press puts one or takes it away). Here only their
         parameters: a width typed applies to all of its kind, or, with some picked on the plan, to those only.
@@ -148,7 +149,7 @@ function CourtsRow({ t, g, courts, standard, editable, some, picked }: { t: Ware
       {court && editable && !waits && (
         <div>
           <Button title="The project's standard court depth again" onClick={() => set(null)}>
-            Standard depth
+            {tr("Standard depth")}
           </Button>
         </div>
       )}

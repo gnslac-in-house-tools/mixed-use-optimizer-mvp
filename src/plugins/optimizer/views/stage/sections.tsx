@@ -22,6 +22,7 @@ import type { Measure, MeasureUnit, ParamKind } from '../../../../modules/types.
 import { summaryOf } from '../../engine/problem.ts'
 import { COS, FIXED_RULES, type Template } from '../../engine/template.ts'
 import { selectClass } from '../kit.ts'
+import { t as tr } from '../../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** More objectives than this and NSGA-II tells them apart less well. */
 const READ_WELL = 4
@@ -335,7 +336,7 @@ export function MustHold(props: { template: Template; edit: Edit; measures: Meas
       <Heading title="Must hold" right="design" />
       <div role="group" aria-label="Always held" className="flex items-center gap-1.5" title="Every run holds these at 0; they cannot be loosened">
         <Icon name="lock" className="h-3 w-3 shrink-0 text-ink-tertiary" />
-        <span className="min-w-0 flex-1 truncate text-label text-ink">Inside the buildable area · No overlaps · Required rules</span>
+        <span className="min-w-0 flex-1 truncate text-label text-ink">{tr("Inside the buildable area · No overlaps · Required rules")}</span>
         <span
           className={`w-[4.5rem] shrink-0 text-right text-caption tabular-nums ${excess.length === 0 ? 'text-status-within' : 'text-status-over'}`}
           title={excess.length === 0 ? undefined : excess.map((x) => `${measures.find((m) => m.id === x.id)?.label ?? x.id}: over by ${fmt(x.over, measures.find((m) => m.id === x.id)?.unit ?? 'm')}`).join('\n')}
@@ -344,7 +345,7 @@ export function MustHold(props: { template: Template; edit: Edit; measures: Meas
         </span>
       </div>
       <div role="group" aria-label="Coverage" className="flex items-center gap-1.5" title={noSite ? "COS needs the site's boundary" : 'The coverage rule (COS): held, or allowed a few points over'}>
-        <span className="min-w-0 flex-1 truncate text-label text-ink">Coverage (COS)</span>
+        <span className="min-w-0 flex-1 truncate text-label text-ink">{tr("Coverage (COS)")}</span>
         <span className="inline-flex shrink-0 rounded-pill bg-fill p-0.5">
           {segment('Strict', !allowed, () => cos && setCos(0))}
           {segment('Allow +', allowed, () => !allowed && setCos((POINTS_DEFAULT / 100) * site))}
@@ -414,7 +415,7 @@ export function Margin({ margins, set }: { margins: { kind: string; step: number
     <section aria-label="Margin over earlier stages" className="flex flex-col gap-1.5">
       <Heading title="Margin over earlier stages" right="± steps" />
       {margins.length === 0 ? (
-        <p className="text-caption text-ink-secondary">The first stage: nothing earlier to keep.</p>
+        <p className="text-caption text-ink-secondary">{tr("The first stage: nothing earlier to keep.")}</p>
       ) : (
         known.map((m) => (
           <div key={m.kind} className="flex items-center gap-1.5" title="How many of its steps this stage may move what an earlier stage approved; 0 keeps it as approved">

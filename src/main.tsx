@@ -18,6 +18,7 @@ import { startScreen, useScreen } from './views/home/screen.ts'
 import { openKept, openSample } from './views/layout/files.ts'
 import { returnFromSpeckle } from './views/layout/speckleReturn.ts'
 import { useTour } from './views/tour/tour.ts'
+import { useIdioma } from './i18n/idioma.ts' // mixed-use-mvp
 
 // dev only: store calls and the live data go out to the /state-graph page
 if (import.meta.env.DEV) {
@@ -43,8 +44,14 @@ startScreen((id) => {
 })
 if (!useScreen.getState().home && useApp.getState().project.id === SAMPLE_ID && !useTour.getState().active) useTour.getState().setOffer(true)
 
+// mixed-use-mvp: al cambiar el idioma (View › Language) la app se vuelve a montar, así que cada texto pasa otra vez por t()
+function Raiz() {
+  const idioma = useIdioma((s) => s.idioma)
+  return <App key={idioma} />
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Raiz />
   </StrictMode>,
 )

@@ -53,7 +53,7 @@ describe('plugin boundaries', () => {
       i.startsWith(`/src/plugins/${own}/`) ||
       ['/src/plugins/host.ts', '/src/plugins/hosting.ts', '/src/plugins/types.ts', '/src/views/format.ts'].includes(i) ||
       catalog(i) ||
-      ['/src/model/', '/src/engine/', '/src/views/controls/'].some((p) => i.startsWith(p)) ||
+      ['/src/model/', '/src/engine/', '/src/views/controls/', '/src/i18n/' /* mixed-use-mvp: el idioma de la interfaz */].some((p) => i.startsWith(p)) ||
       (from.startsWith(`/src/plugins/${own}/engine/`) && verbs(i))
     const wrong = files.flatMap((f) => {
       const own = pluginOf(f.path)

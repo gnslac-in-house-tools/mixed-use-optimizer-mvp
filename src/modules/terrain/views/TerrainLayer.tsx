@@ -14,6 +14,7 @@ import { LABEL_PX } from '../../../views/plan/planStyle.ts'
 import { contoursOf, EARTH_CLASSES, earthColor, earthPathsOf, heightText, SLOPE_CLASSES, slopeColor, slopePathsOf } from './terrainDraw.ts'
 import { useSiteTool } from '../../../views/plan/site/siteTools.ts'
 import { useTerrainView } from './terrainView.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const linesPath = (ls: Point[][]) => ls.map((l) => `M${l.map((p) => `${p.x.toFixed(2)},${(-p.y).toFixed(2)}`).join('L')}`).join('')
 
@@ -145,7 +146,7 @@ export function SlopeLegend() {
   if (!terrain || !shown || !slopePathsOf(terrain)) return null
   return (
     <div aria-label="Slope" className="glass pointer-events-none absolute bottom-7 left-3 z-[1] flex flex-col gap-0.5 rounded-glass px-2 py-1.5 text-caption text-ink-glass shadow-glass">
-      <span className="text-ink">Slope</span>
+      <span className="text-ink">{tr("Slope")}</span>
       {SLOPE_CLASSES.map((c, k) => (
         <span key={c.label} className="flex items-center gap-1.5">
           <span aria-hidden className="h-2.5 w-3.5 rounded-[0.125rem]" style={{ background: slopeColor(k), opacity: 0.8 }} />

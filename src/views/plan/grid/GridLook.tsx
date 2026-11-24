@@ -3,6 +3,7 @@
 // shows it).
 import { Segmented } from '../../controls/Segmented.tsx'
 import { GRID_COLORS, useGridView, type GridColor } from './gridView.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function GridLook() {
   const color = useGridView((s) => s.color)
@@ -10,7 +11,7 @@ export function GridLook() {
   return (
     <div role="group" aria-label="Grid look" className="flex flex-col gap-2 p-0.5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">Colour</span>
+        <span className="text-label text-ink-secondary">{tr("Colour")}</span>
         <Segmented
           kind="toggle"
           label="Grid colour"
@@ -20,7 +21,7 @@ export function GridLook() {
         />
       </div>
       <label className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">Opacity</span>
+        <span className="text-label text-ink-secondary">{tr("Opacity")}</span>
         <input
           type="range"
           aria-label="Grid opacity"

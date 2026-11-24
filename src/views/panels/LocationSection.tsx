@@ -15,6 +15,7 @@ import { Button, NumberField } from '../controls/fields.tsx'
 import { Segmented } from '../controls/Segmented.tsx'
 import { Note } from '../layout/Note.tsx'
 import { captureSiteMap, useMapView } from '../plan/site/mapView.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export const NO_COORDINATES = 'No coordinates found: paste a Google Maps link with @lat,lon, or type lat, lon.'
 export const SHORT_LINK = 'Short links (maps.app.goo.gl) carry no coordinates: open it in the browser and copy the long link from its address bar, or type lat, lon.'
@@ -51,7 +52,7 @@ export function LocationSection() {
 
   return (
     <section aria-label="Location" className="flex flex-col gap-2">
-      <h2 className="min-w-0 truncate text-label text-ink-secondary">Location</h2>
+      <h2 className="min-w-0 truncate text-label text-ink-secondary">{tr("Location")}</h2>
       <Note>{project.site.source ? `The boundary came from ${project.site.source}.` : 'Import the boundary from a file, or draw it.'}</Note>
       <div className="flex items-center gap-1.5">
         <input
@@ -66,7 +67,7 @@ export function LocationSection() {
           className="h-row min-w-0 flex-1 select-text rounded-control border border-separator bg-panel-sunken px-2 text-body text-ink outline-none placeholder:text-ink-tertiary focus:border-ink"
         />
         <Button title="Put this place at the site's centre, and capture the map round it" disabled={!text.trim() || busy} onClick={locate}>
-          Locate
+          {tr("Locate")}
         </Button>
       </div>
       {wrong && (
@@ -83,11 +84,11 @@ export function LocationSection() {
         </>
       )}
       <div className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">Map</span>
+        <span className="text-label text-ink-secondary">{tr("Map")}</span>
         <Segmented kind="toggle" label="Map source" options={SOURCES} value={map?.source ?? source} onChange={pickSource} />
       </div>
       <label className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">Opacity</span>
+        <span className="text-label text-ink-secondary">{tr("Opacity")}</span>
         <span className="flex items-center gap-1.5">
           <input
             type="range"
@@ -108,7 +109,7 @@ export function LocationSection() {
         </Button>
         {map && (
           <Button title="Take the map away from under the plan" disabled={busy} onClick={() => apply((p) => actions.setMap(p, null))}>
-            Remove map
+            {tr("Remove map")}
           </Button>
         )}
       </div>
@@ -117,7 +118,7 @@ export function LocationSection() {
           {error}
         </p>
       )}
-      <Note>The map needs the internet only to be captured: the image is kept in the project.</Note>
+      <Note>{tr("The map needs the internet only to be captured: the image is kept in the project.")}</Note>
     </section>
   )
 }

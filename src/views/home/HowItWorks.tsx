@@ -7,6 +7,7 @@ import { openSample } from '../layout/files.ts'
 import { HOME_ICONS } from './icons.ts'
 import { Badge, Thumb } from './ProjectsTable.tsx'
 import type { Row } from './rows.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** `plugin`: held back as "coming soon" (Decision "Coming soon") the card says so; `off`: not in the sample either. */
 const WAYS: { title: string; text: string; icon: string; tint: string; off?: boolean; plugin?: string }[] = [
@@ -76,7 +77,7 @@ export function HowItWorks({ sample, blocks, narrow }: { sample: Row; blocks: nu
               className="pressable ml-2.5 flex h-[1.875rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-panel px-2.5 text-label font-semibold text-ink shadow-control hover:bg-panel-sunken"
             >
               <Icon path={HOME_ICONS.tour} className="h-4 w-4" />
-              Take the tour · 10 min
+              {tr("Take the tour · 10 min")}
             </button>
             <button
               type="button"
@@ -85,7 +86,7 @@ export function HowItWorks({ sample, blocks, narrow }: { sample: Row; blocks: nu
               className="pressable flex h-[1.875rem] items-center gap-2 rounded-[0.625rem] px-2.5 text-label text-ink-segment hover:bg-hover hover:text-ink"
             >
               <Icon path={HOME_ICONS.open} className="h-4 w-4" />
-              Open
+              {tr("Open")}
             </button>
           </div>
         </div>

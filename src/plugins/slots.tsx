@@ -14,6 +14,7 @@ import { useUi, type RailItem, type Side, type SummaryTab } from '../views/layou
 import { PLUGINS } from './registry.ts'
 import { heldBack, modeOf, usePluginModes } from './settings.ts'
 import type { PluginAction, PluginActionProps, PluginTabKey, PluginTabProps, PluginWindowKey } from './types.ts'
+import { t as tr } from '../i18n/idioma.ts' // mixed-use-mvp
 
 export const isPluginTab = (key: string): key is PluginTabKey => key.startsWith('plugin:')
 
@@ -200,7 +201,7 @@ export function PluginWindowView({ windowKey }: { windowKey: PluginWindowKey }) 
   if (!View || !entry) return null
   return (
     <LoadBoundary key={windowKey} retry={() => windowViews.set(windowKey, lazy(entry.window.load))}>
-      <Suspense fallback={<p className="p-panel-pad text-caption text-ink-secondary">Loading…</p>}>
+      <Suspense fallback={<p className="p-panel-pad text-caption text-ink-secondary">{tr("Loading…")}</p>}>
         <View />
       </Suspense>
     </LoadBoundary>
@@ -261,7 +262,7 @@ export function PluginWidePane({ tab }: { tab: PluginTabKey }) {
 function TabView({ tab, props, retry }: { tab: PluginTabKey; props: PluginTabProps; retry(): void }) {
   return (
     <LoadBoundary key={tab} retry={retry}>
-      <Suspense fallback={<p className="text-caption text-ink-secondary">Loading…</p>}>
+      <Suspense fallback={<p className="text-caption text-ink-secondary">{tr("Loading…")}</p>}>
         <LoadedTab tab={tab} props={props} />
       </Suspense>
     </LoadBoundary>
@@ -284,7 +285,7 @@ class LoadBoundary extends Component<{ retry(): void; children: ReactNode; faile
     if (this.props.failed !== undefined) return this.props.failed
     return (
       <div className="flex flex-col items-start gap-2">
-        <p className="text-caption text-status-over">This tab could not load.</p>
+        <p className="text-caption text-status-over">{tr("This tab could not load.")}</p>
         <button
           type="button"
           className="pressable rounded-control bg-fill px-2.5 py-1 text-label text-ink shadow-control hover:bg-hover"
@@ -293,7 +294,7 @@ class LoadBoundary extends Component<{ retry(): void; children: ReactNode; faile
             this.setState({ failed: false })
           }}
         >
-          Retry
+          {tr("Retry")}
         </button>
       </div>
     )

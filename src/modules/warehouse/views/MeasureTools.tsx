@@ -5,6 +5,7 @@ import { titleWith } from '../../../views/commands/shortcuts.ts'
 import { ChipTrack, ToggleChip } from '../../../views/controls/ToggleChips.tsx'
 import { RULER_HINT, TOOLS, useRuler, useTool } from '../../../views/plan/tools/toolState.ts'
 import { toggle } from '../../../views/tools/hand.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function MeasureTools({ plan }: { plan: boolean }) {
   const tool = useTool((s) => s.tool)
@@ -21,10 +22,10 @@ export function MeasureTools({ plan }: { plan: boolean }) {
           title={`${TOOLS.find((t) => t.key === 'dimension')!.title}${off ? why : ''}`}
           onClick={() => toggle('dimension')}
         >
-          Dimension
+          {tr("Dimension")}
         </ToggleChip>
         <ToggleChip pressed={ruler && !off} disabled={off} title={`${titleWith(RULER_HINT, 'tool.ruler')}${off ? why : ''}`} onClick={() => toggle('ruler')}>
-          Ruler
+          {tr("Ruler")}
         </ToggleChip>
       </ChipTrack>
     </div>

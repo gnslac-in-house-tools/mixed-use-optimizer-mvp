@@ -11,6 +11,7 @@ import { enterTyped, escapeTyped, setTyped, useTyped } from '../../editing/dimen
 import { typingIn } from '../tools/common.tsx'
 import { parseCommand } from './command.ts'
 import { useCommand, type Registration } from './commandState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** What starts a command: typed while drawing, it goes to the field. */
 const STARTS = /^[0-9#@<.\-+]$/
@@ -33,7 +34,7 @@ export function CommandLine() {
   if (registration === null)
     return (
       <div role="group" aria-label="Command" className="flex min-w-0 items-center gap-2 px-1.5">
-        <span className="text-label text-ink-secondary">Command</span>
+        <span className="text-label text-ink-secondary">{tr("Command")}</span>
         {help && (
         <span className="truncate text-caption text-ink-tertiary">
           {plan ? KEY_NOTE() : titleWith('The tools draw on the plan', 'view.plan')}

@@ -3,6 +3,7 @@
 // furniture or equipment in them (the units' furniture; machinery, later). Each on its own.
 import { ChipTrack, ToggleChip } from '../controls/ToggleChips.tsx'
 import { useInteriors } from './interiors.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function InteriorsControls() {
   const s = useInteriors()
@@ -10,10 +11,10 @@ export function InteriorsControls() {
     <div role="toolbar" aria-label="Interiors" className="flex shrink-0 items-center gap-1.5">
       <ChipTrack>
         <ToggleChip pressed={s.interiors} title="Programs: the spaces inside the masses, by use (the rooms of each unit)" onClick={() => s.toggle('interiors')}>
-          Programs
+          {tr("Programs")}
         </ToggleChip>
         <ToggleChip pressed={s.furniture} title="Furniture and equipment inside the masses" onClick={() => s.toggle('furniture')}>
-          Furniture
+          {tr("Furniture")}
         </ToggleChip>
       </ChipTrack>
     </div>

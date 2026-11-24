@@ -8,6 +8,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import { createPortal } from 'react-dom'
 import { placeInWindow } from './place.ts'
 import { Icon, type IconName } from './Icon.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export type MenuItem = {
   key: string
@@ -126,7 +127,7 @@ export function MoreMenu({ items, compact = false, align = 'left' }: { items: Me
               ) : (
                 <span aria-hidden className="h-[1.125rem] w-[1.125rem] shrink-0" />
               )}
-              <span className="flex-1">{item.label}</span>
+              <span className="flex-1">{tr(item.label)}</span>
               {item.detail && <span className="ml-4 text-label text-ink-secondary">{item.detail}</span>}
             </button>
           ))}

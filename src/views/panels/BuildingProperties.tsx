@@ -22,6 +22,7 @@ import {
   whyNotDelete,
   whyNotRemoveFromOption,
 } from './buildingCommands.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /**
  * The settings of the building it is given (never "the active one": Layers picks any building's row). `heading`: Properties names
@@ -49,14 +50,14 @@ export function BuildingProperties({ building: b, heading }: { building: Buildin
           </span>
         </div>
       ) : (
-        <h2 className="text-label text-ink-secondary">Active building</h2>
+        <h2 className="text-label text-ink-secondary">{tr("Active building")}</h2>
       )}
       {/* a locked building (the padlock is CAD's: Layers' row takes it off) holds its name, colour, levels, grid and platform, and every mass in it: read-only, with the reason */}
       <Lockable locked={b.locked === true} muted="text-ink-secondary">
         {/* key: another building's name, not this one's draft */}
         <TextField key={b.id} label="Name" value={b.name} onCommit={(v) => updateBuilding(b.id, { name: v })} />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-label text-ink-secondary">Colour</span>
+          <span className="text-label text-ink-secondary">{tr("Colour")}</span>
           <div role="radiogroup" aria-label="Colour" className="flex flex-wrap justify-end gap-1">
             {BUILDING_COLORS.map((c, i) => (
               <button
@@ -74,8 +75,8 @@ export function BuildingProperties({ building: b, heading }: { building: Buildin
         </div>
         <label className="flex items-start justify-between gap-3" title="Drawn grey, left out of the KPIs, the Summary and its own checks">
           <span className="flex flex-col">
-            <span className="text-label text-ink-secondary">Context</span>
-            <span className="text-caption text-ink-tertiary">Surroundings: drawn, not counted</span>
+            <span className="text-label text-ink-secondary">{tr("Context")}</span>
+            <span className="text-caption text-ink-tertiary">{tr("Surroundings: drawn, not counted")}</span>
           </span>
           <input type="checkbox" className="mt-1 h-4 w-4 accent-ink" checked={b.context === true} onChange={(e) => updateBuilding(b.id, { context: e.target.checked })} />
         </label>
@@ -97,7 +98,7 @@ export function BuildingProperties({ building: b, heading }: { building: Buildin
             </Button>
           )}
           <Button title={notDelete ?? `Delete ${b.name}, its levels and masses, from every option`} disabled={notDelete !== null} onClick={() => deleteBuilding(b)}>
-            Delete
+            {tr("Delete")}
           </Button>
         </div>
       </Lockable>

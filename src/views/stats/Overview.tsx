@@ -16,6 +16,7 @@ import { BuildingRows } from './BuildingRows.tsx'
 import { isolatedName, useIsolate, useIsolatedDerived } from './isolate.ts'
 import { ProgramBars } from './ProgramBars.tsx'
 import { ResumenResidencial } from '../../modules/residential/views/ResumenResidencial.tsx' // mixed-use-mvp
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The groups and their KPIs, in order (the registry's ids). */
 export const OVERVIEW_GROUPS = [
@@ -45,7 +46,7 @@ export function Group({ id, label, children }: { id: string; label: string; chil
         className="flex items-center gap-1 self-start text-label text-ink-secondary hover:text-ink"
       >
         <Icon name={folded ? 'chevronRight' : 'chevronDown'} className="h-3 w-3" />
-        <h2>{label}</h2>
+        <h2>{tr(label)}</h2>
       </button>
       {!folded && children}
     </section>
@@ -54,7 +55,7 @@ export function Group({ id, label, children }: { id: string; label: string; chil
 
 function Metric({ k }: { k: KpiValue }) {
   const color = k.status === 'over' ? 'text-status-over' : k.status === 'within' ? 'text-status-within' : 'text-ink'
-  const label = k.limit === null ? k.label : `${k.label} (max ${formatFigure(k.limit, k.unit)})`
+  const label = k.limit === null ? tr(k.label) : `${tr(k.label)} (${tr('max')} ${formatFigure(k.limit, k.unit)})`
   return (
     <div className="flex items-baseline justify-between gap-3">
       <span className="text-label text-ink-secondary">{label}</span>
@@ -80,7 +81,7 @@ function IsolatedChip() {
     <div role="status" className="flex min-w-0 select-text items-center justify-between gap-2 rounded-control bg-fill py-1 pl-2.5 pr-1 text-label">
       <span className="min-w-0">
         Isolated: <span className="font-medium text-ink">{name}</span>
-        <span className="block text-caption text-ink-secondary">The figures are its alone</span>
+        <span className="block text-caption text-ink-secondary">{tr("The figures are its alone")}</span>
       </span>
       <button type="button" aria-label="Show everything" title="Show everything (Esc)" onClick={() => useIsolate.getState().clear()} className="grid h-6 w-6 place-items-center rounded-control text-ink-secondary hover:bg-hover hover:text-ink">
         <Icon name="close" className="h-3.5 w-3.5" />
@@ -115,7 +116,7 @@ export function Overview() {
       <div className="-mb-3 flex justify-end">
         <label className="flex shrink-0 items-center gap-1.5 text-label text-ink-secondary" title="A building into its programs, a program into its masses">
           <input type="checkbox" className="h-3.5 w-3.5 accent-ink" checked={expanded} onChange={(e) => useOverview.getState().setExpanded(e.target.checked)} />
-          Expand
+          {tr("Expand")}
         </label>
       </div>
       {group('site')}

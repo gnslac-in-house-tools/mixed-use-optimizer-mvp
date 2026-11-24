@@ -12,6 +12,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { BLOCK_EDITOR_ID, TERRAIN_EDITOR_ID } from '../home/editorId.ts'
 import { usePhone } from './media.ts'
 import { startAutosave, toggleAutosave, useSaving } from './saving.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const time = (ms: number) => new Date(ms).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 
@@ -30,7 +31,7 @@ export function SaveStatus() {
   const editor = useApp((s) => s.project.id === BLOCK_EDITOR_ID || s.project.id === TERRAIN_EDITOR_ID)
   const phone = usePhone()
   const when = savedAt === null ? null : time(savedAt)
-  const text = failed ? 'Not saved' : same && when ? `Saved ${when}` : kept === null && !touched ? 'Not saved yet' : 'Unsaved changes'
+  const text = failed ? tr('Not saved') : same && when ? `${tr('Saved')} ${when}` : kept === null && !touched ? tr('Not saved yet') : tr('Unsaved changes')
   const unsaved = text === 'Unsaved changes' || text === 'Not saved'
   const where = `This browser keeps a copy of the project (all its options) at this address; clearing the browser’s data removes it. File › Export › Project (.gft) is the backup.`
   const title = `${autosave ? `Autosave is on: every change is kept a moment after it, and a reload opens it${when ? ` (last at ${when})` : ''}.` : `Autosave is off${unsaved ? ': there are changes this browser has not kept' : ''}. ${keyOrMenu('file.save', 'File › Save')} keeps the project.`} ${where} Click to turn autosave ${autosave ? 'off' : 'on'}.`

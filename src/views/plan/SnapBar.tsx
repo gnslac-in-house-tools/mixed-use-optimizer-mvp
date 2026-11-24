@@ -14,6 +14,7 @@ import { BarMenu } from '../viewport/BarMenu.tsx'
 import { GridMenu } from './grid/GridMenu.tsx'
 import { SNAP_HELP, SNAP_KINDS, SNAP_NAMES, SNAP_TO, SNAP_TO_HELP, SNAP_TO_NAMES, signPath } from './snap/kinds.ts'
 import { useSnapSettings } from './snap/settings.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /**
  * `disabled`: no plan on screen (the 3D view alone). `snapTo`: the *Snap to* reference lines and contours in the kinds'
@@ -36,7 +37,7 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
     <div role="toolbar" aria-label="Snap" data-tour="snap" className={`flex shrink-0 items-center gap-1.5 ${disabled ? 'opacity-50' : ''}`}>
       <ChipTrack>
         <ToggleChip pressed={s.on} disabled={disabled} title={`${titleWith('Object snap on/off', 'view.snap')}. Shift while dragging = no snap`} onClick={() => toggle('on')}>
-          Snap
+          {tr("Snap")}
         </ToggleChip>
       </ChipTrack>
       {/* its kinds in a drop-down (Decision "Bottom bar"): each with the sign the plan draws and its name */}
@@ -63,7 +64,7 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
         {/* what else attracts (Decision "Drawing layers"): yes or no each */}
         {snapTo && (
           <div role="group" aria-label="Snap to" className="mt-1 flex flex-col border-t border-separator pt-1">
-            <span className="px-2 py-0.5 text-caption text-ink-tertiary">Snap to</span>
+            <span className="px-2 py-0.5 text-caption text-ink-tertiary">{tr("Snap to")}</span>
             {SNAP_TO.map((k) => (
               <button
                 key={k}
@@ -88,19 +89,19 @@ export function SnapBar({ disabled = false, snapTo = true, gridTitle, gridMenu =
           title="Align: walls line up with parallel walls (other masses, site, setback); a dragged corner tracks the mass's axes and the lines of nearby walls"
           onClick={() => toggle('align')}
         >
-          Align
+          {tr("Align")}
         </ToggleChip>
       </ChipTrack>
       <ChipTrack>
         <ToggleChip pressed={s.ortho} disabled={disabled} title={`${titleWith('Ortho', 'view.ortho')}: a dragged corner moves only horizontally or vertically`} onClick={() => toggle('ortho')}>
-          Ortho
+          {tr("Ortho")}
         </ToggleChip>
         <ToggleChip
           pressed={s.grid}
           title={gridTitle ?? titleWith(module ? `The structural grid: shown, and the snap to its ${module} modules` : 'The 1 m grid: shown, and the snap to it', 'view.grid')}
           onClick={() => toggle('grid')}
         >
-          Grid
+          {tr("Grid")}
         </ToggleChip>
       </ChipTrack>
       {gridMenu && (

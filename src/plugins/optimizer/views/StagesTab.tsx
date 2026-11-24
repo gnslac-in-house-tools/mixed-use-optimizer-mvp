@@ -27,6 +27,7 @@ import { useSpecimenView } from './specimens/viewState.ts'
 import { approveByHand, approveSpecimen, askAgentFor, circled, editPlan, optionOfStage, reopenStage, replacePlan, runOf, runStage, startByHand, useStages } from './stage/commands.ts'
 import { Review, useSpecimenProject, type Back } from './stage/Review.tsx'
 import { Small } from './stage/sections.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export default function StagesTab() {
   const saved = usePluginData(OPTIMIZER, OptimizerDataSchema)
@@ -40,14 +41,14 @@ function About({ data }: { data: OptimizerData | null }) {
   const project = useProject()
   return (
     <section aria-label="About the optimizer" className="flex flex-col gap-3 rounded-control bg-panel-sunken p-3">
-      <h2 className="text-headline text-ink">Search layouts of your masses</h2>
-      <p className="text-body text-ink">Tries thousands of arrangements within your brief and rules, and keeps the best, one stage at a time.</p>
+      <h2 className="text-headline text-ink">{tr("Search layouts of your masses")}</h2>
+      <p className="text-body text-ink">{tr("Tries thousands of arrangements within your brief and rules, and keeps the best, one stage at a time.")}</p>
       <p className="text-caption text-ink-secondary">
         Your design never changes: each specimen you keep becomes a new option, and yours stays as it is. A run goes on in
         the background while you work.
       </p>
       <span data-tour="optimizer-on" className="contents">
-        <MainButton onClick={() => setPluginData(OPTIMIZER, turnOn(project.typology, data))}>Turn on for this project</MainButton>
+        <MainButton onClick={() => setPluginData(OPTIMIZER, turnOn(project.typology, data))}>{tr("Turn on for this project")}</MainButton>
       </span>
     </section>
   )
@@ -112,7 +113,7 @@ function Stages({ data }: { data: OptimizerData }) {
         >
           {!from && (
             <option value="" disabled>
-              A plan of its own
+              {tr("A plan of its own")}
             </option>
           )}
           {plans.map((t) => (
@@ -131,11 +132,11 @@ function Stages({ data }: { data: OptimizerData }) {
         </Small>
         {!wide && (
           <Small title="The run’s specimens" onClick={() => showTabs(OPTIMIZER, { right: 'specimens' })}>
-            Specimens
+            {tr("Specimens")}
           </Small>
         )}
       </div>
-      <p className="text-caption text-ink-secondary">Seed to leaf, any stage in any order: each runs on the nearest approved one before it.</p>
+      <p className="text-caption text-ink-secondary">{tr("Seed to leaf, any stage in any order: each runs on the nearest approved one before it.")}</p>
       <ol aria-label="The plan" className="flex flex-col">
         {plan.stages.map((s, i) => {
           const status: StageStatus | 'running' = running === s.id ? 'running' : statusOf(plan, s.id)
@@ -298,11 +299,11 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
               {pick === null ? 'Pick one in Specimens to approve it.' : `Picked #${pick}.`}
             </p>
           ) : run?.status === 'running' ? (
-            <p className="text-caption text-ink-secondary">Another stage is running: its run comes back here when that one ends.</p>
+            <p className="text-caption text-ink-secondary">{tr("Another stage is running: its run comes back here when that one ends.")}</p>
           ) : looked === wanted ? (
-            <p className="text-caption text-ink-secondary">Its run is not in this browser: Redo runs it again (its seed repeats it).</p>
+            <p className="text-caption text-ink-secondary">{tr("Its run is not in this browser: Redo runs it again (its seed repeats it).")}</p>
           ) : (
-            <p className="text-caption text-ink-secondary">Looking for its run…</p>
+            <p className="text-caption text-ink-secondary">{tr("Looking for its run…")}</p>
           )}
           {own && pick !== null && picked && (
             <Review before={{ project: own.base, option: own.optionId }} after={{ project: picked, option: own.optionId }} template={own.template} title={`#${pick} against ${against}`} back={back} />
@@ -321,7 +322,7 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
               {pick === null ? 'Approve' : `Approve #${pick}`}
             </MainButton>
             <Small title="Change its parameters or its seed and run it again" onClick={edit}>
-              Redo
+              {tr("Redo")}
             </Small>
           </div>
         </>
@@ -334,10 +335,10 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
           {keptReview}
           <div className="flex flex-wrap gap-2">
             <MainButton disabled={!worked} title="Take that option as this stage’s; the later approved stages to review again" onClick={() => approveByHand(option, stage.id)}>
-              Approve
+              {tr("Approve")}
             </MainButton>
             <Small title="Change its settings" onClick={edit}>
-              Edit…
+              {tr("Edit…")}
             </Small>
           </div>
         </>
@@ -350,12 +351,12 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
               title={run?.status === 'running' ? 'A run is going: stop it first' : 'Search with this stage’s parameters'}
               onClick={() => runStage(option, stage.id)}
             >
-              <span aria-hidden>▶</span> Run
+              <span aria-hidden>▶</span> {tr("Run")}
             </MainButton>
           )}
           {stage.by === 'hand' && (
             <MainButton title="Edit a copy of the option it runs on, then approve it" onClick={() => startByHand(option, stage.id)}>
-              Start by hand
+              {tr("Start by hand")}
             </MainButton>
           )}
           {stage.by === 'agent' && (
@@ -363,11 +364,11 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
               title="Write this stage’s request in the Agent tab, to send: it works it with the stages’ tools"
               onClick={() => askAgentFor(project, plan, stage) || notify('error', 'The Agent is off in this browser: View → Plugins turns it on.')}
             >
-              Ask the agent
+              {tr("Ask the agent")}
             </MainButton>
           )}
           <Small title="Its parameters, in a window" onClick={edit}>
-            Edit…
+            {tr("Edit…")}
           </Small>
         </div>
       )}
@@ -382,10 +383,10 @@ function Picked({ option, plan, stage, status, index }: { option: string; plan: 
               title="Take the approval back: the approved stages after it go to review again"
               onClick={() => reopenStage(option, stage.id)}
             >
-              Reopen
+              {tr("Reopen")}
             </Small>
             <Small title="Its parameters, in a window" onClick={edit}>
-              Edit…
+              {tr("Edit…")}
             </Small>
           </div>
         </>

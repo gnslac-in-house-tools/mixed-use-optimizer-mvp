@@ -9,6 +9,7 @@ import { levelOf } from '../../engine/levels.ts'
 import { useApp } from '../../state/store.ts'
 import { m2 } from '../format.ts'
 import { useIsolate } from './isolate.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function BuildingRows({ expanded = false }: { expanded?: boolean }) {
   const project = useApp((s) => s.project)
@@ -30,13 +31,13 @@ export function BuildingRows({ expanded = false }: { expanded?: boolean }) {
     })
   }
 
-  if (rows.length === 0) return <p className="text-caption text-ink-secondary">No buildings in this option.</p>
+  if (rows.length === 0) return <p className="text-caption text-ink-secondary">{tr("No buildings in this option.")}</p>
   return (
     <table aria-label="By building" className="w-full table-fixed text-body">
       <thead>
         <tr className="text-left text-caption text-ink-secondary">
-          <th className="w-[44%] pb-1 font-medium">Building</th>
-          <th className="pb-1 text-right font-medium">Footprint</th>
+          <th className="w-[44%] pb-1 font-medium">{tr("Building")}</th>
+          <th className="pb-1 text-right font-medium">{tr("Footprint")}</th>
           <th className="pb-1 text-right font-medium">GFA</th>
         </tr>
       </thead>

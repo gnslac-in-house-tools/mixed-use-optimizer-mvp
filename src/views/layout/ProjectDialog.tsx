@@ -10,6 +10,7 @@ import { useApp } from '../../state/store.ts'
 import { TYPOLOGIES } from '../../typologies/index.ts'
 import { Segmented } from '../controls/Segmented.tsx'
 import { trapTab } from '../controls/focus.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Whether the project's data window is open (per session, never saved). */
 export const useProjectData = create<{ open: boolean }>()(() => ({ open: false }))
@@ -67,22 +68,22 @@ export function ProjectDialog({ onClose }: { onClose: () => void }) {
         }}
       >
         <h2 id={titleId} className="text-headline">
-          Project data
+          {tr("Project data")}
         </h2>
         <form className="mt-4 flex flex-col gap-3" onSubmit={save}>
           <label className="block">
-            <span className="mb-1 block text-label text-ink-secondary">Project name</span>
+            <span className="mb-1 block text-label text-ink-secondary">{tr("Project name")}</span>
             <input ref={first} value={name} maxLength={200} onChange={(e) => setName(e.target.value)} className={FIELD} />
           </label>
           <div>
-            <span className="mb-1 block text-label text-ink-secondary">Typology</span>
+            <span className="mb-1 block text-label text-ink-secondary">{tr("Typology")}</span>
             <p className="text-body">{typology?.name ?? initial.typology}</p>
             <p className="mt-1 text-label text-ink-secondary">
               Chosen when the project is created (File › New project): it gave the project its programs and site rules.
             </p>
           </div>
           <div>
-            <span className="mb-1 block text-label text-ink-secondary">Units</span>
+            <span className="mb-1 block text-label text-ink-secondary">{tr("Units")}</span>
             <Segmented
               kind="toggle"
               label="Units"
@@ -93,14 +94,14 @@ export function ProjectDialog({ onClose }: { onClose: () => void }) {
               value={units}
               onChange={setUnits}
             />
-            <p className="mt-1 text-label text-ink-secondary">Used by CAD exports</p>
+            <p className="mt-1 text-label text-ink-secondary">{tr("Used by CAD exports")}</p>
           </div>
           <div className="mt-1 flex justify-end gap-1">
             <button type="button" onClick={onClose} className="pressable rounded-control px-3 py-1.5 text-body font-medium hover:bg-hover">
-              Cancel
+              {tr("Cancel")}
             </button>
             <button type="submit" className="pressable rounded-control bg-fill px-3 py-1.5 text-body font-medium shadow-control hover:bg-hover">
-              Save
+              {tr("Save")}
             </button>
           </div>
         </form>

@@ -17,6 +17,7 @@ import { Note } from '../../../views/layout/Note.tsx'
 import { shapeEdit, updateStep } from './commands.ts'
 import { edgeName } from './handleMath.ts'
 import { useWarehouse } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 interface Props {
   t: WarehouseType
@@ -110,7 +111,7 @@ function HoleRows({ t, g, editable }: Props) {
   return (
     <>
       <span className="text-label text-ink-secondary">{`Holes · ${g.holes.length}`}</span>
-      {g.holes.length === 0 && <p className="select-text text-caption text-ink-tertiary">None: drag one with the Hole tool, inside the outline.</p>}
+      {g.holes.length === 0 && <p className="select-text text-caption text-ink-tertiary">{tr("None: drag one with the Hole tool, inside the outline.")}</p>}
       {g.holes.map((h, i) => (
         <div key={h.id} data-hole={h.id} className="flex items-center justify-between gap-2 rounded-control border border-separator px-2 py-1">
           <span className="text-label text-ink">{`Hole ${i + 1}`}</span>
@@ -147,7 +148,7 @@ function ZoneFields({ t, g, editable }: Props) {
   const area = new Map(g.zones.map((z) => [z.id, z.area]))
   return (
     <>
-      <span className="text-label text-ink-secondary">Zones of the block</span>
+      <span className="text-label text-ink-secondary">{tr("Zones of the block")}</span>
       {zones.map((z) => (
         <Card key={z.id}>
           <div className="flex items-center justify-between gap-2">
@@ -165,7 +166,7 @@ function ZoneFields({ t, g, editable }: Props) {
           {editable && (
             <div className="flex flex-wrap gap-1.5">
               <Button title="This zone in two, across its longer side" disabled={!halve(z)} onClick={() => save(halve(z))}>
-                Split
+                {tr("Split")}
               </Button>
               {neighbours(zones, z.id).map((n) => (
                 <Button key={n.id} title={`${name(z)} and ${name(n)} made one`} onClick={() => save(mergeZones(zones, z.id, n.id))}>
@@ -187,7 +188,7 @@ export function MorphologyFields(props: Props) {
       <HoleRows {...props} />
       <ZoneFields {...props} />
       <Note className="text-caption text-ink-tertiary">
-        On the plan: drag a wall or a corner anywhere (it lands on a module line when it is near one; Shift: free; the box’s walls in blue stretch the box); double click a wall for its bay, then drag that stretch out or in; Alt + double click a wall to add a corner; double click a corner to remove it.
+        {tr("On the plan: drag a wall or a corner anywhere (it lands on a module line when it is near one; Shift: free; the box’s walls in blue stretch the box); double click a wall for its bay, then drag that stretch out or in; Alt + double click a wall to add a corner; double click a corner to remove it.")}
       </Note>
     </>
   )

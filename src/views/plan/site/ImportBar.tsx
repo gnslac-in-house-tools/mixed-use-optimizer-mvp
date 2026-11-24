@@ -4,6 +4,7 @@
 // bar (LookBar.tsx).
 import { useEffect } from 'react'
 import { useSiteImport } from './importState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const BUTTON = 'pressable h-row shrink-0 rounded-control px-2.5 text-label text-ink hover:bg-hover'
 
@@ -29,10 +30,10 @@ export function ImportBar() {
         </span>
         <span aria-hidden className="mx-0.5 h-4 w-px bg-separator" />
         <button type="button" title="Make the largest shape the boundary" onClick={() => pick(0)} className={`${BUTTON} bg-fill`}>
-          Use the largest
+          {tr("Use the largest")}
         </button>
         <button type="button" title="Leave the site as it was (Escape)" onClick={cancel} className={BUTTON}>
-          Cancel
+          {tr("Cancel")}
         </button>
       </div>
     </div>

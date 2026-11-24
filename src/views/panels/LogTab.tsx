@@ -12,6 +12,7 @@ import { useApp } from '../../state/store.ts'
 import { ChipTrack, ToggleChip } from '../controls/ToggleChips.tsx'
 import { whole } from '../format.ts'
 import { exportLogCsv } from '../layout/exporting.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export const BY_LABEL: Record<LogBy, string> = { designer: 'Designer', solve: 'Solve', optimizer: 'Optimizer', agent: 'Agent' }
 
@@ -100,7 +101,7 @@ export function LogTab() {
           onClick={exportLogCsv}
           className="pressable h-row rounded-control bg-fill px-3 text-label text-ink hover:bg-hover disabled:text-ink-tertiary disabled:hover:bg-fill"
         >
-          Export CSV
+          {tr("Export CSV")}
         </button>
       </div>
     </div>
@@ -138,7 +139,7 @@ function Author() {
   }
   return (
     <label className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-center gap-2" title="Your name on the changes you make, in this browser">
-      <span className="text-label text-ink-secondary">You</span>
+      <span className="text-label text-ink-secondary">{tr("You")}</span>
       <input
         aria-label="Your name"
         value={draft ?? name}

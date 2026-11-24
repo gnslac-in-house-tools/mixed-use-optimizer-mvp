@@ -131,6 +131,7 @@ describe('View', () => {
       // each plugin’s two rows, as the View menu lists them today
       ...PLUGINS.flatMap((p) => [`${p.name} tabs`, `Turn the ${p.name.toLowerCase()} off`]),
       'Theme',
+      'Language', // mixed-use-mvp
       'Full screen',
       'Default layout',
     ])

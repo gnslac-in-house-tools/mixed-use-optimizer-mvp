@@ -3,6 +3,7 @@
 // shadow, the weight and the ink carry it. On a phone each option is at least 40 px tall, for the finger.
 import { Fragment } from 'react'
 import { Icon, type IconName } from './Icon.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export type SegmentedOption<K extends string> = {
   key: K
@@ -76,9 +77,9 @@ export function Segmented<K extends string>({
                 active option does not grow and push its neighbours. nowrap on both keeps a centred control on
                 one line. */}
             <span className="inline-grid whitespace-nowrap">
-              <span className="col-start-1 row-start-1 whitespace-nowrap">{o.label}</span>
+              <span className="col-start-1 row-start-1 whitespace-nowrap">{tr(o.label)}</span>
               <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap font-semibold">
-                {o.label}
+                {tr(o.label)}
               </span>
             </span>
           </button>

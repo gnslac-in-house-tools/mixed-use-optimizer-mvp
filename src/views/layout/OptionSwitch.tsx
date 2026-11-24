@@ -12,6 +12,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { useCloseOutside } from '../controls/useCloseOutside.ts'
 import { compareOptions, duplicateActiveOption, goToOption, newOption, removeOption, renameOption } from '../panels/buildingCommands.ts'
 import { useOptionRename } from './optionRename.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const itemClass = 'pressable flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-left text-body hover:bg-hover disabled:opacity-40 disabled:hover:bg-transparent'
 
@@ -121,15 +122,15 @@ export function OptionSwitch() {
               <div role="separator" className="my-1 border-t border-separator" />
               <button type="button" role="menuitem" className={itemClass} onClick={run(newOption)}>
                 <Icon name="plus" className="h-[1.125rem] w-[1.125rem] shrink-0 text-ink-secondary" />
-                <span className="flex-1">New option</span>
+                <span className="flex-1">{tr("New option")}</span>
               </button>
               <button type="button" role="menuitem" className={itemClass} onClick={run(duplicateActiveOption)} title="The same buildings, linked: an edit shows in both">
                 <Icon name="link" className="h-[1.125rem] w-[1.125rem] shrink-0 text-ink-secondary" />
-                <span className="flex-1">Duplicate (linked)</span>
+                <span className="flex-1">{tr("Duplicate (linked)")}</span>
               </button>
               <button type="button" role="menuitem" className={itemClass} onClick={() => setRenaming(true)}>
                 <span aria-hidden className="h-[1.125rem] w-[1.125rem] shrink-0" />
-                <span className="flex-1">Rename…</span>
+                <span className="flex-1">{tr("Rename…")}</span>
               </button>
               <button
                 type="button"
@@ -151,7 +152,7 @@ export function OptionSwitch() {
                 onClick={run(compareOptions)}
               >
                 <Icon name="columns" className="h-[1.125rem] w-[1.125rem] shrink-0 text-ink-secondary" />
-                <span className="flex-1">Compare…</span>
+                <span className="flex-1">{tr("Compare…")}</span>
               </button>
             </>
           )}

@@ -32,6 +32,7 @@ import { WarehouseFigures } from './WarehouseFigures.tsx'
 import { WarehouseTools } from './WarehouseTools.tsx'
 import { WarehouseViewport } from './WarehouseViewport.tsx'
 import { useCurrentProgram, useCurrentType, useWarehouse } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The Brief's figures a program's general level shows, in this order. */
 const GENERAL = ['kind', 'target-area', 'target-count', 'size']
@@ -62,7 +63,7 @@ export function ProgramWindow() {
         <h2 className="text-headline">{editor || warehouse ? 'Block editor' : 'Program'}</h2>
         {g ? (
           <span className="flex items-center gap-2">
-            <span className="text-label text-ink-secondary">Program</span>
+            <span className="text-label text-ink-secondary">{tr("Program")}</span>
             <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-pill border border-separator" style={{ background: g.color }} />
             <select
               aria-label="Program to edit"
@@ -79,7 +80,7 @@ export function ProgramWindow() {
             {!warehouse && <span className="text-caption text-ink-secondary">{KIND_LABELS[kindOf(g)]}</span>}
           </span>
         ) : (
-          <span className="text-body text-ink-secondary">No program yet: add one in the Brief.</span>
+          <span className="text-body text-ink-secondary">{tr("No program yet: add one in the Brief.")}</span>
         )}
         {warehouse && <WarehouseTools />}
         {/* the app's Help switch (Help › Help, F1 and ?), beside the tools: the long texts show only with it on */}
@@ -126,7 +127,7 @@ export function ProgramWindow() {
                 <div className="flex max-w-sm flex-col items-center gap-3 text-center text-body text-ink-secondary">
                   {g.name} has its general level only: its grid, size and range, as in the Brief. Its rule set, deep, is a warehouse type designed a step at a
                   time: grid, hall, columns, envelope, morphology, elements.
-                  {offered ? <Button onClick={() => startType(g.id)}>Start its rule set</Button> : <span className="text-ink-tertiary">This typology does not offer warehouse types.</span>}
+                  {offered ? <Button onClick={() => startType(g.id)}>{tr("Start its rule set")}</Button> : <span className="text-ink-tertiary">{tr("This typology does not offer warehouse types.")}</span>}
                 </div>
               ) : (
                 g && (
@@ -160,7 +161,7 @@ export function ProgramWindow() {
             onClick={closeBlockEditor}
             className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
           >
-            Close
+            {tr("Close")}
           </button>
         ) : (
           <>
@@ -172,7 +173,7 @@ export function ProgramWindow() {
               className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90"
             >
               <Icon name="check" className="h-3.5 w-3.5" />
-              Approve programs
+              {tr("Approve programs")}
             </button>
           </>
         )}

@@ -17,6 +17,7 @@ import { useAccess } from '../plan/access/accessState.ts'
 import { gateLocked } from '../../kinds/locked.ts'
 import { lockedFirst } from '../layers/locks.ts'
 import { Lockable } from './Lockable.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const VEHICLE_LABELS: Record<Vehicles, string> = { trucks: 'Trucks', cars: 'Cars', all: 'Trucks and cars' }
 const FLOWS: { key: Gate['flow']; label: string; title: string }[] = [
@@ -33,7 +34,7 @@ function OwnGatesButton() {
   const optionName = project.options.find((o) => o.id === option)?.name ?? 'this option'
   return ownsGates(project, option) ? (
     <Button title="Drop this option's own gates and use the site's again" onClick={() => apply((p) => actions.dropOwnGates(p, option))}>
-      Use the site's
+      {tr("Use the site's")}
     </Button>
   ) : (
     <Button title={`${optionName} gets a copy of the site's gates to change; the other options keep the site's`} onClick={() => apply((p) => actions.ownGates(p, option))}>
@@ -102,7 +103,7 @@ export function GateProperties({ id, muted }: { id: Id; muted: string }) {
               useAccess.getState().pick(null)
             }}
           >
-            Delete
+            {tr("Delete")}
           </Button>
         </div>
       </Lockable>
@@ -119,7 +120,7 @@ function GateFields({ gate: g }: { gate: Gate }) {
       <NumberField label="Width" unit="m" min={2} value={g.width} onCommit={(v) => setGateWidth(g.id, v)} />
       <NumberField label="Turning radius" unit="m" min={0} value={g.radius} onCommit={(v) => update({ radius: v })} />
       <div className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">Flow</span>
+        <span className="text-label text-ink-secondary">{tr("Flow")}</span>
         <Segmented kind="toggle" label="Flow" options={FLOWS} value={g.flow} onChange={(flow) => update({ flow })} />
       </div>
       <SelectField
@@ -129,7 +130,7 @@ function GateFields({ gate: g }: { gate: Gate }) {
         onCommit={(v) => update({ vehicles: v as Vehicles })}
       />
       <label className="flex items-center justify-between gap-3" title="A booth beside the lane, inside the boundary">
-        <span className="text-label text-ink-secondary">Guard house</span>
+        <span className="text-label text-ink-secondary">{tr("Guard house")}</span>
         <input type="checkbox" className="h-4 w-4 accent-ink" checked={g.guardHouse === true} onChange={(e) => update({ guardHouse: e.target.checked || undefined })} />
       </label>
       <NumberField label="Queue" unit="m" min={0} value={g.queue ?? 0} onCommit={(v) => update({ queue: v > 0 ? v : undefined })} />

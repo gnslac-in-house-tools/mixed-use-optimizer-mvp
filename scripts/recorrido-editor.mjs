@@ -8,6 +8,8 @@ const OUT = 'evidence/demo'
 mkdirSync(OUT, { recursive: true })
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } })
+// los recorridos buscan los textos en inglés (la app arranca en español: src/i18n)
+await page.addInitScript(() => localStorage.setItem('gfit-idioma', 'en'))
 const errores = []
 page.on('console', (m) => { if (m.type() === 'error') errores.push(m.text()) })
 page.on('pageerror', (e) => errores.push(String(e)))

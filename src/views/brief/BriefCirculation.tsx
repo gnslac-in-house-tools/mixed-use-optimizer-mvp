@@ -13,6 +13,7 @@ import { Note } from '../layout/Note.tsx'
 import { useModule } from '../modules.ts'
 import { StandardsSection } from './StandardsSection.tsx'
 import { StreetTypesSection } from './StreetTypesSection.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function BriefCirculation() {
   return (
@@ -40,22 +41,22 @@ function DemandSection() {
 
   return (
     <section aria-label="Demand" className="flex min-w-0 flex-col gap-2">
-      <h3 className="text-label font-semibold text-ink">Demand</h3>
+      <h3 className="text-label font-semibold text-ink">{tr("Demand")}</h3>
       <Note>What each program asks of the parking; what it makes is {option.name}’s, from its floor area{docks ? ' and its dock doors' : ''}. Empty: it asks none.</Note>
       <table aria-label="Parking demand" className="w-full table-fixed text-body">
         <thead>
           <tr className="border-b border-separator text-left align-bottom text-caption text-ink-secondary">
-            <th className="w-[32%] pb-1.5 font-medium">Program</th>
+            <th className="w-[32%] pb-1.5 font-medium">{tr("Program")}</th>
             <th className="pb-1.5 pr-2 text-right font-medium" title="A car stall per so many m² of the program’s floor (GFA; ground for an open one)">
-              Car stalls<span className="block font-normal text-ink-tertiary">1 per m²</span>
+              {tr("Car stalls")}<span className="block font-normal text-ink-tertiary">1 per m²</span>
             </th>
-            <th className="pb-1.5 pr-2 text-right font-medium">Asks</th>
+            <th className="pb-1.5 pr-2 text-right font-medium">{tr("Asks")}</th>
             {docks && (
               <>
                 <th className="pb-1.5 pr-2 text-right font-medium" title="Trailer stalls per dock door of the program’s masses">
-                  Trailer stalls<span className="block font-normal text-ink-tertiary">per door</span>
+                  {tr("Trailer stalls")}<span className="block font-normal text-ink-tertiary">per door</span>
                 </th>
-                <th className="pb-1.5 text-right font-medium">Asks</th>
+                <th className="pb-1.5 text-right font-medium">{tr("Asks")}</th>
               </>
             )}
           </tr>
@@ -85,7 +86,7 @@ function DemandSection() {
         <tfoot>
           <tr className="border-t-2 border-separator text-label">
             <th scope="row" className="pt-2 text-left font-semibold">
-              Total
+              {tr("Total")}
             </th>
             <td />
             <td className="pt-2 pr-2 text-right tabular-nums">{asks(d.carStalls)}</td>

@@ -12,6 +12,7 @@ import type { ToolCamera } from '../../../views/plan/tools/common.tsx'
 import { useSiteTool } from '../../../views/plan/site/siteTools.ts'
 import { letGo } from '../../../views/tools/hand.ts'
 import { contoursOf, heightText, type ContourDrawing } from './terrainDraw.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const FIELD_W = 88
 const FIELD_H = 24
@@ -160,12 +161,12 @@ export function HeightsBar() {
     <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex justify-center px-4 phone:top-3">
       <div role="toolbar" aria-label="Heights" className="glass pointer-events-auto flex max-w-full flex-wrap items-center gap-1.5 rounded-glass px-2 py-1 shadow-glass">
         <span className="min-w-0 px-1 text-label text-ink" title="Two neighbouring contours given say the interval and the way up; the others are counted from them. Where the count is wrong (a hilltop, a valley), give that one its height.">
-          <span className="font-semibold">Heights</span> · click a contour and type its height
+          <span className="font-semibold">{tr("Heights")}</span> · click a contour and type its height
           {none > 0 && <span className="text-status-over"> · {none} without one</span>}
         </span>
         <span aria-hidden className="mx-0.5 h-4 w-px bg-separator" />
         <button type="button" title="Leave Heights (Escape)" onClick={() => letGo()} className="pressable h-row shrink-0 rounded-control bg-fill px-2.5 text-label text-ink hover:bg-hover">
-          Done
+          {tr("Done")}
         </button>
       </div>
     </div>

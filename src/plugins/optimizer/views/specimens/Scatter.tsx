@@ -11,6 +11,7 @@ import { selectClass } from '../kit.ts'
 import { compact, extent, inFilters, valueOn, type Axis, type Filters, type Row } from './rows.ts'
 import { useSize } from './useSize.ts'
 import { useSpecimenView } from './viewState.ts'
+import { t as tr } from '../../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Room for the axes' figures: on the left, the y's; below, the x's. */
 const LEFT = 30
@@ -196,7 +197,7 @@ function AxisPicker({ axis, value, problem, onChange }: { axis: 'X' | 'Y'; value
             {o.label}
           </option>
         ))}
-        <option value="generation">Generation</option>
+        <option value="generation">{tr("Generation")}</option>
       </select>
       {better && <span className="shrink-0 whitespace-nowrap">{better}</span>}
     </label>

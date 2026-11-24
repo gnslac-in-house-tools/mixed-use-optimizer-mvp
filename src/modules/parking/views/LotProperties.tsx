@@ -15,6 +15,7 @@ import { connect } from '../../../views/plan/circulation/connectCommand.ts'
 import { useShown } from '../../../views/viewport/look.ts'
 import { depthOf, SETBACK, type DerivedLot } from '../engine/lots.ts'
 import { changeLot, lotOf, removePickedLot } from './lotState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const m = (x: number) => `${(Math.round(x * 10) / 10).toLocaleString('en-US')} m`
 
@@ -42,16 +43,16 @@ export function LotProperties({ id, muted, answersRename = true }: { id: string;
       <Lockable locked={lot.locked === true} muted={muted}>
       <TextField label="Name" inputRef={nameField} value={lot.name} onCommit={(v) => changeLot(id, { name: v })} />
       <section className="flex flex-col gap-2" aria-label="Where">
-        <h3 className={`text-label ${muted}`}>Where</h3>
+        <h3 className={`text-label ${muted}`}>{tr("Where")}</h3>
         {l.anchor ? (
           <>
             {row('Against', `${wallName ?? 'A mass'} · ${l.anchor.facing} wall`)}
-            <Button onClick={() => changeLot(id, { anchor: null, rect: freed(l), rows: null })}>Free it from the wall</Button>
+            <Button onClick={() => changeLot(id, { anchor: null, rect: freed(l), rows: null })}>{tr("Free it from the wall")}</Button>
             <NumberField label="Rotation" unit="°" decimals={1} disabled title={ANCHORED_TURN} value={angleOf(l)} onCommit={() => {}} />
           </>
         ) : (
           <>
-            <p className={`select-text text-caption ${muted}`}>Free. Dropped against a wall, it is anchored there and follows it.</p>
+            <p className={`select-text text-caption ${muted}`}>{tr("Free. Dropped against a wall, it is anchored there and follows it.")}</p>
             {lot.rect && <NumberField label="Rotation" unit="°" decimals={1} value={lot.rect.rotation} onCommit={(v) => changeLot(id, { rect: { ...lot.rect!, rotation: degrees(v) } })} />}
           </>
         )}
@@ -59,7 +60,7 @@ export function LotProperties({ id, muted, answersRename = true }: { id: string;
       {lot.anchor ? <AnchoredFields l={l} lot={lot} muted={muted} /> : row('Size', `${m(l.length)} × ${m(l.depth)} · ${l.rows} ${l.rows === 1 ? 'row' : 'rows'}`)}
       <Sizes l={l} lot={lot} muted={muted} />
       <section className="flex flex-col gap-2" aria-label="Entrance">
-        <h3 className={`text-label ${muted}`}>Entrance</h3>
+        <h3 className={`text-label ${muted}`}>{tr("Entrance")}</h3>
         <Segmented<'start' | 'end'>
           kind="toggle"
           label="Its entrance"
@@ -72,11 +73,11 @@ export function LotProperties({ id, muted, answersRename = true }: { id: string;
           ]}
         />
         {l.reached ? (
-          <p className={`select-text text-caption ${muted}`}>A street reaches it.</p>
+          <p className={`select-text text-caption ${muted}`}>{tr("A street reaches it.")}</p>
         ) : (
           <>
-            <p className="select-text text-caption text-status-over">No street reaches it: a warning. Connect draws one, as to a truck court.</p>
-            <Button onClick={connect}>Connect</Button>
+            <p className="select-text text-caption text-status-over">{tr("No street reaches it: a warning. Connect draws one, as to a truck court.")}</p>
+            <Button onClick={connect}>{tr("Connect")}</Button>
           </>
         )}
       </section>
@@ -124,7 +125,7 @@ function AnchoredFields({ l, lot, muted }: { l: DerivedLot; lot: Lot; muted: str
   return (
     <>
       <section className="flex flex-col gap-2" aria-label="Length">
-        <h3 className={`text-label ${muted}`}>Length</h3>
+        <h3 className={`text-label ${muted}`}>{tr("Length")}</h3>
         <Segmented<'whole' | 'set'>
           kind="toggle"
           label="Its length"
@@ -146,7 +147,7 @@ function AnchoredFields({ l, lot, muted }: { l: DerivedLot; lot: Lot; muted: str
         )}
       </section>
       <section className="flex flex-col gap-2" aria-label="Rows">
-        <h3 className={`text-label ${muted}`}>Rows</h3>
+        <h3 className={`text-label ${muted}`}>{tr("Rows")}</h3>
         <Segmented<'limit' | 'set'>
           kind="toggle"
           label="Its rows"
@@ -172,12 +173,12 @@ function Sizes({ l, lot, muted }: { l: DerivedLot; lot: Lot; muted: string }) {
   const set = (k: 'stallWidth' | 'stallDepth' | 'aisleWidth', v: number) => changeLot(id, { sizes: { ...lot.sizes, [k]: v } })
   return (
     <section className="flex flex-col gap-2" aria-label="Sizes">
-      <h3 className={`text-label ${muted}`}>Sizes</h3>
+      <h3 className={`text-label ${muted}`}>{tr("Sizes")}</h3>
       <NumberField label="Stall width" unit="m" min={2} value={l.sizes.stallWidth} narrow onCommit={(v) => set('stallWidth', v)} />
       <NumberField label="Stall depth" unit="m" min={3} value={l.sizes.stallDepth} narrow onCommit={(v) => set('stallDepth', v)} />
       <NumberField label="Aisle width" unit="m" min={3} value={l.sizes.aisleWidth} narrow onCommit={(v) => set('aisleWidth', v)} />
       {lot.sizes ? (
-        <Button onClick={() => changeLot(id, { sizes: null })}>The standards again</Button>
+        <Button onClick={() => changeLot(id, { sizes: null })}>{tr("The standards again")}</Button>
       ) : (
         <p className={`select-text text-caption ${muted}`}>The project’s standards (Brief › Circulation).</p>
       )}

@@ -38,6 +38,13 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/views/scene/Scene.tsx` | `<Residencial3d />` en la escena principal | Las losas por nivel derivado y las columnas |
 | `src/views/plan/PlanSvg.tsx` | `<InterioresNave />` junto a la capa residencial | Programs y Furniture en las naves: maniobras frente a los andenes, almacenaje y racks (`modules/warehouse/engine/interiores.ts`) |
 | `src/views/scene/Scene.tsx` | `<Naves3d />` junto a `<Residencial3d />` | Los racks de las naves en 3D, con Furniture y la masa vista por dentro |
+| `src/main.tsx`, `src/i18n/` | La app se vuelve a montar al cambiar el idioma; `t()` traduce con el diccionario `es.ts` | La interfaz en español (View › Language: Español · English); arranca en español |
+| `src/views/controls/{Menu,MoreMenu,Segmented,fields}.tsx`, `src/views/layout/{MenuBar,PanelTabs,PanelColumn,SaveStatus}.tsx`, `src/views/stats/{KpiStrip,Overview}.tsx`, `src/views/layers/Row.tsx`, `src/views/show/ShowControls.tsx` | Las etiquetas se pintan con `tr()` | Traducir en los puntos por donde pasan menús, comandos, campos, paneles y KPIs |
+| ~100 `.tsx` de `src/views`, `src/modules/{warehouse,docks,parking,terrain}`, `src/plugins` | Los textos sueltos entre etiquetas JSX van en `{tr("…")}` (cambio mecánico) | Lo mismo para los textos escritos directo en el JSX |
+| `src/views/layout/PanelTabs.tsx` | Las pestañas con `px-0.5` en lugar de `px-1` | «Capas · Bloques · Propiedades» caben en el ancho de siempre |
+| `vitest.setup.ts` | Cada test arranca en inglés | Los tests de GIM leen los textos en inglés |
+| `src/plugins/__tests__/boundaries.test.ts` | Un plugin puede importar `src/i18n/` | Los plugins traducen sus textos |
+| `src/views/commands/__tests__/registry.test.ts`, `viewSiteDesignTools.test.tsx`, `src/views/layout/__tests__/{theme,workspace}.test.tsx` | El menú View trae Language | El submenú del idioma |
 | `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
 | `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
 | `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |

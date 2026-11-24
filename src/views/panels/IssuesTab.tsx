@@ -17,6 +17,7 @@ import { solveOption } from '../graph/GraphTools.tsx'
 import { issueKey, pickIssues, useIssueFocus } from '../plan/issueMarkers.ts'
 import { briefFor, canSolve, editRule, NOTHING_TO_SOLVE, solveOne } from '../stats/issueCommands.ts'
 import { goToIssue } from '../viewport/goTo.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const GROUPS: { title: string; codes: IssueCode[] }[] = [
   { title: 'Brief and design', codes: ['brief'] },
@@ -59,7 +60,7 @@ export function IssuesTab() {
           className="pressable flex h-7 shrink-0 items-center gap-1.5 rounded-control bg-ink pl-2 pr-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90 disabled:cursor-default disabled:opacity-40"
         >
           <Icon name="play" className="h-3.5 w-3.5" />
-          Solve all
+          {tr("Solve all")}
         </button>
       </div>
       {GROUPS.map((g) => {
@@ -119,17 +120,17 @@ function IssueItem({ issue, place, picked }: { issue: Issue; place: string | nul
               className={`${SMALL} flex items-center gap-1 bg-ink pl-1.5 font-semibold text-on-ink hover:opacity-90`}
             >
               <Icon name="play" className="h-3 w-3" />
-              Solve
+              {tr("Solve")}
             </button>
           )}
           {issue.code === 'brief' && (
             <button type="button" title="The brief asks for what the option has, for this program" onClick={() => briefFor(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
-              Update brief
+              {tr("Update brief")}
             </button>
           )}
           {issue.rule !== undefined && (
             <button type="button" title="The Rules step, with the rule picked" onClick={() => editRule(issue)} className={`${SMALL} bg-fill text-ink hover:bg-hover`}>
-              Edit the rule
+              {tr("Edit the rule")}
             </button>
           )}
         </div>

@@ -29,6 +29,7 @@ import { commands, knownCommand } from './registry.ts'
 import { conflictsOf, differsFromDefault, giveKey, keysFor, resetKeys, setKeys, useShortcutsStore } from './shortcuts.ts'
 import { closeShortcuts, useShortcutsWindow } from './shortcutsWindowState.ts'
 import { WINDOW_GROUPS, type Command } from './types.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** What one row is doing: waiting for a key, refusing one, or asking whether to take it from another command. */
 type Editing =
@@ -187,7 +188,7 @@ function Window() {
       >
         <header className="flex flex-col gap-2 pr-8">
           <h2 id={titleId} className="text-headline">
-            Keyboard shortcuts
+            {tr("Keyboard shortcuts")}
           </h2>
           <input
             ref={first}
@@ -199,7 +200,7 @@ function Window() {
             className="w-full rounded-control bg-fill px-2 py-1.5 text-body outline-none placeholder:text-ink-tertiary focus:bg-hover"
           />
           <details className="text-label text-ink-secondary">
-            <summary className="cursor-pointer select-none">Keys that cannot be given</summary>
+            <summary className="cursor-pointer select-none">{tr("Keys that cannot be given")}</summary>
             <ul className="mt-1 flex max-h-28 flex-col gap-0.5 overflow-y-auto pl-4">
               {RESERVED.map((r) => (
                 <li key={r.name}>
@@ -225,9 +226,9 @@ function Window() {
         </div>
 
         <footer className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-separator pt-3">
-          <p className="min-w-0 flex-1 text-label text-ink-secondary">Your keys are kept in this browser.</p>
+          <p className="min-w-0 flex-1 text-label text-ink-secondary">{tr("Your keys are kept in this browser.")}</p>
           <button type="button" onClick={askAllBack} className={`${BUTTON} shrink-0 bg-fill shadow-control`}>
-            All back to the defaults
+            {tr("All back to the defaults")}
           </button>
         </footer>
 
@@ -258,7 +259,7 @@ function Row({ c, user, editing, onChange, onEditing }: { c: Command; user: Reco
       </span>
       <span className="flex flex-wrap items-center gap-1">
         {waiting ? (
-          <span className="text-label font-medium text-ink">Press a key…</span>
+          <span className="text-label font-medium text-ink">{tr("Press a key…")}</span>
         ) : keys.length === 0 ? (
           <span aria-label="No key" className="px-1.5 text-label text-ink-tertiary">
             —
@@ -273,20 +274,20 @@ function Row({ c, user, editing, onChange, onEditing }: { c: Command; user: Reco
       </span>
       <span className="flex items-center">
         <button type="button" title={`Change the key of ${label}`} onClick={onChange} className={BUTTON}>
-          Change
+          {tr("Change")}
         </button>
         {differsFromDefault(c.id) && (
           <button type="button" title={`Put ${label} back to its default key`} onClick={() => resetOne(c.id, onEditing)} className={BUTTON}>
-            Back to the default
+            {tr("Back to the default")}
           </button>
         )}
         {keys.length > 0 && (
           <button type="button" title={`${label} will have no key`} onClick={() => removeOne(c.id, onEditing)} className={BUTTON}>
-            Remove the key
+            {tr("Remove the key")}
           </button>
         )}
       </span>
-      {waiting && <p className="basis-full text-label text-ink-secondary">Esc cancels.</p>}
+      {waiting && <p className="basis-full text-label text-ink-secondary">{tr("Esc cancels.")}</p>}
       {editing?.stage === 'reserved' && (
         <p role="alert" className="basis-full text-label text-ink-secondary">
           {editing.why}.
@@ -305,10 +306,10 @@ function Row({ c, user, editing, onChange, onEditing }: { c: Command; user: Reco
             }}
             className="pressable rounded-control bg-ink px-2 py-1 text-label font-medium text-on-ink hover:opacity-90"
           >
-            Move
+            {tr("Move")}
           </button>
           <button type="button" onClick={() => onEditing(null)} className={BUTTON}>
-            Cancel
+            {tr("Cancel")}
           </button>
         </div>
       )}

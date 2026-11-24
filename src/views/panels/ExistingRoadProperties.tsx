@@ -14,6 +14,7 @@ import { Lockable } from './Lockable.tsx'
 import { standardsOf } from '../../engine/circulation/standards.ts'
 import { lanesOf } from '../../engine/path/lanes.ts'
 import { lanesRead, sidesRead } from './sidesRead.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The road's name as the lists say it: its own, or its number. */
 export const existingRoadName = (name: string | undefined, index: number): string => name ?? `Existing road ${index + 1}`
@@ -48,11 +49,11 @@ export function ExistingRoadProperties({ id, muted, answersRename = true }: { id
       <Lockable locked={locked} muted={muted}>
         <ExistingRoadFields id={id} answersRename={answersRename} />
         <div className="flex justify-between gap-3 text-body">
-          <span className={`text-label ${muted}`}>Width</span>
+          <span className={`text-label ${muted}`}>{tr("Width")}</span>
           <span className="select-text text-right font-medium tabular-nums">{sidesRead(road.stretches)}</span>
         </div>
         <div className="flex justify-between gap-3 text-body">
-          <span className={`text-label ${muted}`}>Lanes</span>
+          <span className={`text-label ${muted}`}>{tr("Lanes")}</span>
           <span className="select-text text-right font-medium tabular-nums">{lanesRead(road.stretches.map((st) => lanesOf(st, laneWidth)))}</span>
         </div>
         <div>
@@ -69,7 +70,7 @@ export function ExistingRoadProperties({ id, muted, answersRename = true }: { id
               useAccess.getState().pick(null)
             }}
           >
-            Delete
+            {tr("Delete")}
           </Button>
         </div>
       </Lockable>

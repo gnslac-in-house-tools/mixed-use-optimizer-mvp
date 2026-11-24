@@ -23,6 +23,7 @@ import { SpecimenList } from './specimens/SpecimenList.tsx'
 import { useSpecimenView, type Follow } from './specimens/viewState.ts'
 // a pick shows the specimen in the viewport (Decision "Specimen preview")
 import './specimens/preview.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** What the viewport shows while a run goes (Galapagos' display modes; Decision "Following a run"). */
 const FOLLOW: { key: Follow; label: string; title: string }[] = [
@@ -42,9 +43,9 @@ export default function SpecimensTab({ wide, away, setWide, folded, setFolded }:
   if (away)
     return (
       <section aria-label="Specimens" className="flex flex-col items-start gap-2">
-        <p className="text-caption text-ink-secondary">The specimens stand under the viewport, wide.</p>
+        <p className="text-caption text-ink-secondary">{tr("The specimens stand under the viewport, wide.")}</p>
         <button type="button" onClick={() => setWide?.(false)} className="pressable h-row rounded-control bg-fill px-3 text-label text-ink hover:bg-hover">
-          Back to this panel
+          {tr("Back to this panel")}
         </button>
       </section>
     )
@@ -120,7 +121,7 @@ function Specimens({ run, wide, setWide, setFolded }: { run: Run; wide: boolean;
     return (
       <section aria-label="Specimens" className="flex flex-col gap-3">
         {status}
-        <p className="text-caption text-ink-secondary">Starting…</p>
+        <p className="text-caption text-ink-secondary">{tr("Starting…")}</p>
         <Discard />
       </section>
     )
@@ -151,7 +152,7 @@ function Specimens({ run, wide, setWide, setFolded }: { run: Run; wide: boolean;
         <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)] gap-5">
           {scatter}
           <div className="flex min-h-0 flex-col gap-1.5">
-            <p className="text-caption text-ink-secondary">Better at the top of each axis; drag on one to keep a range</p>
+            <p className="text-caption text-ink-secondary">{tr("Better at the top of each axis; drag on one to keep a range")}</p>
             <div className="min-h-0 flex-1">{lines}</div>
           </div>
           {list}
@@ -165,7 +166,7 @@ function Specimens({ run, wide, setWide, setFolded }: { run: Run; wide: boolean;
       {scatter}
       {problem.objectives.length > 1 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-caption text-ink-secondary">Better at the top of each axis; drag on one to keep a range</p>
+          <p className="text-caption text-ink-secondary">{tr("Better at the top of each axis; drag on one to keep a range")}</p>
           {lines}
         </div>
       )}
@@ -186,7 +187,7 @@ function Discard() {
         onClick={() => discard(project)}
         className="pressable h-row rounded-control px-2.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
       >
-        Discard run
+        {tr("Discard run")}
       </button>
     </div>
   )
@@ -238,7 +239,7 @@ function WhileRunning() {
   const follow = useSpecimenView((s) => s.follow)
   return (
     <div className="flex items-center gap-2">
-      <span className="text-caption text-ink-secondary">While running, the viewport shows</span>
+      <span className="text-caption text-ink-secondary">{tr("While running, the viewport shows")}</span>
       <Segmented kind="toggle" label="While running" options={FOLLOW} value={follow} onChange={(f) => useSpecimenView.getState().set({ follow: f, held: false })} />
     </div>
   )

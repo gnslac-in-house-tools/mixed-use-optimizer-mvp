@@ -8,6 +8,7 @@ import { useToast } from '../layout/toast.ts'
 import { HOME_ICONS } from './icons.ts'
 import type { Row } from './rows.ts'
 import { optionShown } from './summary.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const typologyName = (id: string) => TYPOLOGIES.find((t) => t.id === id)?.name ?? id
 
@@ -25,16 +26,16 @@ export function when(ms: number | null, now = Date.now()): string {
 /** The chip of the option a project was left in: its issues, or that it has no site. */
 function Status({ row }: { row: Row }) {
   const chip = 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill px-2 py-0.5 text-caption font-medium before:h-1.5 before:w-1.5 before:rounded-pill before:bg-current'
-  if (!row.thumb) return <span className={`${chip} bg-grid-soft text-grid-line`}>No site yet</span>
+  if (!row.thumb) return <span className={`${chip} bg-grid-soft text-grid-line`}>{tr("No site yet")}</span>
   const o = row.summary && optionShown(row.summary, row.option)
   if (!o) return <span className="text-caption text-ink-secondary">—</span>
   if (o.errors) return <span className={`${chip} bg-hover text-status-over`}>{o.errors} {o.errors === 1 ? 'error' : 'errors'}</span>
   if (o.warnings) return <span className={`${chip} bg-earth-soft text-earth`}>{o.warnings} {o.warnings === 1 ? 'warning' : 'warnings'}</span>
-  return <span className={`${chip} bg-status-within-soft text-status-within`}>No issues</span>
+  return <span className={`${chip} bg-status-within-soft text-status-within`}>{tr("No issues")}</span>
 }
 
 export function Badge() {
-  return <span className="ml-2 rounded-[0.375rem] bg-earth-soft px-1.5 py-px align-[1px] text-caption font-semibold uppercase tracking-wide text-earth">Sample</span>
+  return <span className="ml-2 rounded-[0.375rem] bg-earth-soft px-1.5 py-px align-[1px] text-caption font-semibold uppercase tracking-wide text-earth">{tr("Sample")}</span>
 }
 
 /** A plan in a small tile (thumb.ts draws it with tokens only). */
@@ -81,7 +82,7 @@ export function ProjectsTable({
   return (
     <section aria-label="Your projects" className="panel flex min-h-[7.5rem] flex-1 flex-col overflow-hidden">
       <header className="flex shrink-0 items-center justify-between gap-3 py-3 pl-4 pr-3">
-        <h2 className="text-headline text-ink">Your projects</h2>
+        <h2 className="text-headline text-ink">{tr("Your projects")}</h2>
         <div className="flex items-center gap-1.5">
           <label className="flex h-[2.125rem] w-[13.75rem] items-center gap-2 rounded-[0.625rem] bg-fill px-3 text-ink-tertiary phone:w-[9rem]">
             <Icon path={HOME_ICONS.search} className="h-[0.9375rem] w-[0.9375rem] shrink-0" />
@@ -89,7 +90,7 @@ export function ProjectsTable({
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search"
+              placeholder={tr('Search')}
               aria-label="Search projects"
               className="min-w-0 flex-1 select-text bg-transparent text-label text-ink outline-none placeholder:text-ink-tertiary"
             />
@@ -101,7 +102,7 @@ export function ProjectsTable({
             className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] px-3 text-label text-ink-segment hover:bg-hover hover:text-ink"
           >
             <Icon path={HOME_ICONS.open} className="h-4 w-4" />
-            Load project
+            {tr("Load project")}
           </button>
           <button
             type="button"
@@ -110,7 +111,7 @@ export function ProjectsTable({
             className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-fill px-3 text-label text-ink hover:bg-hover"
           >
             <Icon name="plus" className="h-4 w-4" />
-            New project
+            {tr("New project")}
           </button>
         </div>
       </header>
@@ -118,13 +119,13 @@ export function ProjectsTable({
         <table className="w-full border-collapse text-body">
           <thead className="sticky top-0 z-[1] bg-panel">
             <tr className="text-left text-caption text-ink-tertiary">
-              <th className={`${cell} border-y border-separator font-medium`}>Project</th>
-              <th className={`${cell} border-y border-separator font-medium ${wide}`}>Typology</th>
-              <th className={`${cell} border-y border-separator font-medium ${wide}`}>Options</th>
-              <th className={`${cell} border-y border-separator font-medium`}>Issues</th>
-              <th className={`${cell} border-y border-separator font-medium ${wide}`}>Updated</th>
+              <th className={`${cell} border-y border-separator font-medium`}>{tr("Project")}</th>
+              <th className={`${cell} border-y border-separator font-medium ${wide}`}>{tr("Typology")}</th>
+              <th className={`${cell} border-y border-separator font-medium ${wide}`}>{tr("Options")}</th>
+              <th className={`${cell} border-y border-separator font-medium`}>{tr("Issues")}</th>
+              <th className={`${cell} border-y border-separator font-medium ${wide}`}>{tr("Updated")}</th>
               <th className={`${cell} border-y border-separator`}>
-                <span className="sr-only">Actions</span>
+                <span className="sr-only">{tr("Actions")}</span>
               </th>
             </tr>
           </thead>
@@ -178,7 +179,7 @@ export function ProjectsTable({
                         className="pressable inline-flex items-center gap-1.5 rounded-control px-2.5 py-1.5 text-label text-earth hover:bg-earth-soft"
                       >
                         <Icon path={HOME_ICONS.tour} className="h-4 w-4" />
-                        Tour
+                        {tr("Tour")}
                       </button>
                     ) : (
                       <button
@@ -191,7 +192,7 @@ export function ProjectsTable({
                         className="pressable inline-flex items-center gap-1.5 rounded-control px-2.5 py-1.5 text-label text-ink-segment hover:bg-hover hover:text-ink"
                       >
                         <Icon path={HOME_ICONS.open} className="h-4 w-4" />
-                        Open
+                        {tr("Open")}
                       </button>
                     )}
                   </td>

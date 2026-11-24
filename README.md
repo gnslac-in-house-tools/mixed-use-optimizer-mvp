@@ -13,6 +13,12 @@ que viene de GIM se queda en inglés; lo nuevo se escribe en español.
 | 3 | Blocks habitacionales: catálogo de departamentos con editor (recintos, puertas, ventanas, pasillos y cotas fijas o movibles) | Primera vuelta: pestaña Departamentos y ventana Departamento |
 | 4 | El reconfigurador de plantas, que estira los blocks respetando lo fijo | Primera vuelta: el plano de Mi biblioteca sustituye al de GFit en las plantas y se estira respetando sus cotas fijas, con muebles |
 
+## Idioma
+
+La interfaz arranca en español; **View › Language** cambia entre Español e English (se guarda en el navegador). El
+diccionario es `src/i18n/es.ts`: lo que no está ahí se queda en inglés. Primera vuelta: menús, comandos, campos,
+paneles, KPIs, la barra inferior y el Home; las notas y tooltips largos siguen en inglés. Los tests corren en inglés.
+
 ## Correr
 
 ```powershell

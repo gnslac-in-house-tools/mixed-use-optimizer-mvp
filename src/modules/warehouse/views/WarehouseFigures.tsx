@@ -8,6 +8,7 @@ import { useModule } from '../../../views/modules.ts'
 import { baysInWords } from './summary.ts'
 import { useLengths } from './units.ts'
 import { useCurrentType, useGenerated } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function WarehouseFigures() {
   const t = useCurrentType()
@@ -16,7 +17,7 @@ export function WarehouseFigures() {
   const { on } = useModule('warehouse')
   const { num, unit, whole, area } = useLengths()
   if (!on) return null
-  if (!t || !g) return <p className="text-body text-ink-secondary">No warehouse type yet.</p>
+  if (!t || !g) return <p className="text-body text-ink-secondary">{tr("No warehouse type yet.")}</p>
   const f = figuresOf(g)
   return (
     <div className="flex flex-col gap-6" data-warehouse-figures>

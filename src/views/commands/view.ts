@@ -22,6 +22,7 @@ import { isHidden, toggleLayer } from '../layers/layerView.ts'
 import { fullScreenAvailable, toggleFullScreen } from '../layout/fullScreen.ts'
 import { isPhone } from '../layout/media.ts'
 import { THEMES } from '../layout/theme.ts'
+import { useIdioma } from '../../i18n/idioma.ts' // mixed-use-mvp
 import { BARS, KPI_SIZES, PANEL_NAMES, panelOpen, pickKpiSize, shown, STRIP_DOCKS, togglePanel, useUi, VIEWS, type Side } from '../layout/ui.ts'
 import { mapRefusal, mapShown, toggleMap } from '../plan/site/mapView.ts'
 import { SNAP_KINDS, SNAP_NAMES, SNAP_TO, SNAP_TO_NAMES } from '../plan/snap/kinds.ts'
@@ -240,6 +241,21 @@ const THEME_COMMANDS: Command[] = THEMES.map((t, i) => ({
   checked: () => ui().theme === t.key,
 }))
 
+// mixed-use-mvp: el idioma de la interfaz (src/i18n); los nombres de los idiomas van en su propio idioma
+const IDIOMA_COMMANDS: Command[] = (
+  [
+    ['es', 'Español'],
+    ['en', 'English'],
+  ] as const
+).map(([k, label], i) => ({
+  id: `view.idioma.${k}`,
+  label,
+  menu: ['View', 'Language'],
+  separatorBefore: i === 0,
+  run: () => useIdioma.getState().poner(k),
+  checked: () => useIdioma.getState().idioma === k,
+}))
+
 /** The View menu, in the spec's order; Terrain ▸ and the plugins' rows are lists (they follow the project and the plugins). */
 export function registerView(): void {
   register(VIEW_COMMANDS)
@@ -253,6 +269,7 @@ export function registerView(): void {
   register(SNAP_COMMANDS)
   registerList(['View'], pluginCommands)
   register(THEME_COMMANDS)
+  register(IDIOMA_COMMANDS) // mixed-use-mvp
   register([
     {
       id: 'view.fullscreen',

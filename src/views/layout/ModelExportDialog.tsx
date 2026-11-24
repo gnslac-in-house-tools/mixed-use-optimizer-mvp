@@ -15,6 +15,7 @@ import { download } from './browserIo.ts'
 import { publishToSpeckle, useSpeckle } from './speckle.ts'
 import { SpeckleSection } from './SpeckleSection.tsx'
 import { useToast } from './toast.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export type ModelFormat = 'rhino' | 'ifc' | 'speckle'
 
@@ -119,17 +120,17 @@ function Dialog() {
         }}
       >
         <h2 id={titleId} className="text-headline">
-          Export 3D model
+          {tr("Export 3D model")}
         </h2>
-        <p className="mt-1 text-label text-ink-secondary">The active option, in metres, where it stands on the site.</p>
+        <p className="mt-1 text-label text-ink-secondary">{tr("The active option, in metres, where it stands on the site.")}</p>
         <div className="mt-4 flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <span className="text-label text-ink-secondary">Format</span>
+            <span className="text-label text-ink-secondary">{tr("Format")}</span>
             <Segmented kind="toggle" label="Format" stretch options={FORMATS} value={format} onChange={(f) => useModelExport.setState({ format: f })} />
             <p className="text-caption text-ink-secondary">{FORMATS.find((f) => f.key === format)!.detail}</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className="text-label text-ink-secondary">Include</span>
+            <span className="text-label text-ink-secondary">{tr("Include")}</span>
             <Segmented
               kind="toggle"
               label="Include"

@@ -22,6 +22,7 @@ import { Segmented } from '../controls/Segmented.tsx'
 import { useCloseOutside } from '../controls/useCloseOutside.ts'
 import { ALL as ALL_REACH, REACHES, reachText, referenceLevels, useReference, type Reach } from '../plan/reference.ts'
 import { beginDrag } from '../controls/beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The rail's All option: no level id looks like it (newId gives `l<n>`). */
 const ALL = 'all levels'
@@ -149,7 +150,7 @@ function RefButton() {
               />
             </div>
           ))}
-          <p className="text-caption text-ink-secondary">The farther the level, the fainter its outline.</p>
+          <p className="text-caption text-ink-secondary">{tr("The farther the level, the fainter its outline.")}</p>
         </div>
       )}
     </div>

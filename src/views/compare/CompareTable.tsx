@@ -12,6 +12,7 @@ import type { DesignOption } from '../../model/schema.ts'
 import { useApp } from '../../state/store.ts'
 import { Icon } from '../controls/Icon.tsx'
 import { formatFigure, m2 } from '../format.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Figures worth comparing even when the strip does not show them. Site area and buildable area are the same for all. */
 const CORE = ['built-footprint', 'coverage', 'gfa', 'built-volume', 'buildings', 'masses', 'issues']
@@ -69,7 +70,7 @@ export function CompareTable({ options }: { options: DesignOption[] }) {
         })}
         <tr>
           <th scope="rowgroup" colSpan={options.length + 1} className="px-3 pb-1 pt-3 text-left text-caption font-medium text-ink-secondary">
-            GFA by building
+            {tr("GFA by building")}
           </th>
         </tr>
         {buildings.map((b) => {

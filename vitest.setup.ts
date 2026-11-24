@@ -3,6 +3,7 @@ import { afterEach, beforeEach } from 'vitest'
 import { usePluginModes } from './src/plugins/settings.ts'
 import { LAYERS_KEY, useLayerView } from './src/views/layers/layerView.ts'
 import '@testing-library/jest-dom/vitest'
+import { useIdioma } from './src/i18n/idioma.ts'
 
 // We import describe/it/expect explicitly (no Vitest globals), so Testing Library
 // does not auto-clean. Without this, every render would leak into the next test.
@@ -22,3 +23,6 @@ beforeEach(() => {
   }
   useLayerView.setState({ hidden: [], onTop: [], folded: [] })
 })
+
+// mixed-use-mvp: la app arranca en español (src/i18n); los tests de GIM leen los textos en inglés.
+beforeEach(() => useIdioma.setState({ idioma: 'en' }))

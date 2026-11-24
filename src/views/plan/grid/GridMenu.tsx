@@ -16,6 +16,7 @@ import { useSiteTool } from '../site/siteTools.ts'
 import { toggle } from '../../tools/hand.ts'
 import { GridLook } from './GridLook.tsx'
 import { restoreGrid } from './GridToolLayer.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const metres = (v: number) => `${Math.round(v * 100) / 100}`
 
@@ -42,7 +43,7 @@ export function GridMenu({ disabled = false, inPanel = false }: { disabled?: boo
             title="Move the grid by its origin and turn it by its handle on the plan (Shift: free, 15° steps). Escape or this button lets it go"
             onClick={() => toggle('grid')}
           >
-            Move pivot
+            {tr("Move pivot")}
           </ToggleChip>
         </ChipTrack>
         <button
@@ -51,7 +52,7 @@ export function GridMenu({ disabled = false, inPanel = false }: { disabled?: boo
           onClick={restoreGrid}
           className="pressable h-6 rounded-control px-2 text-label text-ink-segment hover:bg-hover hover:text-ink"
         >
-          Restore original
+          {tr("Restore original")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
@@ -67,7 +68,7 @@ export function GridMenu({ disabled = false, inPanel = false }: { disabled?: boo
         <NumberField narrow label="Origin y" unit="m" value={g.origin.y} onCommit={(v) => update({ origin: { y: v } })} />
       </div>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-label text-ink-secondary">Grid of</span>
+        <span className="text-label text-ink-secondary">{tr("Grid of")}</span>
         <Segmented
           kind="toggle"
           label="Grid of"

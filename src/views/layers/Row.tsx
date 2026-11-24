@@ -19,6 +19,7 @@ import { memo, type DragEvent, type MouseEvent } from 'react'
 import { Icon } from '../controls/Icon.tsx'
 import { NameField } from '../controls/NameField.tsx'
 import type { EyeState, LayerRow } from './tree.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Whether what a row holds is drawn over the model: on, off, or some of each. */
 export type TopState = 'on' | 'off' | 'mixed'
@@ -139,7 +140,7 @@ function RowView({ row, depth, open, eye, eyeTitle, top, picked, current, dim, e
           }`}
         >
           {row.swatch !== undefined && <span aria-hidden className={`h-2.5 w-2.5 shrink-0 rounded-[3px] ${dim ? 'opacity-50' : ''}`} style={{ background: row.swatch }} />}
-          <span className={`min-w-0 truncate ${dim ? 'opacity-50' : ''}`}>{row.label}</span>
+          <span className={`min-w-0 truncate ${dim ? 'opacity-50' : ''}`}>{tr(row.label)}</span>
           {row.count !== undefined && <span className="shrink-0 text-caption tabular-nums text-ink-secondary">{row.count}</span>}
           {row.detail !== undefined && <span className="shrink-0 text-caption tabular-nums text-ink-secondary">{row.detail}</span>}
           {row.marks?.map((m) => (

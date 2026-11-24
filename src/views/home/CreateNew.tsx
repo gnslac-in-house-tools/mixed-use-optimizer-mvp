@@ -19,6 +19,7 @@ import { programOf } from './BlockLibraryView.tsx'
 import { HOME_ICONS } from './icons.ts'
 import { libraryTerrain, libraryTerrains, loadGfitTerrains, useTerrainLibrary } from './terrainLibrary.ts'
 import { terrainThumb } from './thumb.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export type CreateKind = 'project' | 'block'
 
@@ -147,7 +148,7 @@ function BlockTypes() {
     for (const e of libraryBlocks()) groups.set(programOf(e), [...(groups.get(programOf(e)) ?? []), e])
     return [...groups].sort(([a], [b]) => a.localeCompare(b))
   }, [count])
-  if (!byProgram.length) return <p className="text-body text-ink-secondary">No block in the library yet: Start blank begins one.</p>
+  if (!byProgram.length) return <p className="text-body text-ink-secondary">{tr("No block in the library yet: Start blank begins one.")}</p>
   return (
     <div className="flex flex-col gap-3">
       {byProgram.map(([program, blocks]) => (
@@ -218,7 +219,7 @@ function Dialog() {
         }}
       >
         <h2 id={titleId} className="text-headline">
-          Create new
+          {tr("Create new")}
         </h2>
         <div className="grid grid-cols-2 gap-2.5 phone:grid-cols-1">
           <KindCard kind="project" icon={HOME_ICONS.project} title="Project" text="A site and the buildings on it, with its options" />
@@ -226,17 +227,17 @@ function Dialog() {
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto">
           {kind === null ? (
-            <p className="text-body text-ink-secondary">What would you like to create?</p>
+            <p className="text-body text-ink-secondary">{tr("What would you like to create?")}</p>
           ) : kind === 'project' ? (
             <div className="flex flex-col gap-2">
-              <span className="text-label text-ink-secondary">Its type</span>
+              <span className="text-label text-ink-secondary">{tr("Its type")}</span>
               <ProjectTypes />
-              <span className="mt-2 text-label text-ink-secondary">Its terrain</span>
+              <span className="mt-2 text-label text-ink-secondary">{tr("Its terrain")}</span>
               <ProjectTerrains />
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <span className="text-label text-ink-secondary">Start from a block type</span>
+              <span className="text-label text-ink-secondary">{tr("Start from a block type")}</span>
               <BlockTypes />
             </div>
           )}
@@ -250,18 +251,18 @@ function Dialog() {
               className="pressable flex h-[2.125rem] items-center gap-2 rounded-[0.625rem] bg-fill px-3 text-label font-semibold text-ink hover:bg-hover"
             >
               <Icon path={HOME_ICONS.create} className="h-4 w-4" />
-              Start blank
+              {tr("Start blank")}
             </button>
           ) : (
             <span />
           )}
           <div className="flex items-center gap-1.5">
             <button type="button" onClick={close} className="pressable flex h-[2.125rem] items-center rounded-[0.625rem] px-3 text-label text-ink-secondary hover:bg-hover hover:text-ink">
-              Cancel
+              {tr("Cancel")}
             </button>
             {kind === 'project' && (
               <button type="button" data-tour="create-start" onClick={createProject} className="pressable flex h-[2.125rem] items-center rounded-[0.625rem] bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90">
-                Create project
+                {tr("Create project")}
               </button>
             )}
           </div>

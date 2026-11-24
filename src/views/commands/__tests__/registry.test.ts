@@ -203,6 +203,7 @@ const EXPECTED: Record<string, string[]> = {
     'view.grid',
     ...PLUGINS.flatMap((p) => [`view.plugin.${p.id}.tabs`, `view.plugin.${p.id}.power`]),
     ...['system', 'light', 'dark'].map((x) => `view.theme.${x}`),
+    'view.idioma.es', 'view.idioma.en', // mixed-use-mvp
     'view.fullscreen',
     'view.default-layout',
   ],

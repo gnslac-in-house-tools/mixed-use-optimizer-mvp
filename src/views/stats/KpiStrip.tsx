@@ -28,6 +28,7 @@ import { showIssues } from './issueCommands.ts'
 import { KpiPicker } from './KpiPicker.tsx'
 import { KPI_SIZES, useUi, type KpiSize } from '../layout/ui.ts'
 import { beginDrag } from '../controls/beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The strip's size, for its cells. */
 const Size = createContext<KpiSize>('full')
@@ -84,7 +85,7 @@ export function KpiStrip() {
           style={{ gridTemplateColumns: columns }}
         >
           {switcher && <InterruptorJuego />}
-          {kpis.length === 0 && <p className="px-panel-pad text-body text-ink-secondary">No KPIs chosen: pick some with Customize.</p>}
+          {kpis.length === 0 && <p className="px-panel-pad text-body text-ink-secondary">{tr("No KPIs chosen: pick some with Customize.")}</p>}
           {kpis.map((k, i) => {
             const f = figure(k.value, k.unit)
             const sub = note(k)
@@ -182,7 +183,7 @@ function Cell({ label, children }: { label: string; children: ReactNode }) {
   const compact = useContext(Size) === 'compact'
   return (
     <div role="group" aria-label={label} className={`${CELL} ${compact ? 'flex items-baseline gap-2' : ''}`}>
-      <div className="truncate text-label text-ink-secondary">{label}</div>
+      <div className="truncate text-label text-ink-secondary">{tr(label)}</div>
       {children}
     </div>
   )

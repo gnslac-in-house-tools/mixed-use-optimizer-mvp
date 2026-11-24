@@ -6,6 +6,7 @@
 import { useApp } from '../../state/store.ts'
 import { m2, pct } from '../format.ts'
 import { useIsolate } from './isolate.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function ProgramBars({ expanded = false }: { expanded?: boolean }) {
   const byProgram = useApp((s) => s.derived.metrics.footprintByProgram)
@@ -22,7 +23,7 @@ export function ProgramBars({ expanded = false }: { expanded?: boolean }) {
     .sort((a, b) => b.area - a.area)
   const total = rows.reduce((s, r) => s + r.area, 0)
 
-  if (rows.length === 0) return <p className="text-caption text-ink-secondary">No masses yet.</p>
+  if (rows.length === 0) return <p className="text-caption text-ink-secondary">{tr("No masses yet.")}</p>
   return (
     <ul aria-label="Footprint by program" className="flex flex-col gap-1.5">
       {rows.map((r) => {

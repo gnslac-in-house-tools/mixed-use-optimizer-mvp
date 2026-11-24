@@ -44,6 +44,7 @@ import { useLayerPick, pickLayer } from './layerPick.ts'
 import { useSettled } from './settled.ts'
 import { toggleOnTop, useOnTopSet } from './layerView.ts'
 import { flatRows, layerTree, topState, type LayerRow, type RowKind } from './tree.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The id of the row a drawing part is (tree.ts): a file, one of its layers, or its parcels. */
 const partRowId = (part: { file: string; layer?: string; parcels?: boolean }): string =>
@@ -140,7 +141,7 @@ export function LayerProperties({ muted }: { muted: string }) {
   const ids = usePickedRowIds()
   const index = useRowIndex()
   const rows = ids.flatMap((id) => index.get(id) ?? [])
-  if (rows.length === 0) return <p className={`select-text text-caption ${muted}`}>Nothing is picked: pick a row in Layers to see its settings here.</p>
+  if (rows.length === 0) return <p className={`select-text text-caption ${muted}`}>{tr("Nothing is picked: pick a row in Layers to see its settings here.")}</p>
   if (rows.length > 1) return <Several rows={rows} muted={muted} />
   return <One row={rows[0]} muted={muted} />
 }
@@ -173,7 +174,7 @@ function Several({ rows, muted }: { rows: LayerRow[]; muted: string }) {
           <Total label="Floor area" value={m2(gfa)} />
         </dl>
       )}
-      <p className={`select-text text-caption ${muted}`}>Pick one row to see its settings.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("Pick one row to see its settings.")}</p>
     </section>
   )
 }
@@ -273,7 +274,7 @@ function SiteSettings() {
 
 function TerrainSettings({ muted }: { muted: string }) {
   const on = useModule('terrain').on
-  if (!on) return <p className={`select-text text-caption ${muted}`}>The site has no ground yet.</p>
+  if (!on) return <p className={`select-text text-caption ${muted}`}>{tr("The site has no ground yet.")}</p>
   return <TerrainSection />
 }
 
@@ -287,11 +288,11 @@ function DrawingsSettings({ row, muted }: { row: LayerRow; muted: string }) {
           disabled={!boundary}
           onClick={addDrawing}
         >
-          Add drawing…
+          {tr("Add drawing…")}
         </Button>
       </div>
       <OnTopToggle row={row} muted={muted} />
-      <p className={`select-text text-caption ${muted}`}>The drawings of the site, kept for their drawing lines and parcels. Each file is a row below, with its layers and its parcels.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("The drawings of the site, kept for their drawing lines and parcels. Each file is a row below, with its layers and its parcels.")}</p>
     </>
   )
 }
@@ -302,7 +303,7 @@ function OnTopToggle({ row, muted }: { row: LayerRow; muted: string }) {
   if (onTop === null) return null
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-label text-ink-secondary">On top</span>
+      <span className="text-label text-ink-secondary">{tr("On top")}</span>
       <button
         type="button"
         aria-label={`On top ${row.label}`}
@@ -354,7 +355,7 @@ function FileSettings({ row, muted }: { row: LayerRow; muted: string }) {
             useDrawingPick.getState().set([])
           }}
         >
-          Remove
+          {tr("Remove")}
         </Button>
       </div>
       <OnTopToggle row={row} muted={muted} />
@@ -388,7 +389,7 @@ function LayerSettings({ row, muted }: { row: LayerRow; muted: string }) {
         {row.count !== undefined && <Total label={layer !== undefined ? 'Lines' : 'Parcels'} value={row.count.toLocaleString('en-US')} />}
         {row.swatch !== undefined && (
           <div className="flex items-baseline justify-between gap-3">
-            <dt className="text-label text-ink-secondary">Colour</dt>
+            <dt className="text-label text-ink-secondary">{tr("Colour")}</dt>
             <dd className="flex items-center gap-2 text-body text-ink">
               <span aria-hidden data-colour className="h-3 w-3 rounded-[4px]" style={{ background: row.swatch }} />
               {row.swatch}
@@ -398,7 +399,7 @@ function LayerSettings({ row, muted }: { row: LayerRow; muted: string }) {
       </dl>
       {file !== undefined && (
         <div className="flex items-center justify-between gap-3">
-          <span className="text-label text-ink-secondary">Padlock</span>
+          <span className="text-label text-ink-secondary">{tr("Padlock")}</span>
           <button
             type="button"
             aria-label={`Lock ${row.label}`}
@@ -412,7 +413,7 @@ function LayerSettings({ row, muted }: { row: LayerRow; muted: string }) {
         </div>
       )}
       <OnTopToggle row={row} muted={muted} />
-      <p className={`select-text text-caption ${muted}`}>A locked one is seen, not picked on the plan and not moved: it is picked from its row here, to read it or to take the lock off. One on top is drawn over the model, in the plan and in the 3D; it is picked and snapped to as before.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("A locked one is seen, not picked on the plan and not moved: it is picked from its row here, to read it or to take the lock off. One on top is drawn over the model, in the plan and in the 3D; it is picked and snapped to as before.")}</p>
     </>
   )
 }
@@ -425,7 +426,7 @@ function ParcelSettings({ row, muted }: { row: LayerRow; muted: string }) {
         {row.detail !== undefined && <Total label="Area" value={row.detail} />}
         {row.ref?.file !== undefined && <Total label="File" value={row.ref.file} />}
       </dl>
-      <p className={`select-text text-caption ${muted}`}>A parcel of the survey. Its group’s padlock locks them all.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("A parcel of the survey. Its group’s padlock locks them all.")}</p>
     </>
   )
 }
@@ -438,7 +439,7 @@ function ReferenceLinesSettings({ row, muted }: { row: LayerRow; muted: string }
         <Total label="Count" value={(row.count ?? 0).toLocaleString('en-US')} />
       </dl>
       <OnTopToggle row={row} muted={muted} />
-      <p className={`select-text text-caption ${muted}`}>The guides drawn with the Reference line tool: the other tools snap to them, on every level and in every option. Pick one on the plan to see its points; a line that is locked or hidden is a row below, to unlock or show it.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("The guides drawn with the Reference line tool: the other tools snap to them, on every level and in every option. Pick one on the plan to see its points; a line that is locked or hidden is a row below, to unlock or show it.")}</p>
     </>
   )
 }
@@ -456,7 +457,7 @@ function BuildingsSettings({ row, muted }: { row: LayerRow; muted: string }) {
         <Total label="Buildings" value={(row.count ?? 0).toLocaleString('en-US')} />
         <Total label="Floor area" value={m2(gfa)} />
       </dl>
-      <p className={`select-text text-caption ${muted}`}>The buildings of the option in view. Pick one below for its settings, levels and grid.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("The buildings of the option in view. Pick one below for its settings, levels and grid.")}</p>
     </>
   )
 }
@@ -464,7 +465,7 @@ function BuildingsSettings({ row, muted }: { row: LayerRow; muted: string }) {
 /** A building's (or a level's building's) settings: of that building, whichever the plan is on. */
 function BuildingSettings({ id, muted }: { id: Id | undefined; muted: string }) {
   const building = useApp((s) => s.project.buildings.find((b) => b.id === id))
-  if (!building) return <p className={`select-text text-caption ${muted}`}>It is no longer in the project.</p>
+  if (!building) return <p className={`select-text text-caption ${muted}`}>{tr("It is no longer in the project.")}</p>
   return <BuildingProperties building={building} heading="none" />
 }
 
@@ -485,7 +486,7 @@ function CourtsSettings({ row, muted }: { row: LayerRow; muted: string }) {
         <Total label="Courts" value={(row.count ?? 0).toLocaleString('en-US')} />
         <Total label="Area" value={m2(area)} />
       </dl>
-      <p className={`select-text text-caption ${muted}`}>In front of the docked walls, as deep as the standards or the wall’s own ask. Set on the mass.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("In front of the docked walls, as deep as the standards or the wall’s own ask. Set on the mass.")}</p>
     </>
   )
 }
@@ -494,7 +495,7 @@ function CourtsSettings({ row, muted }: { row: LayerRow; muted: string }) {
 function ParkingSettings({ muted }: { muted: string }) {
   const offered = useModule('parking').offered
   const lots = useApp((s) => s.derived.circulation.lots.length)
-  if (!offered) return <p className={`select-text text-caption ${muted}`}>This typology has no parking.</p>
+  if (!offered) return <p className={`select-text text-caption ${muted}`}>{tr("This typology has no parking.")}</p>
   return (
     <div className="flex flex-col gap-5">
       <CarParking />

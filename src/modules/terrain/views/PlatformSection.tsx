@@ -12,6 +12,7 @@ import { Segmented } from '../../../views/controls/Segmented.tsx'
 import { useModule } from '../../../views/modules.ts'
 import { heightText } from './terrainDraw.ts'
 import { balanceWithBanks, joinedWith, ownPlatform, removeStep, setPlatformLevel, setStepLevel } from './platformCommands.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const m3 = (v: number) => `≈ ${Math.round(v).toLocaleString('en-US')} m³`
 const level = (z: number | null) => (z === null ? '—' : `${heightText(z)} m`)
@@ -27,7 +28,7 @@ function Banks({ x }: { x: DerivedPlatform }) {
       </p>
       {Math.abs(left) >= 1 && (
         <Button title={`Type the level at which its cut and fill balance with its banks (${left > 0 ? 'fill' : 'cut'} is over by ${m3(Math.abs(left))} now)`} onClick={() => balanceWithBanks(x.id)}>
-          Balance with banks
+          {tr("Balance with banks")}
         </Button>
       )}
     </div>
@@ -73,9 +74,9 @@ export function PlatformSection({ building: b }: { building: Building }) {
   const names = (ids: Id[]) => ids.map((id) => project.masses.find((m) => m.id === id)?.name ?? id).join(', ')
   return (
     <section aria-label="Platform" data-tour="platform" className="flex flex-col gap-2">
-      <h2 className="text-label text-ink-secondary">Platform</h2>
+      <h2 className="text-label text-ink-secondary">{tr("Platform")}</h2>
       {!own ? (
-        <p className="select-text text-caption text-ink-secondary">No masses of it in this option on the ground: its platform shows once they are.</p>
+        <p className="select-text text-caption text-ink-secondary">{tr("No masses of it in this option on the ground: its platform shows once they are.")}</p>
       ) : (
         <>
           <Segmented
@@ -111,21 +112,21 @@ export function PlatformSection({ building: b }: { building: Building }) {
       {shared.length > 0 && (
         <div className="flex items-center justify-between gap-2">
           <span className="min-w-0 text-caption text-ink-secondary">
-            Joined with <span className="text-ink">{shared.map((x) => x.name).join(', ')}</span>
+            {tr("Joined with")} <span className="text-ink">{shared.map((x) => x.name).join(', ')}</span>
           </span>
           <RowButton label="Own platform" title={`${b.name} leaves the shared platform: one of its own`} icon="close" onClick={() => ownPlatform(b.id)} />
         </div>
       )}
       {steps.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <span className="text-caption text-ink-secondary">Steps</span>
+          <span className="text-caption text-ink-secondary">{tr("Steps")}</span>
           {steps.map((x) => (
             <Step key={x.id} x={x} names={names} />
           ))}
         </div>
       )}
       {own && shared.length === 0 && steps.length === 0 && (
-        <p className="select-text text-caption text-ink-secondary">Join another building’s platform, or step masses onto their own, from the right-click menus.</p>
+        <p className="select-text text-caption text-ink-secondary">{tr("Join another building’s platform, or step masses onto their own, from the right-click menus.")}</p>
       )}
     </section>
   )

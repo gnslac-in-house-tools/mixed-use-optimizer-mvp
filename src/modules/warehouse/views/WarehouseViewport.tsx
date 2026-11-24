@@ -7,6 +7,7 @@ import { Button } from '../../../views/controls/fields.tsx'
 import { newType } from './commands.ts'
 import { WarehousePlan } from './WarehousePlan.tsx'
 import { useCurrentType, useGenerated } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const WarehouseScene = lazy(() => import('./WarehouseScene.tsx').then((m) => ({ default: m.WarehouseScene })))
 
@@ -20,8 +21,8 @@ export function WarehouseViewport() {
     return (
       <div className="grid h-full place-items-center">
         <div className="flex flex-col items-center gap-3 text-body text-ink-secondary">
-          No warehouse type yet.
-          <Button onClick={newType}>New warehouse type</Button>
+          {tr("No warehouse type yet.")}
+          <Button onClick={newType}>{tr("New warehouse type")}</Button>
         </div>
       </div>
     )
@@ -34,7 +35,7 @@ export function WarehouseViewport() {
       )}
       {view !== 'plan' && (
         <div className="relative min-w-0 flex-1">
-          <Suspense fallback={<div className="grid h-full place-items-center text-body text-ink-secondary">Loading the 3D view…</div>}>
+          <Suspense fallback={<div className="grid h-full place-items-center text-body text-ink-secondary">{tr("Loading the 3D view…")}</div>}>
             <WarehouseScene g={g} />
           </Suspense>
         </div>

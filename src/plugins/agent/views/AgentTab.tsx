@@ -23,6 +23,7 @@ import { PROVIDERS, providerOf, shortName, shortlist, type ProviderId } from '..
 import { connectionOf, useAgentSettings } from '../settings.ts'
 import { METERED, SHARED_VENDOR, everyoneUsed, fetchEveryone, usageLine, useUsage, type Used } from '../usage.ts'
 import { listModels, type ToolResult, type Turn } from '../wire.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const fieldClass =
   'h-row w-full min-w-0 select-text rounded-control border border-separator bg-panel-sunken px-1.5 text-label text-ink outline-none focus:border-ink disabled:text-ink-tertiary'
@@ -105,7 +106,7 @@ function ModelSettings() {
               {p.label}
             </option>
           ))}
-          <option value={DESKTOP}>Claude Desktop (MCP)</option>
+          <option value={DESKTOP}>{tr("Claude Desktop (MCP)")}</option>
         </select>
       </Row>
       {mcp.on ? <DesktopSettings /> : chatSettings()}
@@ -191,7 +192,7 @@ function Details({ children }: { children: ReactNode }) {
         className="pressable flex items-center gap-1 self-start rounded-control text-caption text-ink-secondary hover:text-ink"
       >
         <Icon name={open ? 'chevronDown' : 'chevronRight'} className="h-3 w-3" />
-        Details
+        {tr("Details")}
       </button>
       {open && children}
     </div>
@@ -235,7 +236,7 @@ function UsageLine({ provider }: { provider: ProviderId }) {
       >
         {used && (
           <button type="button" className="shrink-0 text-caption text-ink-secondary underline hover:text-ink" onClick={() => reset(provider)}>
-            Reset
+            {tr("Reset")}
           </button>
         )}
       </UsedRow>
@@ -315,7 +316,7 @@ function DesktopSettings() {
           <span className="truncate">{said[status]}</span>
           {status === 'elsewhere' && (
             <button type="button" className="shrink-0 text-ink underline" onClick={() => setOn(true)}>
-              Connect here
+              {tr("Connect here")}
             </button>
           )}
         </span>
@@ -336,17 +337,17 @@ function DesktopIntro() {
   const asked = useAsked((s) => s.text)
   return (
     <section aria-label="Chat" className="flex flex-col gap-2 rounded-control bg-panel-sunken p-3">
-      <h2 className="text-headline text-ink">Ask in Claude Desktop</h2>
-      <p className="text-body text-ink">It works on this project with the app’s own buttons; what it changes shows here.</p>
+      <h2 className="text-headline text-ink">{tr("Ask in Claude Desktop")}</h2>
+      <p className="text-body text-ink">{tr("It works on this project with the app’s own buttons; what it changes shows here.")}</p>
       {asked && (
         <div aria-label="To ask" className="flex flex-col gap-1.5 border-t border-separator pt-2">
           <p className="select-text whitespace-pre-wrap text-label text-ink">{asked}</p>
           <div className="flex gap-3">
             <button type="button" className="text-caption text-ink-secondary hover:text-ink" onClick={() => void navigator.clipboard?.writeText(asked)}>
-              Copy
+              {tr("Copy")}
             </button>
             <button type="button" className="text-caption text-ink-secondary hover:text-ink" onClick={() => useAsked.setState({ text: null })}>
-              Dismiss
+              {tr("Dismiss")}
             </button>
           </div>
         </div>
@@ -361,8 +362,8 @@ function Intro() {
   const ask = useChat((s) => s.ask)
   return (
     <section aria-label="Chat" className="flex flex-col gap-3 rounded-control bg-panel-sunken p-3">
-      <h2 className="text-headline text-ink">Ask, or give it steps</h2>
-      <p className="text-body text-ink">It works the app’s own buttons, as you would, and tells you what it did.</p>
+      <h2 className="text-headline text-ink">{tr("Ask, or give it steps")}</h2>
+      <p className="text-body text-ink">{tr("It works the app’s own buttons, as you would, and tells you what it did.")}</p>
       <ul className="flex flex-col items-start gap-1.5">
         {EXAMPLES.map((e) => (
           <li key={e}>
@@ -420,7 +421,7 @@ function Conversation({ turns }: { turns: Turn[] }) {
           </li>
         ) : null,
       )}
-      {busy && <li className="text-caption text-ink-secondary">Thinking…</li>}
+      {busy && <li className="text-caption text-ink-secondary">{tr("Thinking…")}</li>}
       <li ref={end} aria-hidden />
     </ol>
   )
@@ -489,7 +490,7 @@ function Composer() {
       </div>
       {turns.length > 0 && (
         <button type="button" onClick={clear} className="self-start text-caption text-ink-secondary hover:text-ink" title="Start again: the changes it made stay">
-          New chat
+          {tr("New chat")}
         </button>
       )}
     </div>

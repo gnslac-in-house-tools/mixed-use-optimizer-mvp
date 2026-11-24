@@ -4,6 +4,7 @@
 // with this build's version and commit. Words only, scrolled inside its panel so Home itself never scrolls.
 import type { ReactNode } from 'react'
 import { isSoon, usePluginModes } from '../../plugins/index.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export const REPOSITORY = 'https://github.com/gnslac-in-house-tools/gfit-generative-information-modeler'
 
@@ -64,7 +65,7 @@ export function AboutView() {
   return (
     <section aria-label="About" className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto rounded-[0.875rem] bg-panel p-5 shadow-[inset_0_0_0_1px_var(--separator)]">
       <header className="flex flex-col gap-1.5">
-        <h2 className="text-headline text-ink">About GFit</h2>
+        <h2 className="text-headline text-ink">{tr("About GFit")}</h2>
         <p className="max-w-[44rem] text-body text-ink-secondary">
           GFit, the Generative Information Modeler, is a test fit for buildings on a real site, in the browser: industrial parks first — warehouses, offices, roads, docks and
           platforms on the ground — measured as you go, growing towards geometry with information (datasets, BIM).

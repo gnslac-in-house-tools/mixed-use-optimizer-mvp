@@ -17,6 +17,7 @@ import { useToast } from '../../../views/layout/toast.ts'
 import { useModule } from '../../../views/modules.ts'
 import { maskText, parseMask, patternText } from './doorPattern.ts'
 import { Note } from '../../../views/layout/Note.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const doorsText = (doors: number, walls: number) =>
   doors === 0 && walls === 0 ? 'No docks' : `${doors} ${doors === 1 ? 'door' : 'doors'} on ${walls} ${walls === 1 ? 'wall' : 'walls'}`
@@ -39,7 +40,7 @@ export function DockSection({ id, muted }: { id: Id; muted: string }) {
   return (
     <section aria-label="Docks" className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <h3 className={`text-label ${muted}`}>Docks</h3>
+        <h3 className={`text-label ${muted}`}>{tr("Docks")}</h3>
         <Segmented
           kind="toggle"
           label="Docks"
@@ -60,7 +61,7 @@ export function DockSection({ id, muted }: { id: Id; muted: string }) {
       </p>
       {(own || program?.docks) && (
         <Note className={`text-caption ${muted}`}>
-          On the plan, click the marks beside its walls to turn each wall's docks on or off, or drag a filled one onto another wall to move them there.
+          {tr("On the plan, click the marks beside its walls to turn each wall's docks on or off, or drag a filled one onto another wall to move them there.")}
         </Note>
       )}
       {mine.length > 0 && <Courts id={id} mine={mine} muted={muted} />}
@@ -85,7 +86,7 @@ function Courts({ id, mine, muted }: { id: Id; mine: DerivedDock[]; muted: strin
             </div>
             {d.ownDepth && (
               <Button title="Its block's or the standards' depth again" onClick={() => apply((p) => actions.setCourtDepth(p, id, d.t, null))}>
-                Reset
+                {tr("Reset")}
               </Button>
             )}
           </div>
@@ -96,7 +97,7 @@ function Courts({ id, mine, muted }: { id: Id; mine: DerivedDock[]; muted: strin
           )}
         </div>
       ))}
-      <Note className={`text-caption ${muted}`}>On the plan, drag the pill on a court's outer edge to make it deeper or shallower.</Note>
+      <Note className={`text-caption ${muted}`}>{tr("On the plan, drag the pill on a court's outer edge to make it deeper or shallower.")}</Note>
     </div>
   )
 }
@@ -121,7 +122,7 @@ function DoorPattern({ id, muted }: { id: Id; muted: string }) {
   return (
     <div className="flex flex-col gap-2" data-door-pattern={patternText(pt)}>
       <div className="flex items-center justify-between gap-2">
-        <span className={`text-label ${muted}`}>On the grid</span>
+        <span className={`text-label ${muted}`}>{tr("On the grid")}</span>
         <Segmented
           kind="toggle"
           label="Door pattern"
@@ -152,7 +153,7 @@ function DoorPattern({ id, muted }: { id: Id; muted: string }) {
           {pt.mask && (
             <div>
               <Button title="A door every so many modules again" onClick={() => apply((p) => actions.setDoorPattern(p, id, { every: pt.every, offset: pt.offset, skip: pt.skip }))}>
-                No mask
+                {tr("No mask")}
               </Button>
             </div>
           )}
@@ -166,7 +167,7 @@ function DoorPattern({ id, muted }: { id: Id; muted: string }) {
           </span>
         </p>
       )}
-      <Note className={`text-caption ${muted}`}>Zoom in on the plan: each module of a docked wall is a square there; a click adds or takes away its door.</Note>
+      <Note className={`text-caption ${muted}`}>{tr("Zoom in on the plan: each module of a docked wall is a square there; a click adds or takes away its door.")}</Note>
       {flips > 0 && (
         <div>
           <Button title="Its doors as the pattern places them" onClick={() => apply((p) => actions.clearDoorFlips(p, id))}>

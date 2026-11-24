@@ -215,6 +215,7 @@ describe('View menu', () => {
       'Agent tabs',
       'Turn the agent off',
       'Theme',
+      'Language', // mixed-use-mvp
       'Full screen',
       'Default layout',
     ])

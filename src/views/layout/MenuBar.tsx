@@ -24,6 +24,7 @@ import { menuEntries, menusFor } from '../commands/index.ts'
 import { Icon } from '../controls/Icon.tsx'
 import { Menu, type MenuEntry } from '../controls/Menu.tsx'
 import { usePhone } from './media.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function MenuBar() {
   return usePhone() ? <PhoneMenu /> : <Bar />
@@ -227,7 +228,7 @@ function Bar() {
                 shown ? 'bg-fill text-ink shadow-control' : 'text-ink-secondary hover:bg-hover hover:text-ink'
               }`}
             >
-              {name}
+              {tr(name)}
             </button>
           )
         })}
@@ -292,7 +293,7 @@ function Sheet({ onClose }: { onClose(): void }) {
         className="panel fixed inset-x-0 bottom-0 z-[90] flex max-h-[85dvh] flex-col rounded-b-none pb-[env(safe-area-inset-bottom)] shadow-sheet"
       >
         <div className="flex shrink-0 items-center justify-between px-4 pt-3">
-          <h2 className="text-headline text-ink">Menu</h2>
+          <h2 className="text-headline text-ink">{tr("Menu")}</h2>
           <button type="button" aria-label="Close menu" onClick={onClose} className="pressable grid h-11 w-11 place-items-center rounded-pill hover:bg-hover">
             <Icon name="close" className="h-5 w-5" />
           </button>

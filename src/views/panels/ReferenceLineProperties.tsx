@@ -12,6 +12,7 @@ import { toggleOnTop, useOnTopSet } from '../layers/layerView.ts'
 import { lockedFirst } from '../layers/locks.ts'
 import { letGoKind } from '../plan/mix.ts'
 import { Lockable } from './Lockable.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Metres as the lists say them ("4 m", "12.5 m"). */
 const metres = (v: number): string => `${Math.round(v * 100) / 100} m`
@@ -29,7 +30,7 @@ export function ReferenceLineProperties({ id, muted }: { id: Id; muted: string }
   return (
     <section aria-label={name} className="flex flex-col gap-3">
       <h2 className="text-headline">{name}</h2>
-      <p className={`select-text text-caption ${muted}`}>A guide: the other tools snap to it. It belongs to the project, so it is on every level and in every option. Drag its points on the plan to change it.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("A guide: the other tools snap to it. It belongs to the project, so it is on every level and in every option. Drag its points on the plan to change it.")}</p>
       <Lockable locked={locked} muted={muted}>
         <dl aria-label="Figures" className="flex flex-col gap-1.5">
           <Total label="Length" value={metres(length)} />
@@ -37,7 +38,7 @@ export function ReferenceLineProperties({ id, muted }: { id: Id; muted: string }
         </dl>
       </Lockable>
       <div className="flex items-center justify-between gap-3">
-        <span className="text-label text-ink-secondary">On top</span>
+        <span className="text-label text-ink-secondary">{tr("On top")}</span>
         <button
           type="button"
           aria-label="On top Reference lines"
@@ -58,7 +59,7 @@ export function ReferenceLineProperties({ id, muted }: { id: Id; muted: string }
             letGoKind('reference-line')
           }}
         >
-          Delete
+          {tr("Delete")}
         </Button>
       </div>
     </section>

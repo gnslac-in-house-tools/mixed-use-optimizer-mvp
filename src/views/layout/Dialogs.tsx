@@ -27,6 +27,7 @@ import { GRAPH_SHARE, LINE_STYLES, RULE_KINDS, toggleRuleTool, useGraph, type Li
 import { Rules } from '../graph/Rules.tsx'
 import { Note } from './Note.tsx'
 import { useUi } from './ui.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const SELECT = 'h-7 shrink-0 rounded-control bg-fill px-1.5 text-label text-ink outline-none focus:bg-hover'
 
@@ -115,7 +116,7 @@ function RulesWindow() {
   return (
     <div className="panel flex h-full min-h-0 flex-col gap-3 p-panel-pad">
       <header className="flex flex-wrap items-center gap-3 pr-10">
-        <h2 className="text-headline">Rules</h2>
+        <h2 className="text-headline">{tr("Rules")}</h2>
         <div role="group" aria-label="Rules tools" className="flex items-center gap-1.5">
           <button
             type="button"
@@ -127,7 +128,7 @@ function RulesWindow() {
             }`}
           >
             <Icon name="link" className="h-4 w-4" />
-            Draw rule
+            {tr("Draw rule")}
           </button>
           <select
             aria-label="New rule kind"
@@ -147,7 +148,7 @@ function RulesWindow() {
           </select>
         </div>
         <label className="flex items-center gap-1.5 text-label text-ink-secondary">
-          Lines
+          {tr("Lines")}
           <select aria-label="Lines" title="Lines" value={lines} onChange={(e) => setLines(e.target.value as LineStyle)} className={SELECT}>
             {LINE_STYLES.map((l) => (
               <option key={l.key} value={l.key}>

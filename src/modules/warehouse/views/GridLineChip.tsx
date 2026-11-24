@@ -7,6 +7,7 @@ import type { Generated } from '../engine/generate.ts'
 import { LengthField } from './LengthField.tsx'
 import { moveLine, removeLine } from './commands.ts'
 import { useLengths } from './units.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function GridLineChip({ t, g, axis, line }: { t: WarehouseType; g: Generated; axis: 'x' | 'y'; line: number }) {
   const { text } = useLengths()
@@ -32,7 +33,7 @@ export function GridLineChip({ t, g, axis, line }: { t: WarehouseType; g: Genera
             </button>
             <span className="text-caption text-ink-tertiary">{`or Del: ${text(lines[line + 1] - lines[line - 1])}`}</span>
           </span>
-          <p className="text-caption text-ink-tertiary">Dragged by its bubble, it moves module by module.</p>
+          <p className="text-caption text-ink-tertiary">{tr("Dragged by its bubble, it moves module by module.")}</p>
         </>
       ) : (
         <p className="text-caption text-ink-tertiary">{`The box’s ${line === 0 ? 'first' : 'last'} line: its wall. Its length is step 2’s.`}</p>

@@ -8,6 +8,7 @@ import { Icon } from '../controls/Icon.tsx'
 import { roadName } from '../plan/circulation/roadCommands.ts'
 import { useRoads } from '../plan/circulation/roadState.ts'
 import { StreetProperties } from './StreetProperties.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const pct = (v: number) => `${(v * 100).toLocaleString('en-US', { maximumFractionDigits: 1 })} %`
 const m3 = (v: number) => Math.round(v).toLocaleString('en-US')
@@ -41,23 +42,23 @@ export function RoadProperties({ id, muted }: { id: string; muted: string }) {
       ) : (
         <>
           <div className="flex justify-between gap-3 text-body">
-            <span className={`text-label ${muted}`}>Width</span>
+            <span className={`text-label ${muted}`}>{tr("Width")}</span>
             <span className="select-text font-medium tabular-nums">{road.width} m</span>
           </div>
           <div className="flex justify-between gap-3 text-body">
-            <span className={`text-label ${muted}`}>Length</span>
+            <span className={`text-label ${muted}`}>{tr("Length")}</span>
             <span className="select-text font-medium tabular-nums">{Math.round(length).toLocaleString('en-US')} m</span>
           </div>
           {graded && (
             <dl aria-label="Road grading" className="flex flex-col gap-1.5">
               <div className="flex justify-between gap-3 text-body">
-                <dt className={`text-label ${muted}`}>Steepest grade</dt>
+                <dt className={`text-label ${muted}`}>{tr("Steepest grade")}</dt>
                 <dd className={`select-text font-medium tabular-nums ${graded.grade > maxGrade + 1e-6 ? 'text-status-over' : ''}`}>
                   {pct(graded.grade)} <span className={`font-normal ${muted}`}>of {pct(maxGrade)} max.</span>
                 </dd>
               </div>
               <div className="flex justify-between gap-3 text-body">
-                <dt className={`text-label ${muted}`}>Cut · Fill</dt>
+                <dt className={`text-label ${muted}`}>{tr("Cut · Fill")}</dt>
                 <dd className="select-text font-medium tabular-nums">
                   ≈ {m3(graded.cut)} · {m3(graded.fill)} m³
                 </dd>

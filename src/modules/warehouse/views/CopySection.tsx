@@ -14,6 +14,7 @@ import { useModule } from '../../../views/modules.ts'
 import { backToType, openType, setOverrides } from './commands.ts'
 import { LengthField } from './LengthField.tsx'
 import { useLengths } from './units.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The figures a copy may change, how they read and write its overrides. */
 const FIGURES: {
@@ -112,21 +113,21 @@ export function CopySection({ buildingId }: { buildingId: Id }) {
       {/* its own docks bring its shape and courts with them (one bundle, Decision "Elements by module"): never silent */}
       {o.elements ? (
         <>
-          <p className="select-text text-caption text-ink-tertiary">Own docks: doesn't follow its type</p>
-          <p className="select-text text-caption text-ink-tertiary">Its outline, holes, zones and courts stay as they are too, until Back to type</p>
+          <p className="select-text text-caption text-ink-tertiary">{tr("Own docks: doesn't follow its type")}</p>
+          <p className="select-text text-caption text-ink-tertiary">{tr("Its outline, holes, zones and courts stay as they are too, until Back to type")}</p>
         </>
       ) : (
-        o.courts && <p className="select-text text-caption text-ink-tertiary">Own courts</p>
+        o.courts && <p className="select-text text-caption text-ink-tertiary">{tr("Own courts")}</p>
       )}
       <div className="flex gap-2">
         <Button tour="back-to-type" disabled={!variant && !depths} title="Its figures, its docks and its courts as its type's again" onClick={() => backToType(buildingId)}>
-          Back to type
+          {tr("Back to type")}
         </Button>
         <Button title={`The Program window, on ${type.name}`} onClick={() => openType(type.id)}>
-          Open type
+          {tr("Open type")}
         </Button>
       </div>
-      <Note className="text-caption text-ink-tertiary">Its shape is its type’s: move it and turn it on the plan. Its walls and corners are free, onto its module lines when you drag near them (Shift: free): the box’s past its range too (an Issue says so; the optimizer keeps to it), the others this copy’s own.</Note>
+      <Note className="text-caption text-ink-tertiary">{tr("Its shape is its type’s: move it and turn it on the plan. Its walls and corners are free, onto its module lines when you drag near them (Shift: free): the box’s past its range too (an Issue says so; the optimizer keeps to it), the others this copy’s own.")}</Note>
     </Section>
   )
 }

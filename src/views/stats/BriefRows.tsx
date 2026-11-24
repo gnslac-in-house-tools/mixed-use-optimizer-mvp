@@ -11,6 +11,7 @@ import { useApp } from '../../state/store.ts'
 import { STATUS_TEXT, STATUS_WORD } from '../brief/columns.tsx'
 import { m2, whole } from '../format.ts'
 import { useUi } from '../layout/ui.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const sign = (v: number) => (v > 0 ? '+' : v < 0 ? '−' : '±')
 /** The difference with its sign, its unit in the header: +120, −1,600, ±0. */
@@ -32,7 +33,7 @@ export function BriefRows() {
   const open = () => useUi.getState().openDialog('brief')
   const link = (
     <button type="button" onClick={open} className="pressable rounded-control underline underline-offset-2 hover:text-ink">
-      Brief
+      {tr("Brief")}
     </button>
   )
   const head = 'pb-1.5 text-right font-medium'
@@ -50,15 +51,15 @@ export function BriefRows() {
           </colgroup>
           <thead>
             <tr className="border-b border-separator align-bottom text-caption text-ink-secondary">
-              <th className="pb-1.5 text-left font-medium">Program</th>
+              <th className="pb-1.5 text-left font-medium">{tr("Program")}</th>
               <th className={head} title="What the active option has: its floor area (ground area for open programs)">
-                Option<span className="block font-normal text-ink-tertiary">m²</span>
+                {tr("Option")}<span className="block font-normal text-ink-tertiary">m²</span>
               </th>
               <th className={head} title="The option’s area minus the target, and as a share of it (±5 % meets it)">
                 Δ<span className="block font-normal text-ink-tertiary">m²</span>
               </th>
               <th className={head} title="How many masses of it the active option has, against the target">
-                Now<span className="block font-normal text-ink-tertiary">#</span>
+                {tr("Now")}<span className="block font-normal text-ink-tertiary">#</span>
               </th>
             </tr>
           </thead>
@@ -98,7 +99,7 @@ export function BriefRows() {
             <tfoot>
               <tr className="border-t-2 border-separator align-top text-label">
                 <th scope="row" className="pt-2 text-left font-semibold">
-                  Total
+                  {tr("Total")}
                 </th>
                 <td className="pt-2 text-right tabular-nums">
                   <span className={tint(totals.status)}>{whole(totals.area)}</span>

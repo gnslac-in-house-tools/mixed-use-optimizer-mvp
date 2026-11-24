@@ -15,6 +15,7 @@ import { Segmented } from '../controls/Segmented.tsx'
 import { lockedFirst } from '../layers/locks.ts'
 import { letGoKind } from '../plan/mix.ts'
 import { Lockable } from './Lockable.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The sizes a note has: the middle one is no `size` at all. */
 const SIZES: { key: NoteSize | 'medium'; label: string }[] = [
@@ -66,7 +67,7 @@ export function NoteProperties({ id, muted, answersRename = true }: { id: Id; mu
       <h2 className="text-headline">{noteName(note.text)}</h2>
       <Lockable locked={locked} muted={muted}>
         <label className="flex min-w-0 flex-col gap-1">
-          <span className="text-label text-ink-secondary">Text</span>
+          <span className="text-label text-ink-secondary">{tr("Text")}</span>
           <textarea
             ref={area}
             rows={Math.min(8, Math.max(3, lineCount))}
@@ -100,7 +101,7 @@ export function NoteProperties({ id, muted, answersRename = true }: { id: Id; mu
         <dl aria-label="Figures" className="flex flex-col gap-1.5">
           <Total label="Angle" value={degrees(note.angle ?? 0)} />
         </dl>
-        <p className={`select-text text-caption ${muted}`}>Its angle is set with the Rotate tool.</p>
+        <p className={`select-text text-caption ${muted}`}>{tr("Its angle is set with the Rotate tool.")}</p>
       </Lockable>
       <div>
         <Button
@@ -111,7 +112,7 @@ export function NoteProperties({ id, muted, answersRename = true }: { id: Id; mu
             letGoKind('note')
           }}
         >
-          Delete
+          {tr("Delete")}
         </Button>
       </div>
     </section>

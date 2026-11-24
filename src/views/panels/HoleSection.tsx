@@ -9,6 +9,7 @@ import { useApp } from '../../state/store.ts'
 import { Button, NumberField } from '../controls/fields.tsx'
 import { m2 } from '../format.ts'
 import { useHoles } from '../plan/holeState.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const holeArea = (h: Parameters<typeof contourToPolygon>[0]) => {
   try {
@@ -28,7 +29,7 @@ export function HoleSection({ id, locked, muted }: { id: Id; locked: boolean; mu
 
   return (
     <section aria-label="Holes" className="flex flex-col gap-2 border-t border-separator pt-3">
-      <h3 className={`text-label ${muted}`}>Holes</h3>
+      <h3 className={`text-label ${muted}`}>{tr("Holes")}</h3>
       {holes.map((h, k) => {
         const picked = pick?.massId === id && pick.k === k
         const corridor = corridors?.find((c) => c.k === k)
@@ -62,7 +63,7 @@ export function HoleSection({ id, locked, muted }: { id: Id; locked: boolean; mu
                   setPick(null)
                 }}
               >
-                Delete hole
+                {tr("Delete hole")}
               </Button>
             </div>
           </div>

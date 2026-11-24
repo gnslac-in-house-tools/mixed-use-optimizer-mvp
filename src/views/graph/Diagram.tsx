@@ -18,6 +18,7 @@ import { bends, bubbleBox, edgePath, labelSpot, layoutDiagram, LINE_LOOK, NAME_H
 import { copyProgram } from '../panels/programCommands.ts'
 import { useGraph } from './graphState.ts'
 import { beginDrag } from '../controls/beginDrag.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const STATUS = { met: 'var(--status-within)', broken: 'var(--status-over)', none: 'var(--ink-tertiary)' }
 const LEGEND_H = 44 // px: the legend's strip, and its gap
@@ -328,11 +329,11 @@ export function Diagram() {
 
       <Legend />
       {bubbles.length === 0 && (
-        <p className="pointer-events-none absolute inset-x-0 top-1/2 text-center text-body text-ink-secondary">No programs yet: add them in the Brief.</p>
+        <p className="pointer-events-none absolute inset-x-0 top-1/2 text-center text-body text-ink-secondary">{tr("No programs yet: add them in the Brief.")}</p>
       )}
       {bubbles.length > 0 && lines.length === 0 && (
         <p className="pointer-events-none absolute inset-x-0 bottom-14 text-center text-body text-ink-secondary">
-          No rules yet: pick Draw rule and drag from one program to another, or + Rule in the list below.
+          {tr("No rules yet: pick Draw rule and drag from one program to another, or + Rule in the list below.")}
         </p>
       )}
     </div>

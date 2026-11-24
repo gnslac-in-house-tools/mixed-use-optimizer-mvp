@@ -6,6 +6,7 @@ import { streetTypesOf } from '../../../engine/circulation/streets.ts'
 import { useApp } from '../../../state/store.ts'
 import { SHOW_SELECT } from '../../show/ShowControls.tsx'
 import { useStreetType } from './roadState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function StreetTypeChip({ onPick }: { /** Told after a type is picked here. */ onPick?(): void } = {}) {
   // the standards, not the types: a list made anew on each read would never settle
@@ -17,7 +18,7 @@ export function StreetTypeChip({ onPick }: { /** Told after a type is picked her
   const type = types.find((t) => t.id === picked) ?? types[0]
   return (
     <label className="flex w-56 items-center justify-between gap-2 text-label text-ink-secondary">
-      Type
+      {tr("Type")}
       <select
         aria-label="Street type"
         title="The type the next street takes: its width, its turning radius and who drives it (Brief › Circulation edits the types)"

@@ -13,6 +13,7 @@ import { CellField, NumberField, SelectField } from '../controls/fields.tsx'
 import { Note } from '../layout/Note.tsx'
 import { useModule } from '../modules.ts'
 import { PARKING_LABELS } from '../../modules/parking/views/ParkingTab.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function StandardsSection() {
   const project = useApp((s) => s.project)
@@ -25,7 +26,7 @@ export function StandardsSection() {
 
   return (
     <section aria-label="Circulation standards" className="flex flex-col gap-2">
-      <h3 className="text-label font-semibold text-ink">Standards</h3>
+      <h3 className="text-label font-semibold text-ink">{tr("Standards")}</h3>
       <Note>What the roads, the gates{docks ? ', the truck courts' : ''}{parking ? ' and the car stalls' : ''} are made with; each gate's own are in Properties, picked in Layers under Circulation › Gates; the roads themselves are drawn with the Streets tools.</Note>
       <NumberField label="Road width" unit="m" min={3} value={st.roadWidth} onCommit={(v) => set({ roadWidth: v })} />
       <SearchRange k="roadWidth" label="Road width" />
@@ -64,7 +65,7 @@ function SearchRange({ k, label }: { k: SearchedStandard; label: string }) {
   }
   return (
     <div className="-mt-1 flex items-center justify-end gap-1 text-caption text-ink-secondary" title="The range a road width may be tried in, low to high: what the optimizer searches (its Roads stage: Road widths); each option keeps what it tried. Empty: the standard alone">
-      <span>Search range</span>
+      <span>{tr("Search range")}</span>
       <span className="w-11">
         <CellField label={`${label} search from`} value={range?.[0] ?? null} number={{ min: 3 }} step={0.5} optional placeholder="—" onCommit={(v) => set(0, v)} />
       </span>

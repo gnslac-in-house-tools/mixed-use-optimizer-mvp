@@ -18,6 +18,7 @@ import { StepFields } from './StepFields.tsx'
 import { circled, STEP_NAMES, STEP_TITLES, stepSummary } from './summary.ts'
 import { useUnits } from './units.ts'
 import { useCurrentType, useGenerated, useShownStep, useWarehouse } from './warehouseState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const STATUS_WORDS: Record<StepStatus, string> = { open: 'Open', locked: 'Locked', again: 'To lock again' }
 
@@ -60,7 +61,7 @@ function ProgramChips({ t }: { t: WarehouseType }) {
   const zones = picked.filter((x) => x.kind === 'zone').map((x) => x.id)
   return (
     <section aria-label="Programs" className="flex flex-col gap-1.5">
-      <h2 className="text-label text-ink-secondary">Programs · drag onto a zone</h2>
+      <h2 className="text-label text-ink-secondary">{tr("Programs · drag onto a zone")}</h2>
       <ul aria-label="Programs" className="flex flex-wrap gap-1">
         {programs
           .filter((p) => p.built)
@@ -96,9 +97,9 @@ function StepBody({ t, g, step, status }: { t: WarehouseType; g: Generated; step
       <StepFields t={t} g={g} step={step} editable />
       {status === 'locked' ? (
         <div className="flex items-center justify-between gap-2">
-          <span className="text-caption text-ink-tertiary">Locked: an edit opens it again.</span>
+          <span className="text-caption text-ink-tertiary">{tr("Locked: an edit opens it again.")}</span>
           <Button title="Take its lock away: the later locked steps will need locking again" onClick={() => reopenStep(t.id, step)}>
-            Unlock
+            {tr("Unlock")}
           </Button>
         </div>
       ) : (
@@ -155,7 +156,7 @@ export function StepsPanel() {
           The project is born from one warehouse, designed here alone before the site: its grid, its size, its columns, its envelope, its morphology and the
           elements on its grid, a step at a time, in any order, each locked once checked.
         </p>
-        <Button onClick={newType}>New warehouse type</Button>
+        <Button onClick={newType}>{tr("New warehouse type")}</Button>
       </div>
     )
   return (

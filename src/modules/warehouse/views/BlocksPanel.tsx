@@ -35,6 +35,7 @@ import { projectIds, useBlockPick } from './blockPick.ts'
 import { generate } from '../engine/generate.ts'
 import { duplicateTypes, newType, openProgram, openType, placeCopy, removeTypes, renameType } from './commands.ts'
 import { TYPE_MIME } from './TypePalette.tsx'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export const BLOCK_SHOWS = [
   { key: 'project', label: 'This project', title: 'The blocks of this project' },
@@ -178,14 +179,14 @@ export function BlocksPanel() {
       </Note>
       <Segmented kind="toggle" label="Blocks shown" stretch options={[...BLOCK_SHOWS]} value={show} onChange={(k) => set({ show: k as BlockShow })} />
       <label className="flex items-center justify-between gap-2 text-label text-ink-secondary">
-        Program
+        {tr("Program")}
         <select
           aria-label="Program"
           value={program ?? ''}
           onChange={(e) => set({ program: e.target.value || null })}
           className="h-[1.75rem] min-w-0 max-w-[11rem] truncate rounded-control bg-panel px-1.5 text-label text-ink shadow-control outline-none"
         >
-          <option value="">All programs</option>
+          <option value="">{tr("All programs")}</option>
           {names.map((n) => (
             <option key={n} value={n}>
               {n}

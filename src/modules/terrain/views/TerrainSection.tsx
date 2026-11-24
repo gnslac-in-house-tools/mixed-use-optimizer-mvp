@@ -13,6 +13,7 @@ import { Button, NumberField, Section, Total } from '../../../views/controls/fie
 import { Segmented } from '../../../views/controls/Segmented.tsx'
 import { heightText } from './terrainDraw.ts'
 import { EXAGGERATIONS, useTerrainView } from './terrainView.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 export function TerrainSection() {
   const terrain = useApp((s) => s.project.site.terrain)
@@ -60,7 +61,7 @@ export function TerrainSection() {
       )}
       {terrain.contours.length > 0 && (
         <div className="flex flex-col gap-1">
-          <span className="text-caption text-ink-secondary">Ground</span>
+          <span className="text-caption text-ink-secondary">{tr("Ground")}</span>
           <Segmented
           kind="toggle"
           label="Ground"
@@ -123,7 +124,7 @@ export function TerrainSection() {
       />
       <div>
         <Button title="Remove the ground from the site (undo brings it back)" onClick={() => apply((p) => actions.setTerrain(p, null))}>
-          Remove terrain
+          {tr("Remove terrain")}
         </Button>
       </div>
     </Section>

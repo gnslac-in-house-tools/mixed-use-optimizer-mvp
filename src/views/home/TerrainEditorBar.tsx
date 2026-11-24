@@ -2,6 +2,7 @@
 // terrain uploaded to Home is imported as a site — its name, *Save to library* and *Close* (back to Home).
 import { useApp } from '../../state/store.ts'
 import { closeTerrainEditor, saveEditedTerrain, terrainReady, useTerrainEditor } from './terrainEditor.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function TerrainEditorBar() {
   const open = useTerrainEditor((s) => s.open)
@@ -10,7 +11,7 @@ export function TerrainEditorBar() {
   if (!open) return null
   return (
     <div role="region" aria-label="Terrain editor" className="panel fixed left-1/2 top-16 z-40 flex -translate-x-1/2 items-center gap-2 px-3 py-2 shadow-sheet">
-      <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-secondary">Terrain editor</span>
+      <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-secondary">{tr("Terrain editor")}</span>
       <input
         aria-label="Terrain name"
         value={name}
@@ -24,7 +25,7 @@ export function TerrainEditorBar() {
         onClick={saveEditedTerrain}
         className="pressable flex h-[2rem] items-center whitespace-nowrap rounded-control bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90 disabled:opacity-40"
       >
-        Save to library
+        {tr("Save to library")}
       </button>
       <button
         type="button"
@@ -32,7 +33,7 @@ export function TerrainEditorBar() {
         onClick={closeTerrainEditor}
         className="pressable flex h-[2rem] items-center rounded-control px-3 text-label text-ink-secondary hover:bg-hover hover:text-ink"
       >
-        Close
+        {tr("Close")}
       </button>
     </div>
   )

@@ -10,6 +10,7 @@ import { actions } from '../../../state/actions/index.ts'
 import { useApp } from '../../../state/store.ts'
 import { useToast } from '../../../views/layout/toast.ts'
 import { libraryBlock, saveType, type SaveMode } from './blockLibrary.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 /**
  * A type whose *Save to library* question something else asks to open (Ctrl+S in the block editor: it must not choose for
@@ -53,13 +54,13 @@ export function SaveBlock({ type: t, onSaved, unlink = true }: { type: Warehouse
           “{linked?.block.type.name ?? t.name}”{linked?.shelf === 'gfit' ? ' is GFit’s: overwrite it in this browser, or save a copy?' : ': overwrite it, or save a copy?'}
         </span>
         <button type="button" title="A new version of the block: every project linked to it takes it when it opens" onClick={() => save('overwrite')} className={`${BUTTON} bg-ink font-semibold text-on-ink hover:opacity-90`}>
-          Overwrite
+          {tr("Overwrite")}
         </button>
         <button type="button" title="A block of its own; this type then follows it" onClick={() => save('copy')} className={`${BUTTON} bg-panel text-ink hover:bg-hover`}>
-          Save a copy
+          {tr("Save a copy")}
         </button>
         <button type="button" onClick={() => setAsking(false)} className={`${BUTTON} text-ink-secondary shadow-none hover:bg-hover`}>
-          Cancel
+          {tr("Cancel")}
         </button>
       </div>
     )
@@ -71,7 +72,7 @@ export function SaveBlock({ type: t, onSaved, unlink = true }: { type: Warehouse
         onClick={() => (t.library ? setAsking(true) : save('copy'))}
         className={`${BUTTON} bg-panel text-ink hover:bg-hover`}
       >
-        Save to library
+        {tr("Save to library")}
       </button>
       {t.library && unlink && (
         <button
@@ -80,7 +81,7 @@ export function SaveBlock({ type: t, onSaved, unlink = true }: { type: Warehouse
           onClick={() => useApp.getState().apply((p) => actions.unlinkBlock(p, t.id))}
           className={`${BUTTON} text-ink-secondary shadow-none hover:bg-hover`}
         >
-          Unlink
+          {tr("Unlink")}
         </button>
       )}
     </span>

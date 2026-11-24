@@ -15,6 +15,7 @@ import { HOME_ICONS } from './icons.ts'
 import { Thumb } from './ProjectsTable.tsx'
 import type { Row } from './rows.ts'
 import { optionShown } from './summary.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Where `o` stands among the options on figure `id`: one dot an option, lowest left; its own dark. */
 function Against({ s, o, id }: { s: Summary; o: OptionSummary; id: string }) {
@@ -135,7 +136,7 @@ export function ProjectSummary({ row, close, changed }: { row: Row; close: () =>
           {o.figures.length > 0 && (
             <div>
               <div className="flex justify-between text-caption font-semibold text-ink-tertiary">
-                <span>Figures</span>
+                <span>{tr("Figures")}</span>
                 {s.options.length > 1 && <span>against the other options</span>}
               </div>
               <dl className="mt-1">
@@ -172,15 +173,15 @@ export function ProjectSummary({ row, close, changed }: { row: Row; close: () =>
                     {t}
                   </li>
                 ))}
-                {!o.issues.length && <li className="text-label font-normal text-ink-secondary">None in this option.</li>}
+                {!o.issues.length && <li className="text-label font-normal text-ink-secondary">{tr("None in this option.")}</li>}
               </ul>
             </div>
           ) : (
-            <p className="text-label font-normal text-ink-secondary">No site yet: open it to import a DXF or draw the site.</p>
+            <p className="text-label font-normal text-ink-secondary">{tr("No site yet: open it to import a DXF or draw the site.")}</p>
           )}
         </>
       ) : (
-        <p className="text-label font-normal text-ink-secondary">This browser’s copy does not read: export it as .gft from the editor, or remove it.</p>
+        <p className="text-label font-normal text-ink-secondary">{tr("This browser’s copy does not read: export it as .gft from the editor, or remove it.")}</p>
       )}
 
       <div className="mt-auto flex gap-2 pt-1">
@@ -195,7 +196,7 @@ export function ProjectSummary({ row, close, changed }: { row: Row; close: () =>
             className="pressable flex h-10 items-center gap-2 rounded-[0.625rem] bg-panel px-3 text-label font-semibold text-ink shadow-control hover:bg-panel-sunken"
           >
             <Icon path={HOME_ICONS.tour} className="h-4 w-4" />
-            Tour
+            {tr("Tour")}
           </button>
         )}
       </div>
@@ -208,20 +209,20 @@ export function ProjectSummary({ row, close, changed }: { row: Row; close: () =>
           }}
           className={quiet}
         >
-          Duplicate
+          {tr("Duplicate")}
         </button>
         <button type="button" onClick={() => saveKept(row.id)} className={quiet}>
-          Export .gft
+          {tr("Export .gft")}
         </button>
         {row.sample ? (
           row.savedAt !== null && (
             <button type="button" onClick={reset} className={quiet}>
-              Reset
+              {tr("Reset")}
             </button>
           )
         ) : (
           <button type="button" onClick={remove} className={quiet}>
-            Remove
+            {tr("Remove")}
           </button>
         )}
       </div>

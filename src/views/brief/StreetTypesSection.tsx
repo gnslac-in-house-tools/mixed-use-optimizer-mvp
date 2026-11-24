@@ -10,6 +10,7 @@ import { useApp } from '../../state/store.ts'
 import { CellField } from '../controls/fields.tsx'
 import { Icon } from '../controls/Icon.tsx'
 import { Note } from '../layout/Note.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const WHO: Record<Vehicles, string> = { trucks: 'Trucks', cars: 'Cars', all: 'Trucks and cars' }
 
@@ -31,17 +32,17 @@ export function StreetTypesSection() {
 
   return (
     <section aria-label="Street types" className="flex min-w-0 flex-col gap-2">
-      <h3 className="text-label font-semibold text-ink">Street types</h3>
-      <Note>What a street is drawn with: the width a new street takes, its corners’ turning radius and who drives it. A drawn street’s width is its own: its sides are pulled by hand. The first type is what a new street takes.</Note>
+      <h3 className="text-label font-semibold text-ink">{tr("Street types")}</h3>
+      <Note>{tr("What a street is drawn with: the width a new street takes, its corners’ turning radius and who drives it. A drawn street’s width is its own: its sides are pulled by hand. The first type is what a new street takes.")}</Note>
       <table aria-label="Street types" className="w-full table-fixed text-body">
         <thead>
           <tr className="border-b border-separator text-left align-bottom text-caption text-ink-secondary">
-            <th className="w-[34%] pb-1.5 font-medium">Name</th>
-            <th className="pb-1.5 pr-2 text-right font-medium" title="What a new street of this type is drawn with: once drawn, its sides are pulled by hand">New street width<span className="block font-normal text-ink-tertiary">m</span></th>
+            <th className="w-[34%] pb-1.5 font-medium">{tr("Name")}</th>
+            <th className="pb-1.5 pr-2 text-right font-medium" title="What a new street of this type is drawn with: once drawn, its sides are pulled by hand">{tr("New street width")}<span className="block font-normal text-ink-tertiary">m</span></th>
             <th className="pb-1.5 pr-2 text-right font-medium" title="The turning radius its corners are drawn with">
-              Radius<span className="block font-normal text-ink-tertiary">m</span>
+              {tr("Radius")}<span className="block font-normal text-ink-tertiary">m</span>
             </th>
-            <th className="w-[28%] pb-1.5 font-medium">Who</th>
+            <th className="w-[28%] pb-1.5 font-medium">{tr("Who")}</th>
             <th className="w-6 pb-1.5" aria-label="Remove" />
           </tr>
         </thead>

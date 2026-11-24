@@ -14,6 +14,7 @@ import { useLayerView } from '../layers/layerView.ts'
 import { pickUnlocked } from '../layers/locks.ts'
 import { useUi } from '../layout/ui.ts'
 import { RULE_KINDS, useGraph } from './graphState.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const m = (v: number) => `${Math.round(v * 10) / 10} m`
 
@@ -49,14 +50,14 @@ export function RuleProperties({ id, muted }: { id: Id; muted: string }) {
       <SelectField label={r.kind === 'apart' ? 'From every' : 'Its nearest'} value={r.b} options={options} onCommit={(v) => update({ b: v })} />
       <label className="flex items-start justify-between gap-3" title="Broken, a required rule is an error; otherwise a warning">
         <span className="flex flex-col">
-          <span className="text-label text-ink-secondary">Required</span>
-          <span className={`text-caption ${muted}`}>Broken, it is an error, not a warning</span>
+          <span className="text-label text-ink-secondary">{tr("Required")}</span>
+          <span className={`text-caption ${muted}`}>{tr("Broken, it is an error, not a warning")}</span>
         </span>
         <input type="checkbox" className="mt-1 h-4 w-4 accent-ink" checked={r.required === true} onChange={(e) => update({ required: e.target.checked })} />
       </label>
       <NumberField label="Weight" min={0.1} value={r.weight} onCommit={(v) => update({ weight: v })} />
       <TextField key={`${id}-why`} label="Why" value={r.reason ?? ''} onCommit={(v) => update({ reason: v.trim() || undefined })} />
-      <p className={`select-text text-caption ${muted}`}>The weight is its pull when Solve moves the masses; why shows with its warnings.</p>
+      <p className={`select-text text-caption ${muted}`}>{tr("The weight is its pull when Solve moves the masses; why shows with its warnings.")}</p>
       <div className="flex gap-2">
         <Button
           title="Delete the rule (Delete); the masses stay"
@@ -65,7 +66,7 @@ export function RuleProperties({ id, muted }: { id: Id; muted: string }) {
             useGraph.getState().selectRule(null)
           }}
         >
-          Delete
+          {tr("Delete")}
         </Button>
       </div>
     </section>
@@ -107,7 +108,7 @@ export function RelationProperties({ id, muted }: { id: string; muted: string })
               useGraph.getState().selectRule(rule.id)
             }}
           >
-            Edit the rule
+            {tr("Edit the rule")}
           </Button>
         )}
         <Button title="Pick both masses" onClick={() => {
@@ -116,7 +117,7 @@ export function RelationProperties({ id, muted }: { id: string; muted: string })
             const free = pickUnlocked([x.a, x.b].filter((id) => !massHiddenOnPlan(project, level, id, useLayerView.getState().hidden)))
             if (free.length > 0) useApp.getState().selectMany(free)
           }}>
-          Select the masses
+          {tr("Select the masses")}
         </Button>
       </div>
     </section>

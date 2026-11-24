@@ -3,6 +3,7 @@
 // of the Layers tree (Graph, Labels, Dimensions, Issues, Rules, the Map row) and View › Overlays still toggles them, with Level planes
 // and Issue count on the chip, which are not rows (Decision "Layers"). The terrain's look is the bar's too (TerrainViewRow).
 import { DETAILS, useDetail, type Detail } from '../detail.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** A Show menu's look: as small as the chips beside it. */
 export const SHOW_SELECT = 'h-[1.25rem] min-w-0 flex-1 rounded-segment-pill bg-panel px-1 text-label text-ink shadow-control outline-none disabled:opacity-50'
@@ -22,7 +23,7 @@ export function DetailSelect() {
     >
       {DETAILS.map((d) => (
         <option key={d.key} value={d.key}>
-          {d.label}
+          {tr(d.label)}
         </option>
       ))}
     </select>

@@ -6,6 +6,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { chapters, stepsOf, useTour } from './tour.ts'
 import { startZero } from './zero/run.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const GAP = 12
 const MARGIN = 16
@@ -135,7 +136,7 @@ export function TourCard() {
             {list.indexOf(step.chapter) + 1}/{list.length} · {step.chapter} · {inChapter.indexOf(step) + 1}/{inChapter.length}
           </span>
           <button type="button" onClick={exit} className="pressable rounded-control px-2 py-0.5 text-caption text-ink-secondary hover:bg-hover hover:text-ink">
-            Exit
+            {tr("Exit")}
           </button>
         </div>
         <h2 className="text-headline text-ink">{step.title}</h2>
@@ -155,7 +156,7 @@ export function TourCard() {
         )}
         {step.why && (
           <details className="text-body text-ink-secondary">
-            <summary className="cursor-pointer text-label text-ink-segment hover:text-ink">Why</summary>
+            <summary className="cursor-pointer text-label text-ink-segment hover:text-ink">{tr("Why")}</summary>
             <p className="mt-1">{step.why}</p>
           </details>
         )}
@@ -196,7 +197,7 @@ export function TourCard() {
             onClick={back}
             className="pressable rounded-control px-3 py-1.5 text-label text-ink-segment hover:bg-hover hover:text-ink disabled:opacity-40"
           >
-            Back
+            {tr("Back")}
           </button>
           {zero && step.act && !done && (
             <button
@@ -204,7 +205,7 @@ export function TourCard() {
               onClick={() => void doIt()}
               className="pressable rounded-control px-3 py-1.5 text-label text-ink-segment hover:bg-hover hover:text-ink"
             >
-              Do it for me
+              {tr("Do it for me")}
             </button>
           )}
           <button

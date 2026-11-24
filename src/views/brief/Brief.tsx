@@ -27,6 +27,7 @@ import { BRIEF_COLUMNS } from './columns.tsx'
 import { ProgramRules } from './ProgramRules.tsx'
 import { ProgramStyle } from './ProgramStyle.tsx'
 import { Note } from '../layout/Note.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** Where a dragged row lands: a line on top of a row, or under it. */
 const BEFORE = 'shadow-[inset_0_2px_0_0_var(--ink)]'
@@ -95,8 +96,8 @@ export function Brief() {
     <section aria-label="Brief" className="panel flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-panel-pad">
       <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pr-10">
         <div className="flex flex-col gap-0.5">
-          <h2 className="text-headline">Brief</h2>
-          <Note>What the client asks, program by program. Areas are floor areas (GFA; ground area for open programs).</Note>
+          <h2 className="text-headline">{tr("Brief")}</h2>
+          <Note>{tr("What the client asks, program by program. Areas are floor areas (GFA; ground area for open programs).")}</Note>
         </div>
         <dl aria-label="Site" className="flex flex-wrap gap-x-5 gap-y-1 text-caption">
           <Fact label="Site" value={formatFigure(hasSite ? derived.metrics.siteArea : null, 'm2')} />
@@ -124,7 +125,7 @@ export function Brief() {
               <thead>
                 <tr className="border-b border-separator text-left align-bottom text-caption text-ink-secondary">
                   <th aria-label="Order" />
-                  <th className="pb-1.5 font-medium">Program</th>
+                  <th className="pb-1.5 font-medium">{tr("Program")}</th>
                   {columns.map((c, i) => (
                     <th
                       key={c.key}
@@ -245,7 +246,7 @@ export function Brief() {
                   <tr className="border-t-2 border-separator text-label">
                     <td />
                     <th scope="row" className="pt-2 text-left font-semibold">
-                      Total
+                      {tr("Total")}
                     </th>
                     {columns.map((c, i) => (
                       <td
@@ -278,13 +279,13 @@ export function Brief() {
               </button>
               .
             </p>
-            <Note className="text-caption text-ink-tertiary">Costs and rents come later, with the pro forma.</Note>
+            <Note className="text-caption text-ink-tertiary">{tr("Costs and rents come later, with the pro forma.")}</Note>
           </div>
         </>
       )}
 
       <footer className="mt-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-2 border-t border-separator pt-3">
-        <Note>Next, Program: each program’s rule set, deep; then Rules, how the programs relate.</Note>
+        <Note>{tr("Next, Program: each program’s rule set, deep; then Rules, how the programs relate.")}</Note>
         <button
           type="button"
           title="The brief is ready: on to Program, each program’s rule set designed alone"

@@ -34,6 +34,7 @@ import { anchorFor, depthOf, WALK, type DerivedLot } from '../engine/lots.ts'
 import { addToMix } from '../../../views/plan/mix.ts'
 import { wholeDrag } from '../../../views/plan/pickedDrag.ts'
 import { changeLot, lotOf, useLots } from './lotState.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const HANDLE_PX = 10
 /** The rotation handle's dot and what catches the pointer round it, as a mass's (MassHandles.tsx). */
@@ -300,7 +301,7 @@ function TurnHandle({ id, rect, px, drag, turned, onTurn }: { id: Id; rect: NonN
   return (
     <>
       <g {...drag.bind(key, startLotRotateDrag(id, onTurn))} style={{ cursor: turning ? 'grabbing' : 'grab', touchAction: 'none' }}>
-        <title>Drag round the lot: turn it by 15° steps, Shift freely</title>
+        <title>{tr("Drag round the lot: turn it by 15° steps, Shift freely")}</title>
         <line x1={h.stem.x} y1={-h.stem.y} x2={h.at.x} y2={-h.at.y} stroke="var(--ink)" strokeWidth={1.25} vectorEffect="non-scaling-stroke" pointerEvents="none" />
         <circle cx={h.at.x} cy={-h.at.y} r={(TURN_HIT_PX / 2) * px} fill="transparent" />
         <circle cx={h.at.x} cy={-h.at.y} r={TURN_DOT_PX * px} fill={turning ? 'var(--ink)' : 'var(--panel)'} stroke="var(--ink)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
@@ -342,7 +343,7 @@ function EntrancePill({ l, lot, px }: { l: DerivedLot; lot: Lot; px: number }) {
       <title>{l.reached ? 'Its entrance: click to move it to the other end' : 'No street reaches its entrance: click to move it to the other end, or Connect draws one'}</title>
       <rect x={c.x - w / 2} y={-c.y - h / 2} width={w} height={h} rx={h / 2} fill="var(--panel)" stroke={l.reached ? 'var(--ink)' : 'var(--status-over)'} strokeWidth={1.25} vectorEffect="non-scaling-stroke" />
       <text x={c.x} y={-c.y} textAnchor="middle" dominantBaseline="central" fontSize={10 * px} fontWeight={600} fill="var(--ink)" pointerEvents="none">
-        In
+        {tr("In")}
       </text>
     </g>
   )

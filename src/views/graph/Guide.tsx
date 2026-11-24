@@ -4,6 +4,7 @@
 // it with the notes, and its × turns the help off (remembered per browser, ui.ts).
 import { Icon } from '../controls/Icon.tsx'
 import { useUi } from '../layout/ui.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const STEPS: { title: string; text: string }[] = [
   {
@@ -38,7 +39,7 @@ export function Guide() {
       className="glass pointer-events-auto absolute left-4 top-4 z-10 flex max-h-[calc(100%-2rem)] w-80 flex-col gap-2 overflow-y-auto p-4 phone:inset-x-3 phone:w-auto"
     >
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-headline">From site to massing</h3>
+        <h3 className="text-headline">{tr("From site to massing")}</h3>
         <button
           type="button"
           aria-label="Hide the help"
@@ -67,7 +68,7 @@ export function Guide() {
         className="pressable self-start rounded-control text-caption text-ink underline underline-offset-2"
         onClick={() => useUi.getState().openDialog('brief')}
       >
-        Back to the Brief
+        {tr("Back to the Brief")}
       </button>
     </section>
   )

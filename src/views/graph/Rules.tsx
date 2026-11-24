@@ -14,6 +14,7 @@ import { Button, CellField } from '../controls/fields.tsx'
 import { Icon } from '../controls/Icon.tsx'
 import { useGraph } from './graphState.ts'
 import { Note } from '../layout/Note.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** One empty list for a project without rules: a new [] on every read would make the store re-render without end. */
 const NO_RULES: Rule[] = []
@@ -54,7 +55,7 @@ export function Rules() {
   return (
     <section aria-label="Rules" className="panel flex h-full min-h-0 flex-col gap-2 overflow-y-auto p-panel-pad">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h3 className="text-headline">Rules</h3>
+        <h3 className="text-headline">{tr("Rules")}</h3>
         <Note>How the programs relate. The graph above applies each one to every mass with its nearest partner and checks it; ▶ Solve moves the masses to meet them.</Note>
       </div>
       {rules.length === 0 ? (
@@ -106,7 +107,7 @@ export function Rules() {
                 </select>
                 <label className="flex items-center gap-1 text-caption text-ink-secondary" title="Broken, a required rule is an error; otherwise a warning">
                   <input type="checkbox" className="h-3.5 w-3.5 accent-ink" checked={r.required === true} onChange={(e) => update(r.id, { required: e.target.checked })} />
-                  Required
+                  {tr("Required")}
                 </label>
                 <span className="min-w-[10rem] flex-1">
                   <CellField label={`Why of rule ${r.id}`} value={r.reason ?? ''} optional placeholder="Why (optional)" onCommit={(v) => update(r.id, { reason: v || undefined })} />

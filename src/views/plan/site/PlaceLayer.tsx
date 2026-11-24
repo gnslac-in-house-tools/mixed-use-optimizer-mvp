@@ -12,6 +12,7 @@ import { angleTo, handleDistance, TURN_STEP, turnedBy } from './place.ts'
 import { useSiteTool } from './siteTools.ts'
 import { letGo } from '../../tools/hand.ts'
 import { beginDrag } from '../../controls/beginDrag.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const HANDLE_PX = 7
 const ARM_PX = 30
@@ -113,7 +114,7 @@ export function PlaceLayer({ camera }: { camera: ToolCamera }) {
         vectorEffect="non-scaling-stroke"
         style={{ cursor: 'grab', touchAction: 'none' }}
       >
-        <title>Turn the map (Shift: steps of 15°)</title>
+        <title>{tr("Turn the map (Shift: steps of 15°)")}</title>
       </circle>
     </g>
   )

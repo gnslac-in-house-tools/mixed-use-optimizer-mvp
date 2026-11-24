@@ -16,6 +16,7 @@ import { useRun } from '../../run/store.ts'
 import { keep, keptAs, optionName, replace } from './keep.ts'
 import { against, compact, listed, sortOf, UNIT_WORD, type Filters, type Row, type Show, type Sort } from './rows.ts'
 import { LIST_ROWS, useSpecimenView } from './viewState.ts'
+import { t as tr } from '../../../../i18n/idioma.ts' // mixed-use-mvp
 
 const SHOW: { value: Show; label: string }[] = [
   { value: 'front', label: 'Front' },
@@ -61,7 +62,7 @@ export const SpecimenList = memo(function SpecimenList(props: {
     <div className={`flex min-h-0 flex-col gap-2 ${props.wide ? 'h-full' : ''}`}>
       <div className="flex items-center gap-2">
         <label className="flex min-w-0 flex-1 items-center gap-1 text-caption text-ink-secondary">
-          Show
+          {tr("Show")}
           <select aria-label="Show" className={`${selectClass} min-w-0 flex-1`} value={show} onChange={(e) => set({ show: e.target.value as Show, rows: LIST_ROWS })}>
             {SHOW.map((s) => (
               <option key={s.value} value={s.value}>
@@ -71,7 +72,7 @@ export const SpecimenList = memo(function SpecimenList(props: {
           </select>
         </label>
         <label className="flex min-w-0 flex-1 items-center gap-1 text-caption text-ink-secondary">
-          Sort
+          {tr("Sort")}
           <select
             aria-label="Sort"
             className={`${selectClass} min-w-0 flex-1`}
@@ -81,13 +82,13 @@ export const SpecimenList = memo(function SpecimenList(props: {
               set({ sort: v === 'balanced' || v === 'newest' ? v : Number(v) })
             }}
           >
-            <option value="balanced">Balanced</option>
+            <option value="balanced">{tr("Balanced")}</option>
             {problem.objectives.map((o, i) => (
               <option key={o.id} value={i}>
                 Best {o.label}
               </option>
             ))}
-            <option value="newest">Newest</option>
+            <option value="newest">{tr("Newest")}</option>
           </select>
         </label>
       </div>
@@ -97,7 +98,7 @@ export const SpecimenList = memo(function SpecimenList(props: {
           <>
             ·
             <button type="button" className="pressable rounded-control px-1 text-ink underline-offset-2 hover:underline" onClick={() => set({ filters: {}, rows: LIST_ROWS })}>
-              Clear filters
+              {tr("Clear filters")}
             </button>
           </>
         )}

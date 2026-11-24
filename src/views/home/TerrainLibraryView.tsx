@@ -18,6 +18,7 @@ import { HOME_ICONS } from './icons.ts'
 import { openTerrainEditor } from './terrainEditor.ts'
 import { libraryTerrain, libraryTerrains, loadGfitTerrains, removeTerrain, saveTerrain, useTerrainLibrary, type LibraryTerrainEntry } from './terrainLibrary.ts'
 import { terrainThumb } from './thumb.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const SHELF = { gfit: 'GFit', browser: 'Mine' } as const
 
@@ -70,12 +71,12 @@ export function TerrainLibraryView({ onBack }: { onBack: () => void }) {
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" onClick={onBack} title="Back to your projects" className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
           <Icon path={HOME_ICONS.back} className="h-4 w-4" />
-          Projects
+          {tr("Projects")}
         </button>
-        <h2 className="mr-auto text-headline text-ink">Terrain</h2>
+        <h2 className="mr-auto text-headline text-ink">{tr("Terrain")}</h2>
         <label className="flex h-[2.125rem] items-center gap-2 rounded-[0.625rem] bg-fill px-2.5 text-label text-ink-secondary">
           <Icon path={HOME_ICONS.search} className="h-4 w-4 shrink-0" />
-          <input aria-label="Search terrains" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} className="w-32 select-text bg-transparent text-ink outline-none placeholder:text-ink-tertiary" />
+          <input aria-label="Search terrains" placeholder={tr('Search')} value={query} onChange={(e) => setQuery(e.target.value)} className="w-32 select-text bg-transparent text-ink outline-none placeholder:text-ink-tertiary" />
         </label>
         <button
           type="button"
@@ -84,7 +85,7 @@ export function TerrainLibraryView({ onBack }: { onBack: () => void }) {
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90"
         >
           <Icon name="import" className="h-4 w-4" />
-          Upload…
+          {tr("Upload…")}
         </button>
         <input ref={fileInput} type="file" accept={`.${TERRAIN_EXTENSION},${SITE_FILE_ACCEPT}`} aria-label="Upload terrain" className="hidden" onChange={onFile} />
       </div>
@@ -93,7 +94,7 @@ export function TerrainLibraryView({ onBack }: { onBack: () => void }) {
         is. New project here starts a project on one.
       </p>
       {gfit === null && !all.length ? (
-        <p className="text-body text-ink-secondary">Reading GFit’s terrains…</p>
+        <p className="text-body text-ink-secondary">{tr("Reading GFit’s terrains…")}</p>
       ) : shown.length ? (
         <ul aria-label="Terrains" className="grid min-h-0 grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] content-start gap-3 overflow-y-auto">
           {shown.map((e) => (
@@ -128,7 +129,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
           onClick={() => openCreateNew('project', t.id)}
           className="pressable flex h-7 items-center rounded-control bg-fill px-2.5 text-label text-ink hover:bg-hover"
         >
-          New project here
+          {tr("New project here")}
         </button>
         <button
           type="button"
@@ -156,7 +157,7 @@ function TerrainTile({ entry: e }: { entry: LibraryTerrainEntry }) {
             onClick={() => useToast.getState().confirm(`Remove “${t.name}” from this browser’s terrains? Projects on it keep their site.`, () => removeTerrain(t.id))}
             className={small}
           >
-            Remove
+            {tr("Remove")}
           </button>
         )}
       </div>

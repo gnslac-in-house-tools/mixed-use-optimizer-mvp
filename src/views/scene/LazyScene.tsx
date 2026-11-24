@@ -3,6 +3,7 @@
 // deploy), the notice stays where the 3D goes, with "Retry": the plan and the rest keep working. With `option`, it is
 // that option's pane in Compare (read-only, its camera shared with the other panes).
 import { Component, lazy, Suspense, useState, type ReactNode } from 'react'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 // one download for every pane (Compare opens several at once); a failed one is asked for again on Retry
 let loading: Promise<typeof import('./Scene.tsx')> | null = null
@@ -35,9 +36,9 @@ class Boundary extends Component<{ className?: string; retry: () => void; childr
     if (!this.state.error) return this.props.children
     return (
       <Notice className={this.props.className}>
-        Could not load the 3D view.
+        {tr("Could not load the 3D view.")}
         <button type="button" className="pressable rounded-control bg-fill px-3 py-1.5 text-label font-medium hover:bg-hover" onClick={this.props.retry}>
-          Retry
+          {tr("Retry")}
         </button>
       </Notice>
     )
@@ -48,7 +49,7 @@ export function LazyScene({ className, option, graph }: { className?: string; op
   const [{ Scene, attempt }, setLoad] = useState(() => ({ Scene: load(), attempt: 0 }))
   return (
     <Boundary key={attempt} className={className} retry={() => setLoad((c) => ({ Scene: load(), attempt: c.attempt + 1 }))}>
-      <Suspense fallback={<Notice className={className}>Loading 3D…</Notice>}>
+      <Suspense fallback={<Notice className={className}>{tr("Loading 3D…")}</Notice>}>
         <Scene className={className} option={option} graph={graph} />
       </Suspense>
     </Boundary>

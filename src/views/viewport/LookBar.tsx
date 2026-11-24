@@ -2,6 +2,7 @@
 // 57"), ‹ › through its owner's list, its owner's actions (Keep as option) and Back to my design (Escape too:
 // useShortcuts.ts). Top centre, on glass: the levels rail is top right, the pipeline's card top left.
 import { endLook, useLook } from './look.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const STEP = 'pressable grid h-row w-row place-items-center rounded-control text-headline text-ink hover:bg-hover disabled:opacity-40 disabled:hover:bg-transparent'
 
@@ -39,7 +40,7 @@ export function LookBar() {
           onClick={() => endLook()}
           className="pressable h-row shrink-0 rounded-control px-2.5 text-label text-ink hover:bg-hover"
         >
-          Back to my design
+          {tr("Back to my design")}
         </button>
       </div>
     </div>

@@ -53,6 +53,7 @@ import { GateProperties } from './AccessSection.tsx'
 import { ExistingRoadProperties } from './ExistingRoadProperties.tsx'
 import { LayerProperties, useLayerRowPicked } from '../layers/LayerProperties.tsx'
 import { LotProperties } from '../../modules/parking/views/LotProperties.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 export function Properties({ surface }: { surface: 'panel' | 'glass' }) {
   // what is picked, of any kind, through the bridge: the first of each kind is the one shown (the masses: one, or several together)
@@ -138,7 +139,7 @@ export function Properties({ surface }: { surface: 'panel' | 'glass' }) {
         {building ? (
           <BuildingProperties building={building} heading="properties" />
         ) : (
-          <p className="select-text text-caption text-ink-secondary">Select a mass or a dimension to see and edit it here.</p>
+          <p className="select-text text-caption text-ink-secondary">{tr("Select a mass or a dimension to see and edit it here.")}</p>
         )}
       </div>
     )
@@ -452,9 +453,9 @@ function GroupProperties({ muted }: { muted: string }) {
         ]}
       />
       {anyLocked ? (
-        <p className={`select-text text-caption ${muted}`}>Some are locked: unlock them (the padlock) to change the group.</p>
+        <p className={`select-text text-caption ${muted}`}>{tr("Some are locked: unlock them (the padlock) to change the group.")}</p>
       ) : (
-        <Note className={`text-caption ${muted}`}>Drag one to move them all. Shift+click adds or takes out a mass; click one alone to edit its shape.</Note>
+        <Note className={`text-caption ${muted}`}>{tr("Drag one to move them all. Shift+click adds or takes out a mass; click one alone to edit its shape.")}</Note>
       )}
     </>
   )
@@ -488,7 +489,7 @@ function CornerSection({ id, vertex, locked, muted }: { id: Id; vertex: number; 
             <p className={`select-text text-caption ${muted}`}>Fits up to {max.toFixed(2)} m</p>
           </>
         ) : (
-          <Note className={`text-caption ${muted}`}>A straight corner: drag it off the wall to shape it, then round it.</Note>
+          <Note className={`text-caption ${muted}`}>{tr("A straight corner: drag it off the wall to shape it, then round it.")}</Note>
         )}
         <div className="flex gap-2">
           <Button
@@ -499,7 +500,7 @@ function CornerSection({ id, vertex, locked, muted }: { id: Id; vertex: number; 
               select(id)
             }}
           >
-            Delete corner
+            {tr("Delete corner")}
           </Button>
         </div>
       </Section>
@@ -542,11 +543,11 @@ function DimensionProperties({ id, muted }: { id: Id; muted: string }) {
         <NumberField label="Length" unit="m" min={0.001} disabled={locked} title={locked ? 'Its length is fixed: free it to type another' : undefined} value={length} onCommit={(v) => typeDimensionLength(id, v)} />
         <NumberField label="Offset" unit="m" value={d.offset} onCommit={(v) => apply((p) => actions.setDimensionOffset(p, id, v))} />
         <div className="flex justify-between gap-3">
-          <span className={`text-label ${muted}`}>From</span>
+          <span className={`text-label ${muted}`}>{tr("From")}</span>
           <span className="truncate text-label">{end(d.anchorA)}</span>
         </div>
         <div className="flex justify-between gap-3">
-          <span className={`text-label ${muted}`}>To</span>
+          <span className={`text-label ${muted}`}>{tr("To")}</span>
           <span className="truncate text-label">{end(d.anchorB)}</span>
         </div>
       </div>
@@ -558,7 +559,7 @@ function DimensionProperties({ id, muted }: { id: Id; muted: string }) {
             letGoKind('dimension')
           }}
         >
-          Delete
+          {tr("Delete")}
         </Button>
       </div>
       <p className={`select-text text-caption ${muted}`}>

@@ -86,7 +86,7 @@ describe('theme', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'View' }))
     const menu = openMenu()!
     const names = Array.from(menu.querySelectorAll('[data-menu-key]')).map((b) => b.querySelector('span')!.textContent)
-    expect(names.slice(-3)).toEqual(['Theme', 'Full screen', 'Default layout'])
+    expect(names.slice(-4)).toEqual(['Theme', 'Language', 'Full screen', 'Default layout']) // mixed-use-mvp: Language
     fireEvent.click(rowOf(menu, 'Theme'))
     const sub = openMenu()!
     expect(Array.from(sub.querySelectorAll('[data-menu-key]')).map((b) => b.querySelector('span')!.textContent)).toEqual(['System', 'Light', 'Dark'])

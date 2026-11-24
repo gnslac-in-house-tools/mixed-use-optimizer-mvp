@@ -16,6 +16,7 @@ import { useToast } from '../layout/toast.ts'
 import { openBlockEditor } from './blockEditor.ts'
 import { openCreateNew } from './CreateNew.tsx'
 import { HOME_ICONS } from './icons.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** A library block's hall program's name. */
 export const programOf = (e: LibraryBlock) => e.block.programs.find((g) => g.id === e.block.type.program)?.name ?? 'No program'
@@ -53,15 +54,15 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" onClick={onBack} title="Back to your projects" className="pressable flex h-[2.125rem] items-center gap-1 rounded-[0.625rem] px-2 text-label text-ink-segment hover:bg-hover hover:text-ink">
           <Icon path={HOME_ICONS.back} className="h-4 w-4" />
-          Projects
+          {tr("Projects")}
         </button>
-        <h2 className="mr-auto text-headline text-ink">Blocks</h2>
+        <h2 className="mr-auto text-headline text-ink">{tr("Blocks")}</h2>
         <label className="flex h-[2.125rem] items-center gap-2 rounded-[0.625rem] bg-fill px-2.5 text-label text-ink-secondary">
           <Icon path={HOME_ICONS.search} className="h-4 w-4 shrink-0" />
-          <input aria-label="Search blocks" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} className="w-32 select-text bg-transparent text-ink outline-none placeholder:text-ink-tertiary" />
+          <input aria-label="Search blocks" placeholder={tr('Search')} value={query} onChange={(e) => setQuery(e.target.value)} className="w-32 select-text bg-transparent text-ink outline-none placeholder:text-ink-tertiary" />
         </label>
         <select aria-label="Program" value={program} onChange={(e) => setProgram(e.target.value)} className="h-[2.125rem] rounded-[0.625rem] bg-fill px-2.5 text-label text-ink outline-none">
-          <option value="">All programs</option>
+          <option value="">{tr("All programs")}</option>
           {programs.map((n) => (
             <option key={n} value={n}>
               {n}
@@ -75,7 +76,7 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-fill px-3 text-label text-ink hover:bg-hover"
         >
           <Icon name="import" className="h-4 w-4" />
-          Upload…
+          {tr("Upload…")}
         </button>
         <input ref={fileInput} type="file" accept=".gfb,.json,application/json" aria-label="Upload block" className="hidden" onChange={onFile} />
         <button
@@ -85,7 +86,7 @@ export function BlockLibraryView({ onBack }: { onBack: () => void }) {
           className="pressable flex h-[2.125rem] items-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-ink px-3 text-label font-semibold text-on-ink hover:opacity-90"
         >
           <Icon name="plus" className="h-4 w-4" />
-          New block
+          {tr("New block")}
         </button>
       </div>
       <p className="text-caption text-ink-tertiary">
@@ -124,7 +125,7 @@ function BlockTile({ entry: e }: { entry: LibraryBlock }) {
           onClick={() => openBlockEditor(e.block.id)}
           className="pressable flex h-7 items-center rounded-control bg-fill px-2.5 text-label text-ink hover:bg-hover"
         >
-          Open
+          {tr("Open")}
         </button>
         <button
           type="button"
@@ -143,7 +144,7 @@ function BlockTile({ entry: e }: { entry: LibraryBlock }) {
             onClick={() => useToast.getState().confirm(`Remove “${t.name}” from this browser’s blocks? Projects that use it keep it as it is.`, () => removeBlock(e.block.id))}
             className="pressable flex h-7 items-center rounded-control px-2.5 text-label text-ink-secondary hover:bg-hover hover:text-ink"
           >
-            Remove
+            {tr("Remove")}
           </button>
         )}
       </div>

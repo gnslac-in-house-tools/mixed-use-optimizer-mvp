@@ -11,6 +11,7 @@ import { LazyScene } from '../scene/LazyScene.tsx'
 import { ComparePlan } from './ComparePlan.tsx'
 import { CompareTable } from './CompareTable.tsx'
 import { useCompare, type CompareMode } from './compareView.ts'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 const MODES: { key: CompareMode; label: string }[] = [
   { key: 'plan', label: 'Plan' },
@@ -43,7 +44,7 @@ export function Compare() {
   return (
     <section aria-label="Compare options" className="flex h-full min-h-0 flex-col">
       <header className="flex flex-wrap items-center gap-3 border-b border-separator px-4 py-2.5">
-        <h2 className="text-headline">Compare</h2>
+        <h2 className="text-headline">{tr("Compare")}</h2>
         <div role="group" aria-label="Options compared" className="flex min-w-0 flex-1 flex-wrap gap-1.5">
           {options.map((o) => {
             const on = ids.includes(o.id)
@@ -100,7 +101,7 @@ export function Compare() {
                 }}
                 className="pressable shrink-0 rounded-control bg-fill px-2.5 py-0.5 text-label hover:bg-hover"
               >
-                Edit
+                {tr("Edit")}
               </button>
             </div>
             <div className="relative min-h-0 flex-1">{mode === 'plan' ? <ComparePlan option={o.id} /> : <LazyScene className="h-full w-full" option={o.id} />}</div>

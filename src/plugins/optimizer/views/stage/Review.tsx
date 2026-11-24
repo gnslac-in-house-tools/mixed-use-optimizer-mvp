@@ -11,6 +11,7 @@ import type { Template } from '../../engine/template.ts'
 import type { Run } from '../../run/store.ts'
 import { projectOf } from '../specimens/decode.ts'
 import { fmt, Heading } from './sections.tsx'
+import { t as tr } from '../../../../i18n/idioma.ts' // mixed-use-mvp
 
 const ARROW = { up: '▲', down: '▼' } as const
 const tone = (better: boolean | null) => (better === true ? 'text-status-within' : better === false ? 'text-status-over' : 'text-ink-secondary')
@@ -66,7 +67,7 @@ export function Review({ before, after, template, title, back }: { before: Side;
       {margins && r.moved && (
         <section aria-label="What moved of earlier stages" className="flex flex-col gap-1.5">
           <Heading title="Earlier stages" right="within their margins" />
-          {r.moved.length === 0 && <p className="text-caption text-ink-secondary">Nothing they approved moved.</p>}
+          {r.moved.length === 0 && <p className="text-caption text-ink-secondary">{tr("Nothing they approved moved.")}</p>}
           {r.moved.map((m) => (
             <div key={m.key} className="flex items-center gap-1.5">
               <span className="min-w-0 flex-1 truncate text-label text-ink" title={m.label}>

@@ -25,6 +25,7 @@ import { useSnapSettings } from '../snap/settings.ts'
 import { SnapMark } from '../snap/SnapMark.tsx'
 import { sourcesFor } from '../snap/sources.ts'
 import { beginDrag } from '../../controls/beginDrag.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const HANDLE_PX = 7
 const ARM_PX = 60
@@ -153,7 +154,7 @@ export function GridToolLayer({ camera }: { camera: ToolCamera }) {
         vectorEffect="non-scaling-stroke"
         style={{ cursor: dragging ? 'grabbing' : 'move', touchAction: 'none' }}
       >
-        <title>Move the grid: lines A and 1 meet here (it snaps; Shift: free). Double-click or right-click: restore original</title>
+        <title>{tr("Move the grid: lines A and 1 meet here (it snaps; Shift: free). Double-click or right-click: restore original")}</title>
       </circle>
       <circle
         {...handlers('turn')}
@@ -166,7 +167,7 @@ export function GridToolLayer({ camera }: { camera: ToolCamera }) {
         vectorEffect="non-scaling-stroke"
         style={{ cursor: 'grab', touchAction: 'none' }}
       >
-        <title>Turn the grid round its origin (it snaps; Shift: steps of 15°). Double-click or right-click: restore original</title>
+        <title>{tr("Turn the grid round its origin (it snaps; Shift: steps of 15°). Double-click or right-click: restore original")}</title>
       </circle>
     </g>
   )

@@ -16,6 +16,7 @@ import { Icon } from '../../controls/Icon.tsx'
 import { Segmented } from '../../controls/Segmented.tsx'
 import { importable, useSiteImport, zoneGuess, type SurveyImport } from './importState.ts'
 import { THUMB } from './surveyPreview.ts'
+import { t as tr } from '../../../i18n/idioma.ts' // mixed-use-mvp
 
 const KIND_LABEL: Record<LayerKind, string> = {
   boundary: 'Boundary',
@@ -131,7 +132,7 @@ function Layers({ s }: { s: SurveyImport }) {
           </span>
           <button type="button" className={`${BUTTON} flex items-center gap-1 px-2`} title="Take them out of the import (Delete)" onClick={remove}>
             <Icon name="trash" className="h-3.5 w-3.5" />
-            Delete
+            {tr("Delete")}
           </button>
         </div>
       )}
@@ -188,7 +189,7 @@ function Layers({ s }: { s: SurveyImport }) {
             title="Bring them back into the list, each as its guess or the first kind it can be"
             onClick={() => setKinds(Object.fromEntries(deleted.map((l) => [l.name, restored(l, KINDS)])))}
           >
-            Restore
+            {tr("Restore")}
           </button>
         </p>
       )}
@@ -231,7 +232,7 @@ function Coordinates({ s }: { s: SurveyImport }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="flex items-center gap-2 text-label text-ink-glass">
-        <span className="w-[5.5rem]">Units</span>
+        <span className="w-[5.5rem]">{tr("Units")}</span>
         <select aria-label="Units" className={INPUT} value={s.choice.units} onChange={(e) => setUnits(e.target.value as LengthUnit)}>
           {LENGTH_UNITS.map((u) => (
             <option key={u} value={u}>
@@ -245,7 +246,7 @@ function Coordinates({ s }: { s: SurveyImport }) {
         <p className="text-caption text-ink-glass">Read in {s.unitsGuess}: its numbers look like UTM in metres, not in {s.fileUnits}.</p>
       )}
       <div className="flex items-center gap-2 text-label text-ink-glass">
-        <span className="w-[5.5rem] shrink-0">Coordinates</span>
+        <span className="w-[5.5rem] shrink-0">{tr("Coordinates")}</span>
         <Segmented
           kind="toggle"
           label="Coordinates"
@@ -267,7 +268,7 @@ function Coordinates({ s }: { s: SurveyImport }) {
       {utm && (
         <div className="flex items-center gap-2 pl-[6rem] text-label text-ink-glass">
           <label className="flex items-center gap-1">
-            Zone
+            {tr("Zone")}
             <input
               aria-label="UTM zone"
               type="number"
@@ -294,7 +295,7 @@ function Coordinates({ s }: { s: SurveyImport }) {
           />
         </div>
       )}
-      {s.utmLike && c.kind === 'local' && <p className="text-caption text-ink-glass">Its numbers look like UTM.</p>}
+      {s.utmLike && c.kind === 'local' && <p className="text-caption text-ink-glass">{tr("Its numbers look like UTM.")}</p>}
     </div>
   )
 }
@@ -316,7 +317,7 @@ function Boundary({ s }: { s: SurveyImport }) {
     <div className="flex items-center justify-between gap-2">
       <p className="text-caption text-ink">{k} shapes: click the boundary on the plan</p>
       <button type="button" className={`${BUTTON} bg-fill`} title="Make the largest shape the boundary" onClick={() => pick(0)}>
-        Use the largest
+        {tr("Use the largest")}
       </button>
     </div>
   )
@@ -347,7 +348,7 @@ function Brings({ s }: { s: SurveyImport }) {
   if (!s.canReference) return null
   return (
     <div className="flex items-center gap-2 text-label text-ink-glass">
-      <span className="w-[5.5rem] shrink-0">Brings</span>
+      <span className="w-[5.5rem] shrink-0">{tr("Brings")}</span>
       <Segmented
         kind="toggle"
         label="Brings"
@@ -390,9 +391,9 @@ function Foot({ s }: { s: SurveyImport }) {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-label text-ink-glass">
           {s.setups.length > 0 && (
             <label className="flex min-w-0 items-center gap-1.5">
-              Start from
+              {tr("Start from")}
               <select aria-label="Start from" className={`${INPUT} max-w-[12rem]`} value={s.start ?? ''} onChange={(e) => startFrom(e.target.value === '' ? null : Number(e.target.value))}>
-                <option value="">The layers’ names</option>
+                <option value="">{tr("The layers’ names")}</option>
                 {s.setups.map((x, i) => (
                   <option key={i} value={i}>
                     {x.at ? `${x.file} · ${new Date(x.at).toLocaleDateString()}` : `The site’s file (${x.file})`}
@@ -403,13 +404,13 @@ function Foot({ s }: { s: SurveyImport }) {
           )}
           <label className="flex items-center gap-1.5" title="Keep the units, the coordinates and what each layer is, in this browser, for the next file">
             <input type="checkbox" className="h-4 w-4 accent-ink" checked={s.remember} onChange={(e) => setRemember(e.target.checked)} />
-            Remember this setup
+            {tr("Remember this setup")}
           </label>
         </div>
       )}
       <div className="flex justify-end gap-1.5">
         <button type="button" className={BUTTON} title="Leave the site as it was (Escape)" onClick={cancel}>
-          Cancel
+          {tr("Cancel")}
         </button>
         <button
           type="button"
@@ -419,7 +420,7 @@ function Foot({ s }: { s: SurveyImport }) {
           className="pressable h-row rounded-control bg-ink px-3 text-label font-semibold text-on-ink shadow-control hover:opacity-90 disabled:opacity-40"
           onClick={commit}
         >
-          Import
+          {tr("Import")}
         </button>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { actions } from '../../state/actions/index.ts'
 import { useApp } from '../../state/store.ts'
 import { useCloseOutside } from '../controls/useCloseOutside.ts'
 import { defaultHatch, HATCH_LABELS, HatchSwatch } from '../plan/hatches.tsx'
+import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 
 /** The box's width (px): it opens under the swatch, inside the window. */
 const BOX_W = 256
@@ -50,7 +51,7 @@ export function ProgramStyle({ program }: { program: Program }) {
           style={{ left: at.left, top: at.top, width: BOX_W }}
         >
           <section className="flex flex-col gap-1.5">
-            <h3 className="text-label text-ink-secondary">Colour</h3>
+            <h3 className="text-label text-ink-secondary">{tr("Colour")}</h3>
             <div role="group" aria-label="Colour" className="grid grid-cols-8 gap-1">
               {colors.map((c) => (
                 <button
@@ -67,7 +68,7 @@ export function ProgramStyle({ program }: { program: Program }) {
           </section>
           <section className="flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between gap-2">
-              <h3 className="text-label text-ink-secondary">Hatch</h3>
+              <h3 className="text-label text-ink-secondary">{tr("Hatch")}</h3>
               {program.hatch !== undefined && (
                 <button
                   type="button"
@@ -75,7 +76,7 @@ export function ProgramStyle({ program }: { program: Program }) {
                   onClick={() => update({ hatch: undefined })}
                   className="pressable rounded-control text-caption text-ink-secondary underline underline-offset-2 hover:text-ink"
                 >
-                  Default
+                  {tr("Default")}
                 </button>
               )}
             </div>
