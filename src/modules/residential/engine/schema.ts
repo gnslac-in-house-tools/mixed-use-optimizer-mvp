@@ -39,6 +39,24 @@ export const ParamsEdificioSchema = z.object({
 })
 export type ParamsEdificio = z.infer<typeof ParamsEdificioSchema>
 
+// ---- pieza 3: Mi biblioteca de departamentos (los planos del catálogo que se editan), con la forma de PlanCatalogo
+const PuntoSchema = z.tuple([z.number(), z.number()])
+export const PlanCatalogoSchema = z.object({
+  id: Id,
+  name: z.string(),
+  origen: z.enum(['generada', 'manual']),
+  typeId: z.string(),
+  w: z.number().positive(),
+  d: z.number().positive(),
+  rooms: z.array(z.object({ kind: z.string(), name: z.string(), shape: z.array(PuntoSchema) })),
+  muebles: z.array(z.object({ id: z.string(), kind: z.string(), room: z.number().int(), x: z.number(), y: z.number(), rot: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)]) })),
+  reglas: z.object({ cama: z.enum(['matrimonial', 'queen', 'king']), comedor: z.union([z.literal(4), z.literal(6)]), paso: z.number(), closets: z.boolean() }),
+  desde: z.string().optional(),
+  puertas: z.array(z.object({ eje: z.enum(['x', 'y']), x: z.number(), y: z.number(), ancho: z.number().positive() })).optional(),
+  ventanas: z.array(z.object({ x: z.number(), ancho: z.number().positive() })).optional(),
+  fijas: z.object({ x: z.array(z.number().int()), y: z.array(z.number().int()) }).optional(),
+})
+
 export const ResidentialSchema = z.object({
   /** por id de programa */
   usos: z.record(Id, UsoSchema),
@@ -47,5 +65,7 @@ export const ResidentialSchema = z.object({
   edificios: z.record(Id, ParamsEdificioSchema),
   /** las reglas de la calificación por palancas; sin ellas rigen `REGLAS_INICIO` */
   calificacion: CalificacionSchema.optional().catch(undefined),
+  /** Mi biblioteca: los planos de departamento del proyecto (pieza 3); uno mal guardado no rompe la carga */
+  catalogo: z.array(PlanCatalogoSchema).optional().catch(undefined),
 })
 export type Residential = z.infer<typeof ResidentialSchema>

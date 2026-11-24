@@ -43,7 +43,7 @@ async function dibuja(punto, medida) {
   await page.keyboard.press('Enter')
   await espera(800)
 }
-await dibuja('0,0', '32.4x16.2')
+await dibuja('0,0', '48.6x16.2')
 // la torre de 30 m: la masa queda elegida; su Height en Properties
 await page.getByText('Properties', { exact: true }).first().click()
 await espera(500)
@@ -61,7 +61,7 @@ if (await opciones.count()) {
   await page.getByRole('combobox').filter({ hasText: 'Núcleo' }).first().selectOption({ label: 'Núcleo' }).catch(() => {})
   await page.keyboard.press('Escape')
 }
-await dibuja('12.15,5.4', '8.1x5.4')
+await dibuja('0,5.4', '8.1x5.4')
 await page.keyboard.press('Escape')
 await page.keyboard.press('Escape')
 await espera(1500)

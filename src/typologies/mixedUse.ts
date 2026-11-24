@@ -15,7 +15,7 @@ export const mixedUse: Typology = {
   programs: [
     { id: VIVIENDA, name: 'Vivienda', color: '#B5DBB6', built: true, size: { width: 32.4, depth: 16.2 } },
     { id: COMERCIO, name: 'Comercio', color: '#B9A3DC', built: true, size: { width: 32.4, depth: 16.2 } },
-    { id: NUCLEO, name: 'Núcleo', color: '#8C8C8C', built: true, size: { width: 8.1, depth: 5.4 } },
+    { id: NUCLEO, name: 'Núcleo', color: '#8C8C8C', built: true, nested: true, size: { width: 8.1, depth: 5.4 } },
   ],
   // PROVISIONAL: la ocupación del proyecto demo de mixed-use-optimizer (cov 60 %). Su índice (5) y su altura (100 m) no
   // caben en las reglas de sitio de GIM

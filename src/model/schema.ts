@@ -155,6 +155,8 @@ export const ProgramSchema = z.object({
   name: z.string(),
   color: z.string(), // informational colour: belongs to project data, not to the UI theme
   built: z.boolean(), // true = a building (counts toward coverage, cannot overlap); false = open area
+  // mixed-use-mvp: may stand inside another mass of its own building (a core in its tower): no overlap with them
+  nested: z.boolean().optional(),
   kind: z.enum(PROGRAM_KINDS).optional(),
   // Its own grid (Decision "Program rule set": every program has its own, none inherited), while it has no warehouse
   // type: a Warehouse program's is its type's (engine/programs.ts programGrid). Absent: none yet.

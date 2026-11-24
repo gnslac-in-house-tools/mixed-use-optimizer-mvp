@@ -175,7 +175,7 @@ describe('side panels', () => {
     render(<App />)
     const summary = panel('Summary')
     const rail = within(summary).getByRole('tablist', { name: 'Summary' })
-    expect(within(rail).getAllByRole('tab').map((t) => t.getAttribute('title'))).toEqual(['Overview', 'Against the brief', expect.stringMatching(/^Issues/), 'Calificación']) // mixed-use-mvp: the Calificación tab
+    expect(within(rail).getAllByRole('tab').map((t) => t.getAttribute('title'))).toEqual(['Overview', 'Against the brief', expect.stringMatching(/^Issues/), 'Calificación', 'Departamentos']) // mixed-use-mvp: the Calificación and Departamentos tabs
     expect(rail.nextElementSibling).toBeNull() // after the content: on the right edge
     expect(within(summary).getByRole('heading', { name: 'Overview' })).toBeInTheDocument()
     expect(within(summary).getByText('By building')).toBeInTheDocument()

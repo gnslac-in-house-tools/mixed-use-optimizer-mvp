@@ -83,7 +83,8 @@ export function deriveMassing(project: Project, option?: Id | null): MassingDeri
   for (const m of project.masses) {
     const built = (m.programId ? programs.get(m.programId)?.built : undefined) ?? true
     const b = buildingOf(project, m)
-    const base = { id: m.id, name: m.name, levelId: m.levelId, buildingId: b.id, context: b.context === true, span: massSpan(project, m), built }
+    const nested = m.programId ? programs.get(m.programId)?.nested === true : false // mixed-use-mvp
+    const base = { id: m.id, name: m.name, levelId: m.levelId, buildingId: b.id, context: b.context === true, span: massSpan(project, m), built, ...(nested ? { nested } : {}) }
     try {
       const polygon = footprintPolygon(m.footprint)
       const { holes, outside } = holesIn(m.holes, polygon)

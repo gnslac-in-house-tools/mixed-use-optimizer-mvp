@@ -24,6 +24,7 @@ export interface DerivedMass {
   corridors: Corridor[] // round the holes that have one (Phase H.4), part of its area
   area: number // m²: the polygon's less its holes
   built: boolean // from its program; decides coverage and overlap rules
+  nested?: boolean // mixed-use-mvp: from its program; may stand inside another mass of its building (no overlap)
 }
 
 export interface Metrics {

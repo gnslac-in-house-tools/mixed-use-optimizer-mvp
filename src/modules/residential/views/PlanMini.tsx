@@ -1,7 +1,7 @@
 // Un plano dibujado en chico (mixed-use-optimizer `ui/Catalogo.tsx#PlanMini` y `ui/Furniture.tsx`): recintos en su
 // color, muebles como bloques grises con una línea o dos que dicen qué son, y la fachada abajo.
-import type { Mueble, PlanCatalogo, Ring } from '../engine/catalogo'
-import { CATALOGO, ROOM_FILL } from '../engine/catalogo'
+import type { Mueble, PlanCatalogo, Ring } from '../engine/catalogo.ts'
+import { CATALOGO, ROOM_FILL } from '../engine/catalogo.ts'
 
 const ringD = (r: Ring) => r.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('') + 'Z'
 

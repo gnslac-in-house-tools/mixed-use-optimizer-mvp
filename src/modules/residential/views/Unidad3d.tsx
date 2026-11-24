@@ -4,11 +4,11 @@
 import { Edges } from '@react-three/drei'
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
-import type { PlanCatalogo, Ring } from '../engine/catalogo'
-import { CATALOGO, ROOM_FILL, huella } from '../engine/catalogo'
-import { offset } from '../engine/gfit/src/model/geom'
-import { extruir, type Punto } from './geometria3d'
-import { MAT_ARISTA, MAT_MUEBLE, modeloMueble } from './muebles3d'
+import type { PlanCatalogo, Ring } from '../engine/catalogo.ts'
+import { CATALOGO, ROOM_FILL, huella } from '../engine/catalogo.ts'
+import { offset } from '../engine/gfit/src/model/geom.ts'
+import { extruir, type Punto } from './geometria3d.ts'
+import { MAT_ARISTA, MAT_MUEBLE, modeloMueble } from './muebles3d.ts'
 
 export const ALTO_MURO = 2.6
 const MEDIO_MURO = 0.06 // m: cada recinto pone la mitad de su muro, 12 cm entre dos recintos

@@ -21,6 +21,9 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `vite.config.ts` | `server: { port: 5180, strictPort: true }` | El puerto del proyecto; con `strictPort` falla en vez de tomar otro |
 | `.gitignore` | Las entradas de GIM (`.env`, `.gfit-usage/`, `.gfit-bridge/`) más `evidence/` | Llaves locales y capturas fuera de git |
 | `src/views/viewport/Viewport.tsx` | `<BarraPisos />` (de `modules/residential/views`) junto a las barras flotantes, fuera de una mirada | La barra de pisos de uso mixto: elegir qué piso (o el sótano) dibujan la planta y el 3D. No pinta nada fuera de Uso mixto |
+| `src/views/layout/ui.ts`, `src/views/panels/SummaryPanel.tsx`, `src/views/layout/Dialogs.tsx` | La pestaña «Departamentos» (`departamentos`, el `Catalogo` del módulo) en el riel del panel derecho, y la ventana «Departamento» (`unidad`, `VentanaUnidad`) en el marco de ventanas de GIM | Pieza 3, primera vuelta: el catálogo y el editor de departamentos, como hizo la calificación con su pestaña y su ventana |
+| `src/api/tools/index.ts` | `guardarPlan` y `borrarPlan` en `LEFT_OUT`, con su razón | Los verbos del catálogo de departamentos se usan desde su pestaña y su ventana; el agente queda fuera de esta pieza |
+| `src/model/schema.ts`, `src/engine/types.ts`, `src/engine/derive.ts`, `src/engine/massing/checks.ts` | `Program.nested?` (opcional), copiado a `DerivedMass.nested`; `checkOverlap` no marca traslape entre dos masas del mismo edificio si una es `nested`. El Núcleo de Uso mixto es `nested: true` | El núcleo va dentro de su torre: sin esto cada proyecto típico salía con el error rojo de traslape. Genérico (cualquier tipología puede marcar un programa así); fuera del mismo edificio, o sin la marca, el traslape sigue igual |
 | `src/model/schema.ts` | `residential: ResidentialSchema.optional()` en `ProjectSchema`, y su import de `modules/residential/engine/schema.ts` | Los datos del módulo (usos de programa, tipos, parámetros por edificio), como `warehouseTypes`. Opcional: sin migración. El esquema va en `engine/` porque las fronteras de GIM solo dejan importar el `engine/` de un módulo, y solo importa zod (sin ciclo) |
 | `src/typologies/types.ts` | Campo opcional `extra?(programs): Partial<Project>` | Lo que un módulo agrega a un proyecto nuevo (Uso mixto: `residential`) |
 | `src/typologies/index.ts` | `mixedUse` en `TYPOLOGIES`; `newProject` agrega `t.extra?.(programs)` | Registro de la tipología |
@@ -38,7 +41,7 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/modules/__tests__/catalog.test.ts` | calificación: esas dos listas descuentan también los `calif-*` | Son KPIs del módulo residencial, apagado en el demo industrial |
 | `src/views/layout/ui.ts` | calificación: `SummaryTab` y `SUMMARY_TABS` ganan `calificacion` («Calificación», icono `sliders`); `Dialog` gana `calificacion` | La pestaña de la calificación por palancas en el Resumen; su botón «Editar reglas…» abre la ventana de reglas (Tarea 7 de la calificación) |
 | `src/views/panels/SummaryPanel.tsx` | calificación: la rama `tab === 'calificacion'` → `<Calificacion />` | La pestaña dibuja el componente del módulo, como Overview dibuja `<ResumenResidencial />` |
-| `src/views/layout/__tests__/areas.test.tsx`, `src/views/layout/__tests__/frame.test.tsx` | calificación: las pestañas del riel del Resumen terminan en «Calificación» | La pestaña nueva está en `SUMMARY_TABS` |
+| `src/views/layout/__tests__/areas.test.tsx`, `frame.test.tsx` | La pestaña «Departamentos» al final del riel del Resumen (pieza 3) |
 | `src/views/stats/KpiStrip.tsx` | calificación: con el módulo residencial, el interruptor «KPIs: Calificación · Proyecto» al inicio de la barra; los ids según el juego (`idsDeLaBarra`); la celda de un `calif-*` la dibuja `<CeldaCalificacion />`, cuyo clic abre la pestaña con la palanca | La calificación siempre a la vista (spec §4 y §7.5); la lógica vive en `modules/residential/views/calificacion/`, como la celda de Issues abre su pestaña |
 | `src/views/layout/Dialogs.tsx` | calificación: la rama `dialog === 'calificacion'` → `<VentanaReglas />` en el `Frame` de siempre, con el título «Reglas de calificación» | La ventana de reglas de la calificación (spec §6 y §7.3): se cierra con ✕, Esc o un clic afuera, como Brief y Rules |
 | `src/views/commands/design.ts` | calificación: `design.calificacion` «Reglas de calificación…» en el menú Design, tras Rules…; desactivado sin `project.residential` («Only with the Uso mixto typology») | La ventana de reglas se abre desde Design (spec §6 y §7.4) |
@@ -100,6 +103,7 @@ Con la suite completa en esta máquina, tres tests de GIM con interfaz (`shortcu
 | `src/views/commands/__tests__/registry.test.ts`, `fileEditHelp.test.tsx` | El comando `file.new.mixed-use` |
 | `src/views/home/__tests__/home.test.tsx` | «Uso mixto» en los tipos de proyecto de Create new |
 | `src/model/__tests__/schema.test.ts` | `residential` en las claves del JSON Schema |
+| `src/views/layout/__tests__/areas.test.tsx` | La pestaña «Departamentos» al final del riel del Resumen (pieza 3) |
 
 La tipología lleva `plugins.optimizer` vacío (`templates: []`, `stages: []`): GIM exige datos del optimizador en
 toda tipología (`circulation.test.ts`) y el optimizador queda fuera de esta pieza.

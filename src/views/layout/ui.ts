@@ -16,7 +16,7 @@ import { applyTheme, isTheme, type Theme } from './theme.ts'
 
 /** Brief, Program and Rules: windows over the app, never the viewport's (Decisions "Brief and Rules as windows",
  *  "Program rule set layout"); a plugin's window too (`plugin:<id>/<window>`, Decision "Stages layout"). */
-export type Dialog = 'brief' | 'program' | 'rules' | 'calificacion' | PluginTabKey // mixed-use-mvp
+export type Dialog = 'brief' | 'program' | 'rules' | 'calificacion' | 'unidad' | PluginTabKey // mixed-use-mvp
 /** The Brief window's tabs (Decision "Program rule set layout"): its programs, its circulation's standards and demand. */
 export type BriefTab = 'programs' | 'circulation'
 /** How the viewport looks (Sheets, off until 10.D, is not a value yet). */
@@ -26,7 +26,7 @@ export type View = 'plan' | '3d' | 'split'
  *  or a plugin's left tab (`plugin:<id>/<tab>`, opened by its action: Decision "Optimizer plugin"). A layout saved with
  *  an item of before (`site`, `massing`, `flow`, `brief`) opens Layers. */
 export type RailItem = 'layers' | 'blocks' | 'properties' | PluginTabKey
-export type SummaryTab = 'overview' | 'brief' | 'issues' | 'calificacion' | PluginTabKey // mixed-use-mvp
+export type SummaryTab = 'overview' | 'brief' | 'issues' | 'calificacion' | 'departamentos' | PluginTabKey // mixed-use-mvp
 export type Side = 'left' | 'right'
 /** The bars docked to the viewport (Decision "Workspace layout"): the drafting bar. (The tools bar went with the Tools strip,
  *  AS.2; a saved `docks.tools` is ignored.) */
@@ -67,6 +67,7 @@ export const SUMMARY_TABS: { key: Exclude<SummaryTab, PluginTabKey>; label: stri
   { key: 'brief', label: 'Against the brief', icon: 'target' },
   { key: 'issues', label: 'Issues', icon: 'warning' },
   { key: 'calificacion', label: 'Calificación', icon: 'sliders' }, // mixed-use-mvp
+  { key: 'departamentos', label: 'Departamentos', icon: 'program' }, // mixed-use-mvp (pieza 3)
 ]
 
 /** The side panels' names, for their toggles, their sheets and screen readers. */

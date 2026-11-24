@@ -1,0 +1,26 @@
+/* Los trazos de los planos de departamento (el catálogo y el editor); colores de los tokens de GIM. Viene del MVP anterior. */
+.plan-mini { width: 100%; display: block; }
+.pm-outline { fill: #fff; stroke: #3a3a3a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.pm-room { stroke: #8a8a8a; stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.pm-facade { stroke: #6fa8dc; stroke-width: 3; stroke-dasharray: 6 3; vector-effect: non-scaling-stroke; }
+.mueble { fill: #dcdcdc; stroke: #7d7d7d; stroke-width: 0.5; vector-effect: non-scaling-stroke; }
+.md { fill: none; stroke: #8f8f8f; stroke-width: 0.4; vector-effect: non-scaling-stroke; }
+.plano-unidad .pm-outline { stroke-width: 3; }
+.plano-unidad .pm-room { stroke-width: 1; }
+.plano-unidad .mueble { stroke-width: 0.8; }
+.plano-unidad .md { stroke-width: 0.6; }
+.pu-rotulo text { fill: var(--ink); font-family: var(--font-sans); font-weight: 600; paint-order: stroke; stroke: rgba(255, 255, 255, 0.85); stroke-width: 0.06; pointer-events: none; }
+.pu-rotulo .pu-area { fill: var(--ink-secondary); font-weight: 500; }
+.pu-cota line { stroke: var(--ink-tertiary); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.pu-cota text { fill: var(--ink-secondary); font-family: var(--font-sans); }
+/* el editor */
+.ed-muro { stroke: transparent; stroke-width: 14; vector-effect: non-scaling-stroke; cursor: col-resize; }
+.ed-muro.y { cursor: row-resize; }
+.ed-muro:hover, .ed-muro.activo { stroke: rgba(46, 120, 220, 0.35); }
+.ed-puerta { stroke: #2b2d2f; stroke-width: 1.2; fill: none; vector-effect: non-scaling-stroke; }
+.ed-hueco { stroke: #fff; stroke-width: 4; vector-effect: non-scaling-stroke; }
+.ed-ventana { stroke: #3c8be0; stroke-width: 5; vector-effect: non-scaling-stroke; }
+.ed-grafo line { stroke: #d2553f; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.ed-grafo line.muro { stroke-dasharray: 4 3; opacity: 0.6; }
+.ed-grafo circle { fill: #d2553f; }
+.ed-sel { fill: none; stroke: #2e78dc; stroke-width: 2.5; vector-effect: non-scaling-stroke; }

@@ -56,6 +56,8 @@ export function checkOverlap(masses: DerivedMass[]): Issue[] {
   for (let i = 0; i < built.length; i++) {
     for (let j = i + 1; j < built.length; j++) {
       if (!clash(built[i], built[j])) continue
+      // mixed-use-mvp: a nested mass (a core) may stand inside another mass of its own building
+      if (built[i].buildingId === built[j].buildingId && (built[i].nested || built[j].nested)) continue
       // Cheap test first: if the boxes are apart, skip the expensive booleans.
       if (!boundsTouch(boxes[i], boxes[j], 0)) continue
       const a = built[i]

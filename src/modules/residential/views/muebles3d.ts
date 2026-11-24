@@ -4,7 +4,7 @@
 // hondo (d) con el respaldo en z = −d/2 (el lado +y del plano) y el frente en z = +d/2; y = 0 es el piso.
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import { CATALOGO } from '../engine/catalogo'
+import { CATALOGO } from '../engine/catalogo.ts'
 
 const C = {
   madera: '#c8b59c',

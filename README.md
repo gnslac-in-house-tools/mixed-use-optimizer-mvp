@@ -9,8 +9,8 @@ que viene de GIM se queda en inglés; lo nuevo se escribe en español.
 | # | Pieza | Estado |
 |---|---|---|
 | 1 | GIM como base, con la tipología «Uso mixto»: masa, retícula de 8.1 m en módulos de 2.7 m, niveles, plantas tipo y departamentos con los muros sobre la retícula, columnas y KPIs | Hecha |
-| 2 | Sótanos de estacionamiento con el motor de cajones de Praktico, regidos por la misma retícula | Pendiente |
-| 3 | Blocks habitacionales: catálogo de departamentos con editor (recintos, puertas, ventanas, pasillos y cotas fijas o movibles) | Pendiente |
+| 2 | Sótanos de estacionamiento con el motor de cajones de Praktico (el de GFit), bajo la huella | Primera vuelta: sótanos que pide el programa (o los fijados), sus cajones en planta y 3D, su costo |
+| 3 | Blocks habitacionales: catálogo de departamentos con editor (recintos, puertas, ventanas, pasillos y cotas fijas o movibles) | Primera vuelta: pestaña Departamentos y ventana Departamento |
 | 4 | El reconfigurador de plantas, que estira los blocks respetando lo fijo | Pendiente |
 
 ## Correr
@@ -39,7 +39,20 @@ npm run dev        # http://localhost:5180
    - **en la barra de KPIs**, Área construida, Área vendible, Departamentos, Cajones requeridos y Margen.
 5. Las Properties del edificio llevan el fondo de unidad, el ancho de pasillo, la mezcla objetivo y la semilla.
 
-Recorrido en el navegador (con `npm run dev` arriba): `node scripts/recorrido.mjs`. Deja capturas en `evidence/pieza-1/`.
+6. **Pisos y estacionamiento.** La barra de pisos (abajo a la izquierda del viewport) elige **Tipo**, cada nivel o el
+   sótano (**S1–n**): la planta dibuja ese piso con sus departamentos, o el sótano con los cajones y pasillos del motor;
+   el 3D pasa a Ghosted y muestra los departamentos por color y los sótanos bajo el suelo. Los sótanos son los que pide
+   el programa (hasta 5) o los fijados en Properties; ahí también van el precio tope y el terreno.
+7. **Columnas.** Con la retícula, los anchos de cada tramo se ordenan para que los muros entre departamentos caigan en
+   las columnas (8.1 m), sin cambiar la mezcla.
+8. **Calificación.** Con el estacionamiento y el precio por departamento, las cinco palancas tienen valor aun con una
+   sola opción (la regla de inicio «Costo entre ingreso» califica el costo sin mediana).
+9. **Departamentos** (pestaña del panel derecho): ✎ en un plano de la Biblioteca GFit lo copia a Mi biblioteca y abre
+   la ventana **Departamento**: arrastrar un muro (o teclear su cota) estira los recintos de sus dos lados; el candado
+   fija una cota, que viaja entera con su muro; **Puerta** y **Ventana** se ponen con un clic; **Recinto** cambia el uso
+   (también a Pasillo); el grafo de adyacencias se prende y se apaga; el 3D de la unidad va a la derecha.
+
+Recorridos en el navegador (con `npm run dev` arriba): `node scripts/recorrido.mjs` (pieza 1), `node scripts/recorrido-demo.mjs` (pisos, sótano, 3D) y `node scripts/recorrido-editor.mjs` (editor). Dejan capturas en `evidence/`.
 
 ## Verificar
 

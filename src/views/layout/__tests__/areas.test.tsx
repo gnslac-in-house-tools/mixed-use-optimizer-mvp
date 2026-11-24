@@ -318,7 +318,7 @@ describe('only what works is shown (Phase Q.9, Decision "Only what works is show
   it('the Summary has Overview, Against the brief and Issues: no Decision log tab', () => {
     start()
     const summary = screen.getByRole('tablist', { name: 'Summary' })
-    expect(within(summary).getAllByRole('tab').map((t) => t.getAttribute('title'))).toEqual(['Overview', 'Against the brief', expect.stringMatching(/^Issues/), 'Calificación']) // mixed-use-mvp: the Calificación tab
+    expect(within(summary).getAllByRole('tab').map((t) => t.getAttribute('title'))).toEqual(['Overview', 'Against the brief', expect.stringMatching(/^Issues/), 'Calificación', 'Departamentos']) // mixed-use-mvp: the Calificación and Departamentos tabs
     expect(screen.queryByRole('tab', { name: 'Decision log' })).toBeNull()
     expect(screen.queryByRole('tabpanel', { name: 'Decision log' })).toBeNull()
   })

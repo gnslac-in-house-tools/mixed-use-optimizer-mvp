@@ -4,11 +4,11 @@
 //
 // El marco de una unidad: x a lo largo de la fachada (las ventanas), y desde la fachada (0) hacia el pasillo (d).
 // Todo es geometría pura; los recintos salen del WFC de cuartos de GFit (`gfit/src/layout/rooms.ts`).
-import type { Pt, Ring } from './gfit/src/model/geom'
-import { intersection, signedArea } from './gfit/src/model/geom'
-import { generateRooms } from './gfit/src/layout/rooms'
-import { ROOMS0, UNIT_TEMPLATES } from './gfit/src/model/program'
-import type { RoomType, UnitType } from './gfit/src/model/program'
+import type { Pt, Ring } from './gfit/src/model/geom.ts'
+import { intersection, signedArea } from './gfit/src/model/geom.ts'
+import { generateRooms } from './gfit/src/layout/rooms.ts'
+import { ROOMS0, UNIT_TEMPLATES } from './gfit/src/model/program.ts'
+import type { RoomType, UnitType } from './gfit/src/model/program.ts'
 
 export type { Pt, Ring, UnitType }
 
@@ -41,7 +41,15 @@ export interface PlanCatalogo {
   reglas: ReglasUnidad
   /** el plano de la Biblioteca GFit del que se copió */
   desde?: string
+  /** pieza 3 (editor): puertas sobre los muros interiores, ventanas en la fachada y los tramos de cota fijos por eje */
+  puertas?: Puerta[]
+  ventanas?: Ventana[]
+  fijas?: { x: number[]; y: number[] }
 }
+/** Una puerta en un muro interior: el eje del muro (x: un muro a x constante) y su centro. */
+export interface Puerta { eje: 'x' | 'y'; x: number; y: number; ancho: number }
+/** Una ventana en la fachada (y = 0): su centro a lo largo de x. */
+export interface Ventana { x: number; ancho: number }
 
 export const REGLAS0: ReglasUnidad = { cama: 'queen', comedor: 4, paso: 0.75, closets: true }
 

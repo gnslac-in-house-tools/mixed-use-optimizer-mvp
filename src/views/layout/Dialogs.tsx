@@ -17,6 +17,7 @@ import { pluginWindowOf, PluginWindowView } from '../../plugins/index.ts'
 import { Brief } from '../brief/Brief.tsx'
 import { ProgramWindow } from '../../modules/warehouse/views/ProgramWindow.tsx'
 import { VentanaReglas } from '../../modules/residential/views/calificacion/VentanaReglas.tsx' // mixed-use-mvp
+import { VentanaUnidad } from '../../modules/residential/views/VentanaUnidad.tsx' // mixed-use-mvp (pieza 3)
 import { Divider } from '../controls/Divider.tsx'
 import { trapTab } from '../controls/focus.ts'
 import { titleWith } from '../commands/shortcuts.ts'
@@ -45,6 +46,13 @@ export function Dialogs() {
     return (
       <Frame key={dialog} label="Reglas de calificación">
         <VentanaReglas />
+      </Frame>
+    )
+  // mixed-use-mvp (pieza 3): the department editor, in the same frame
+  if (dialog === 'unidad')
+    return (
+      <Frame key={dialog} label="Departamento">
+        <VentanaUnidad />
       </Frame>
     )
   if (dialog !== 'brief' && dialog !== 'program' && dialog !== 'rules') return null
