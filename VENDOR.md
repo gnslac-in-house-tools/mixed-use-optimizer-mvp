@@ -40,6 +40,7 @@ ya traía `mixed-use-optimizer`. Reemplaza la copia parcial (solo cuartos, con s
 |---|---|---|
 | `test/*.test.ts` | Primera línea: `import { test, expect, … } from 'vitest'` | GIM corre Vitest sin `globals`; así no se toca su configuración |
 | `src/**/*.ts`, `test/*.test.ts` | Los imports relativos llevan `.ts` (154 imports en 41 archivos, cambio mecánico) | `tsconfig.node.json` de GIM (nodenext, incluye `mcp/`) llega a GFit por la tipología y exige extensiones |
+| `src/layout/level.ts` | `setUnitModule({ origin, u, step } \| null)` y `avisosModulo()`. Con el módulo puesto: `widthsOf` da los múltiplos del módulo dentro de `[wMin, wMax]` (en la rejilla de 0.3 m de la banda; sin ninguno, el menor desde `wMin`, con aviso); cada tramo de banda se recorta a líneas de módulo en el eje de la retícula que sigue su fachada (lo recortado es el «remanente» del nivel, con aviso), y las unidades de punta ya no crecen sobre lo que sobra. Con `null`, GFit queda exactamente como antes | Los muros entre departamentos caen sobre los módulos de la retícula (cada 2.7 m). El solver de banda ya estira las unidades para llenar su tramo: con tramos y anchos en módulos, el estiramiento es 1 |
 
 ## Del MVP anterior (catálogo de unidades)
 

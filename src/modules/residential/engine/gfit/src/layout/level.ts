@@ -59,8 +59,66 @@ const ATTEMPTS = 30
 const live = (rules: SRule[]) => rules.filter((r) => r.on)
 const inLevels = (r: SRule, n: number) => n >= (r.a ?? 1) && n <= (r.b ?? 999)
 
+// ---- mixed-use-mvp patch: unit widths and band runs on the structural grid's modules -------------------------------
+/** The grid's origin and x axis (a unit vector) on the plan, and its module (m). */
+export type ModuloUnidad = { origin: Pt; u: Pt; step: number }
+let MOD: ModuloUnidad | null = null
+/** where layoutLevel moved the plate (it solves at the local origin): the module's origin moves with it */
+let SHIFT: Pt = [0, 0]
+let AVISOS: string[] = []
+const onQ = (w: number) => Math.abs(w / Q - Math.round(w / Q)) < 1e-6
+const r2 = (w: number) => Math.round(w * 100) / 100
+
+/** With a module, unit widths are its multiples and each band run starts and ends on a module line; null: as before. */
+export function setUnitModule(m: ModuloUnidad | null): void {
+  MOD = m
+  AVISOS = []
+}
+
+/** What the last runs with a module said: a type with no width in modules, the leftover of each level. */
+export function avisosModulo(): string[] {
+  return [...new Set(AVISOS)]
+}
+
+/** The run cut to the module lines along its facade (in the grid's u or v); what was cut, m. A run slanted to the grid is kept. */
+function aModulo(run: Run): { run: Run; cut: number } {
+  if (!MOD) return { run, cut: 0 }
+  const f = run.frame
+  const u = MOD.u
+  const v: Pt = [-u[1], u[0]]
+  const cu = f.u[0] * u[0] + f.u[1] * u[1], cv = f.u[0] * v[0] + f.u[1] * v[1]
+  const axis = Math.abs(cu) > 0.999 ? u : Math.abs(cv) > 0.999 ? v : null
+  if (!axis) {
+    AVISOS.push('una fachada no va con la retícula: sus unidades no siguen los módulos')
+    return { run, cut: 0 }
+  }
+  const sign = f.u[0] * axis[0] + f.u[1] * axis[1] > 0 ? 1 : -1
+  const o: Pt = [MOD.origin[0] - SHIFT[0], MOD.origin[1] - SHIFT[1]]
+  const ao = (f.o[0] - o[0]) * axis[0] + (f.o[1] - o[1]) * axis[1]
+  const s = MOD.step
+  // along the run, the grid coordinate is ao + sign·x
+  let x0 = sign > 0 ? Math.ceil((ao + run.x0) / s - 1e-6) * s - ao : ao - Math.floor((ao - run.x0) / s + 1e-6) * s
+  let x1 = sign > 0 ? Math.floor((ao + run.x1) / s + 1e-6) * s - ao : ao - Math.ceil((ao - run.x1) / s - 1e-6) * s
+  x0 = Math.max(run.x0, x0)
+  x1 = Math.min(run.x1, Math.max(x0, x1))
+  return { run: { ...run, x0, x1, convexStart: run.convexStart && x0 - run.x0 < Q, convexEnd: run.convexEnd && run.x1 - x1 < Q }, cut: x0 - run.x0 + (run.x1 - x1) }
+}
+// ---- end of mixed-use-mvp patch ---------------------------------------------------------------------------------
+
 /** the widths a type offers on the 0.6 m grid inside its range */
 export function widthsOf(t: UnitType): number[] {
+  // mixed-use-mvp patch: with a module, its multiples inside the range (on the band's 0.3 m grid); none: the least one from wMin
+  if (MOD) {
+    const s = MOD.step
+    const mod: number[] = []
+    for (let k = Math.ceil(t.wMin / s - 1e-9); k * s <= t.wMax + 1e-6; k++) if (onQ(k * s)) mod.push(r2(k * s))
+    if (mod.length) return mod
+    let k = Math.max(1, Math.ceil(t.wMin / s - 1e-9))
+    while (!onQ(k * s) && k < 1000) k++
+    const w = r2(k * s)
+    AVISOS.push(`${t.name} sin ancho en módulos de ${s} m entre ${t.wMin} y ${t.wMax} m: se usa ${w} m`)
+    return [w]
+  }
   const out: number[] = []
   for (let w = t.wMin; w <= t.wMax + 1e-6; w += 0.6) out.push(Math.round(w * 100) / 100)
   return out.length ? out : [t.wMin]
@@ -108,7 +166,13 @@ export function layoutLevel(i: LevelInput): LevelLayout {
   const ox = Math.min(...pts.map((p) => p[0])), oy = Math.min(...pts.map((p) => p[1]))
   if (!ox && !oy) return solveLevel(i)
   const below = i.below && { ...i.below, units: i.below.units.map((u) => ({ ...u, shape: shift(u.shape, -ox, -oy) })) }
-  const L = solveLevel({ ...i, plate: shift(i.plate, -ox, -oy), cores: shift(i.cores, -ox, -oy), ...(below ? { below } : {}) })
+  SHIFT = [ox, oy] // mixed-use-mvp patch
+  let L: LevelLayout
+  try {
+    L = solveLevel({ ...i, plate: shift(i.plate, -ox, -oy), cores: shift(i.cores, -ox, -oy), ...(below ? { below } : {}) })
+  } finally {
+    SHIFT = [0, 0]
+  }
   return {
     ...L,
     units: L.units.map((u) => ({
@@ -169,7 +233,7 @@ function solveLevel(i: LevelInput): LevelLayout {
   const required = rules.filter((r) => r.strength === 'required' && r.kind === 'at-least')
 
   const cands = candidates(i.plate, z)
-  let best: { raw: Raw[]; fails: string[]; attempts: number } | null = null
+  let best: { raw: Raw[]; fails: string[]; attempts: number; cut: number } | null = null
   for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
     const r = rng(i.seed * 977 + i.num * 131 + attempt)
     const raw: Raw[] = []
@@ -181,13 +245,17 @@ function solveLevel(i: LevelInput): LevelLayout {
     })
     const counts: Record<string, number> = {}
     let runIx = 0
+    let cut = 0 // mixed-use-mvp patch: m of run cut to the module lines
     for (const c of cands) {
       for (const run0 of runsOf(c, z, taken)) {
         // a slot no unit can serve (its door cannot reach the corridor, or the along rules contradict there)
         // splits the run: both sides are solved on their own, the slot itself is left over
         const queue: Run[] = [run0]
         for (let solves = 0; queue.length && solves < 40; solves++) {
-          const run = queue.shift()!
+          // mixed-use-mvp patch: each run starts and ends on a module line; what is cut is the level's leftover
+          const trimmed = aModulo(queue.shift()!)
+          const run = trimmed.run
+          cut += trimmed.cut
           if (run.x1 - run.x0 < minW - 1e-6) continue
           const ri = runIx++
           const len = run.x1 - run.x0
@@ -260,7 +328,8 @@ function solveLevel(i: LevelInput): LevelLayout {
     // what no band reached — wedges where a chord's run starts late, the strip between a chord and its arc, the
     // ends of a slab — goes to the units next to it: run-end units grow along their band (up to 4.5 m), then every
     // unit takes what lies within 0.7 m (the chord tolerance). Always clipped to what is still free: no overlaps.
-    if (raw.length) {
+    // mixed-use-mvp patch: with a module the units keep their module lines; what is left stays leftover
+    if (raw.length && !MOD) {
       let rest = difference(z.unit, union(raw.map((u) => u.shape)))
       const grow = (u: Raw, add: Shape) => {
         if (area(add) <= 0.01) return
@@ -316,12 +385,14 @@ function solveLevel(i: LevelInput): LevelLayout {
       if (have < (q.n ?? 1)) fails.push('At least ' + (q.n ?? 1) + ' ' + q.types.join('/') + ' per level')
     }
     const score = (b: { raw: Raw[]; fails: string[] }) => -b.fails.length * 1e6 + b.raw.length * 1e3 + b.raw.reduce((a, u) => a + u.area, 0)
-    const cand = { raw, fails, attempts: attempt + 1 }
+    const cand = { raw, fails, attempts: attempt + 1, cut }
     if (!best || score(cand) > score(best)) best = cand
     if (!fails.length && raw.length) break
     if (!raw.length && attempt >= 2) break
   }
   const B = best!
+  // mixed-use-mvp patch
+  if (MOD && B.cut > 0.05) AVISOS.push(`remanente de ${B.cut.toFixed(1)} m en L${String(i.num).padStart(2, '0')}`)
   const units: PlacedUnit[] = B.raw.filter((u) => u.area > 0).map((u, k) => {
     const t = types.find((x) => x.id === u.type)!
     const g = roomsFor(t, i.rooms, u.w, u.d, i.seed)
