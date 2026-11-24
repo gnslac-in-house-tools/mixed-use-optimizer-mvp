@@ -34,6 +34,8 @@ export const ParamsEdificioSchema = z.object({
   sotanos: z.number().int().min(0).max(6).nullable().optional(),
   /** precio tope de una unidad (FAPRIVI) para la velocidad de venta */
   tope: z.number().positive().optional(),
+  /** precio del terreno del edificio ($); GFit lo suma al costo */
+  terreno: z.number().nonnegative().optional(),
 })
 export type ParamsEdificio = z.infer<typeof ParamsEdificioSchema>
 

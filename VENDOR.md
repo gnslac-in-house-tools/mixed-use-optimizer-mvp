@@ -20,6 +20,7 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 |---|---|---|
 | `vite.config.ts` | `server: { port: 5180, strictPort: true }` | El puerto del proyecto; con `strictPort` falla en vez de tomar otro |
 | `.gitignore` | Las entradas de GIM (`.env`, `.gfit-usage/`, `.gfit-bridge/`) más `evidence/` | Llaves locales y capturas fuera de git |
+| `src/views/viewport/Viewport.tsx` | `<BarraPisos />` (de `modules/residential/views`) junto a las barras flotantes, fuera de una mirada | La barra de pisos de uso mixto: elegir qué piso (o el sótano) dibujan la planta y el 3D. No pinta nada fuera de Uso mixto |
 | `src/model/schema.ts` | `residential: ResidentialSchema.optional()` en `ProjectSchema`, y su import de `modules/residential/engine/schema.ts` | Los datos del módulo (usos de programa, tipos, parámetros por edificio), como `warehouseTypes`. Opcional: sin migración. El esquema va en `engine/` porque las fronteras de GIM solo dejan importar el `engine/` de un módulo, y solo importa zod (sin ciclo) |
 | `src/typologies/types.ts` | Campo opcional `extra?(programs): Partial<Project>` | Lo que un módulo agrega a un proyecto nuevo (Uso mixto: `residential`) |
 | `src/typologies/index.ts` | `mixedUse` en `TYPOLOGIES`; `newProject` agrega `t.extra?.(programs)` | Registro de la tipología |

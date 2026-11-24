@@ -51,6 +51,9 @@ function Edificio({ buildingId, d, titulo }: { buildingId: Id; d: Derivado; titu
       <Fila k="Área construida" v={m2(t.gfa)} />
       <Fila k="Área vendible" v={m2(t.nsa)} />
       <Fila k="Cajones requeridos" v={n0(t.req)} />
+      <Fila k="Sótanos" v={d.estacionamiento.sotanos ? `${d.estacionamiento.sotanos} × ${d.estacionamiento.porSotano} cajones` : '—'} />
+      <Fila k="Cajones en sótanos" v={`${n0(d.estacionamiento.cajones)} de ${n0(d.estacionamiento.requeridos)}`} />
+      <Fila k="Costo del estacionamiento" v={dinero(d.estacionamiento.costo)} />
       <Fila k="Ingreso" v={dinero(t.revenue)} />
       <Fila k="Costo" v={dinero(t.cost)} />
       <Fila k="Margen" v={margen === null ? '—' : `${margen.toFixed(1)} %`} />

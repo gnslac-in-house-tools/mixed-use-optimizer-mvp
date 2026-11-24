@@ -172,6 +172,14 @@ describe('derivar', () => {
     expect(xs.filter((x) => Math.abs(x / 8.1 - Math.round(x / 8.1)) < 1e-3 && x > 8.2 && x < 48.5).length).toBeGreaterThanOrEqual(3)
   })
 
+  it('(o) el terreno del edificio se suma al costo; sin él, 0', () => {
+    const p = caso()
+    const sin = derivar(p, 'b1')!
+    expect(sin.totals.land).toBe(0)
+    const q: Project = { ...p, residential: { ...p.residential!, edificios: { b1: { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, terreno: 5e6 } } } }
+    expect(derivar(q, 'b1')!.totals.cost - sin.totals.cost).toBeCloseTo(5e6, 0)
+  })
+
   it('sin masas de vivienda ni de comercio da null', () => {
     expect(derivar(proyecto([masa('nucleo', NUCLEO, 30)]), 'b1')).toBeNull()
     expect(derivar(newProject('mixed-use'), 'b1')).toBeNull()

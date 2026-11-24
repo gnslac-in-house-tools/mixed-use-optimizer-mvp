@@ -122,6 +122,8 @@ function calcular(
   const s = fresh()
   s.progs = PROGS0().map((x) => (x.id === 'res' ? { ...x, fh: fhViv } : x.id === 'ret' ? { ...x, fh: fhCom } : x))
   s.unitTypes = p.residential!.tipos.map((t) => ({ ...t, rooms: [...t.rooms] }))
+  // el terreno es del edificio (millones en GFit); sin él, 0 (GFit traía 10 M para cualquier predio)
+  s.cg = { ...s.cg, land: params.terreno / 1e6 }
   const geom = new Map<string, GeomObj>()
   const obj = (m: DerivedMass, kind: GeomObj['kind'], rings: Ring[]): GeomObj => {
     const xs = m.polygon.map((q) => q.x), ys = m.polygon.map((q) => q.y)

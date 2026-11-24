@@ -3,7 +3,7 @@
 import type { Id } from '../../../model/schema.ts'
 import { actions } from '../../../state/actions/index.ts'
 import { useApp } from '../../../state/store.ts'
-import { NumberField } from '../../../views/controls/fields.tsx'
+import { NumberField, SelectField } from '../../../views/controls/fields.tsx'
 import { useModule } from '../../../views/modules.ts'
 import { paramsDe } from '../engine/defaults.ts'
 import type { ParamsEdificio } from '../engine/schema.ts'
@@ -25,6 +25,14 @@ export function PropiedadesResidencial({ buildingId }: { buildingId: Id }) {
         <NumberField key={`${buildingId}-mix-${t.id}`} label={`Mezcla ${t.name}`} unit="%" min={0} max={100} decimals={0} value={pr.mezcla[t.id] ?? 0} onCommit={(v) => cambia(buildingId, { mezcla: { [t.id]: v } })} />
       ))}
       {Math.abs(suma - 100) > 0.5 && <p className="text-caption text-status-over">La mezcla suma {Math.round(suma)} %: debe sumar 100 %.</p>}
+      <SelectField
+        label="Sótanos"
+        value={pr.sotanos === null ? 'auto' : String(pr.sotanos)}
+        options={[{ value: 'auto', label: 'Los que pide' }, ...[0, 1, 2, 3, 4, 5, 6].map((n) => ({ value: String(n), label: String(n) }))]}
+        onCommit={(v) => cambia(buildingId, { sotanos: v === 'auto' ? null : Number(v) })}
+      />
+      <NumberField key={`${buildingId}-tope`} label="Precio tope" unit="$" min={0} decimals={0} value={pr.tope} onCommit={(v) => cambia(buildingId, { tope: v })} />
+      <NumberField key={`${buildingId}-terreno`} label="Terreno" unit="$" min={0} decimals={0} value={pr.terreno} onCommit={(v) => cambia(buildingId, { terreno: v })} />
       <NumberField key={`${buildingId}-semilla`} label="Semilla" min={0} decimals={0} value={pr.semilla} onCommit={(v) => cambia(buildingId, { semilla: Math.round(v) })} />
     </section>
   )
