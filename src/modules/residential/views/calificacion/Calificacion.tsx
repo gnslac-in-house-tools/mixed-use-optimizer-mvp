@@ -6,11 +6,10 @@ import { useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Icon } from '../../../../views/controls/Icon.tsx'
 import { useUi } from '../../../../views/layout/ui.ts'
-import { useShown } from '../../../../views/viewport/look.ts'
 import type { Calificacion as Cal, Traza } from '../../engine/calificacion/calificar.ts'
 import { PALANCAS, PALANCA_ES, reglasDe } from '../../engine/calificacion/reglas.ts'
 import { BarraBandas, BarraSuma, DetalleVariable, Puntos, Valor, conSigno, fmtValor, leer, texto } from './piezas.tsx'
-import { useCalificacion, usePalancasAbiertas } from './useCalificacion.ts'
+import { useCalificacion, useEnVista, usePalancasAbiertas } from './useCalificacion.ts'
 
 const ANCHO_TARJETA = 268
 
@@ -68,7 +67,7 @@ function Linea({ t, sin }: { t: Traza; sin: boolean }) {
 
 export function Calificacion() {
   const c = useCalificacion()
-  const reglas = reglasDe(useShown((s) => s.project))
+  const reglas = reglasDe(useEnVista().project)
   const help = useUi((s) => s.help)
   const abiertas = usePalancasAbiertas((s) => s.abiertas)
   const alternar = usePalancasAbiertas((s) => s.alternar)

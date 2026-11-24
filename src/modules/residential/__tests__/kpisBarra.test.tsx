@@ -10,6 +10,9 @@ import { emptyHistory } from '../../../state/history.ts'
 import { NO_SELECTION, useApp } from '../../../state/store.ts'
 import { newProject } from '../../../typologies/index.ts'
 import { useUi } from '../../../views/layout/ui.ts'
+import { isolatedProject, useIsolate } from '../../../views/stats/isolate.ts'
+import { addBuilding } from '../../../state/actions/buildings.ts'
+import { calificacionDe } from '../engine/calificacion/datos.ts'
 import { PALANCAS, PALANCA_ES } from '../engine/calificacion/reglas.ts'
 import { JUEGO_CALIFICACION } from '../kpisCalificacion.ts'
 import { JUEGO_KEY, useJuegoKpis } from '../views/calificacion/juegoKpis.ts'
@@ -99,5 +102,38 @@ describe('la barra de KPIs con el juego Calificación', () => {
     expect(within(barra()).queryByRole('button', { name: 'Proyecto' })).toBeNull()
     expect(nombres()).toEqual(chosenKpis(p).map((id) => etiqueta(p, id)))
     expect(nombres()).not.toContain('Calificación')
+  })
+})
+
+describe('con un edificio aislado en el Overview', () => {
+  afterEach(() => useIsolate.getState().clear())
+
+  it('la cifra de cada celda, su línea y la pestaña leen lo mismo: lo aislado', () => {
+    // dos edificios de vivienda en la opción: el segundo, una franja donde no cabe ninguna unidad
+    const p0 = caso()
+    const b = addBuilding(p0, { optionId: p0.options[0].id })
+    const p: Project = { ...b.project, masses: [...b.project.masses, { ...masa('m3', 'vivienda', rect(60, 0, 68.1, 16.2), 30), levelId: b.levelId }] }
+    abre(p)
+    const isolated = { kind: 'building' as const, id: b.id }
+    useIsolate.setState({ isolated })
+    const option = p.options[0].id
+    const todo = calificacionDe(p, option)
+    const aislado = calificacionDe(isolatedProject(p, isolated), option)
+    expect(aislado.n).not.toBe(todo.n) // que la prueba distinga las dos fuentes
+    useUi.setState({ summaryTab: 'calificacion' })
+    render(<App />)
+
+    const puntaje = celdas()[0]
+    const cifra = aislado.puntaje == null ? '—' : aislado.puntaje < 0 ? '−' + Math.abs(aislado.puntaje) : '+' + aislado.puntaje
+    expect(puntaje).toHaveTextContent(cifra)
+    expect(puntaje).toHaveTextContent(`${aislado.n} de ${PALANCAS.length} palancas`)
+    for (const l of aislado.palancas) {
+      const celda = within(barra()).getByRole('group', { name: PALANCA_ES[l.palanca] })
+      expect(celda).toHaveTextContent(`${l.trazas.filter((t) => t.rating != null).length} de ${l.trazas.length} variables`)
+    }
+    const tab = screen.getByRole('tabpanel', { name: 'Calificación' })
+    const resumen = within(tab).getByRole('group', { name: 'Puntaje' })
+    expect(resumen).toHaveTextContent(cifra)
+    expect(resumen).toHaveTextContent(`sobre ${aislado.n} de ${PALANCAS.length} palancas`)
   })
 })

@@ -6,12 +6,11 @@
 // «KPIs: Calificación · Proyecto» que la barra pone a su inicio.
 import type { KpiValue } from '../../../../engine/kpis.ts'
 import { showPanel, useUi } from '../../../../views/layout/ui.ts'
-import { useShown } from '../../../../views/viewport/look.ts'
 import { PALANCAS, reglasDe } from '../../engine/calificacion/reglas.ts'
 import { BarraSuma, Puntos, conSigno, leer, texto } from './piezas.tsx'
 import { Segmented, type SegmentedOption } from '../../../../views/controls/Segmented.tsx'
 import { useJuegoKpis, type Juego } from './juegoKpis.ts'
-import { abrirPalanca, useCalificacion } from './useCalificacion.ts'
+import { abrirPalanca, useCalificacion, useEnVista } from './useCalificacion.ts'
 
 // las de la celda de GIM (views/stats/KpiStrip.tsx), para que la celda mida lo mismo
 const CELDA = 'min-w-0 px-panel-pad phone:w-[max(11rem,34%)] phone:shrink-0 phone:snap-start'
@@ -28,7 +27,7 @@ function abrirPestana(): void {
 
 export function CeldaCalificacion({ kpi, grande = false }: { kpi: KpiValue; grande?: boolean }) {
   const size = useUi((s) => s.kpiSize)
-  const provisional = reglasDe(useShown((s) => s.project)).provisional
+  const provisional = reglasDe(useEnVista().project).provisional
   const c = useCalificacion()
   const compact = size === 'compact'
   const r = kpi.value != null && Number.isFinite(kpi.value) ? kpi.value : null
