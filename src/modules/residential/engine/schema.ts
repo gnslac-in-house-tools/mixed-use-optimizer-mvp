@@ -40,6 +40,6 @@ export const ResidentialSchema = z.object({
   /** por id de edificio; un edificio sin los suyos usa los de `paramsDe` */
   edificios: z.record(Id, ParamsEdificioSchema),
   /** las reglas de la calificación por palancas; sin ellas rigen `REGLAS_INICIO` */
-  calificacion: CalificacionSchema.optional(),
+  calificacion: CalificacionSchema.optional().catch(undefined),
 })
 export type Residential = z.infer<typeof ResidentialSchema>

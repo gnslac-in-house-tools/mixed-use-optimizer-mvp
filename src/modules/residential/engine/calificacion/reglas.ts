@@ -17,8 +17,8 @@ export type Modo = 'higher' | 'lower' | 'vsMedianHigher' | 'vsMedianLower'
 export const MODO_ES: Record<Modo, string> = {
   higher: 'Mayor es mejor',
   lower: 'Menor es mejor',
-  vsMedianHigher: 'vs mediana · mayor mejor',
-  vsMedianLower: 'vs mediana · menor mejor',
+  vsMedianHigher: 'Sobre la mediana',
+  vsMedianLower: 'Bajo la mediana',
 }
 
 const PalancaSchema = z.enum(['m2_vendibles', 'precio_producto', 'velocidad_venta', 'costo_obra', 'plazo_riesgo'])

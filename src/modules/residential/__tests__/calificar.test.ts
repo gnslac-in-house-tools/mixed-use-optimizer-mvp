@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ProjectSchema } from '../../../model/schema.ts'
 import { newProject } from '../../../typologies/index.ts'
 import { calificar } from '../engine/calificacion/calificar.ts'
-import { CalificacionSchema, REGLAS_INICIO, reglasDe, validarVariable, type Reglas, type Variable } from '../engine/calificacion/reglas.ts'
+import { CalificacionSchema, MODO_ES, REGLAS_INICIO, reglasDe, validarVariable, type Reglas, type Variable } from '../engine/calificacion/reglas.ts'
 
 const traza = (r: ReturnType<typeof calificar>, id: string) => r.palancas.flatMap((p) => p.trazas).find((t) => t.variable.id === id)!
 const palanca = (r: ReturnType<typeof calificar>, p: string) => r.palancas.find((x) => x.palanca === p)!
@@ -32,6 +32,11 @@ describe('calificar · mediana', () => {
     expect(t.rating).toBe(1)
     expect(t.mediana).toBe(1820)
     expect(t.porque).toBe('+2.2% vs mediana 1,820')
+  })
+  it('si las otras opciones no tienen dato tampoco hay referencia', () => {
+    const t = traza(calificar(REGLAS_INICIO, d(1860), [{ ingreso: null, m2_vendibles: 1 }]), 'precio_m2')
+    expect(t.rating).toBeNull()
+    expect(t.porque).toBe('sin referencia: una sola opción')
   })
   it('sin otras opciones no hay referencia', () => {
     const t = traza(calificar(REGLAS_INICIO, d(1860), []), 'precio_m2')
@@ -86,6 +91,19 @@ describe('esquema', () => {
   it('un proyecto con residential sin calificación pasa', () => {
     const p = { ...newProject('mixed-use'), residential: { usos: {}, tipos: [], edificios: {} } }
     expect(ProjectSchema.parse(p).residential).toBeTruthy()
+  })
+})
+
+describe('esquema · robustez', () => {
+  it('una calificación mal guardada se descarta y rigen las reglas de inicio', () => {
+    const v = REGLAS_INICIO.variables[0]
+    const mala = { ...REGLAS_INICIO, variables: [{ ...v, steps: [1, 2, 3] }] }
+    const r = ProjectSchema.safeParse({ ...newProject('mixed-use'), residential: { usos: {}, tipos: [], edificios: {}, calificacion: mala } })
+    expect(r.success).toBe(true)
+    if (r.success) expect(reglasDe(r.data)).toBe(REGLAS_INICIO)
+  })
+  it('MODO_ES', () => {
+    expect(MODO_ES).toEqual({ higher: 'Mayor es mejor', lower: 'Menor es mejor', vsMedianHigher: 'Sobre la mediana', vsMedianLower: 'Bajo la mediana' })
   })
 })
 

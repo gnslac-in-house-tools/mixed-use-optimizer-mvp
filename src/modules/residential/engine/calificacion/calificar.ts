@@ -58,6 +58,7 @@ export function calificar(reglas: Reglas, enUso: Datos, otras: Datos[]): Calific
     }
     if (!otras.length) return { variable: v, valor: x, rating: null, porque: 'sin referencia: una sola opción' }
     const vals = [enUso, ...otras].map((d) => evaluarFormula(v.formula, d)).filter((q): q is { v: number } => 'v' in q && q.v !== null).map((q) => q.v)
+    if (vals.length < 2) return { variable: v, valor: x, rating: null, porque: 'sin referencia: una sola opción' }
     const med = mediana(vals)
     if (!med) return { variable: v, valor: x, rating: null, porque: 'sin referencia' }
     const rel = x / med - 1
