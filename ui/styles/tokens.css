@@ -1,0 +1,161 @@
+/*
+ * Design tokens — adapted from the Plaza-Practiko Testfit tool.
+ * macOS pro-app style: Apple system greys, no accent colour.
+ *
+ * Rule: informational colour belongs to the project data (program colours,
+ * metric status). The interface itself is graphite, white and greys, the
+ * optimizer's buttons too (Decision "No accent").
+ *
+ * Light and dark (Decision "Dark mode"): every colour is a `light-dark(light, dark)` pair; `color-scheme` picks one.
+ * With no choice the system's scheme applies; the View menu or the ☾ sets `data-theme` on <html>
+ * (views/layout/theme.ts). The dark side is Apple's dark system greys, the same family as the light side. Program
+ * colours are project data and stay as they are in both.
+ */
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root {
+  /* ---- Surfaces ---- */
+  --canvas: light-dark(#f5f5f7, #1c1c1e);
+  --panel: light-dark(#ffffff, #2c2c2e);
+  --panel-sunken: light-dark(#fafafa, #242426);
+  --fill: light-dark(#e8e8ed, #3a3a3c);
+
+  /* ---- Ink ---- */
+  --ink: light-dark(#1d1d1f, #f5f5f7); /* 15.5:1 on canvas; dark 16.0:1 */
+  --ink-secondary: light-dark(#6e6e73, #aeaeb2); /* 4.66:1 on canvas; dark 7.9:1 */
+  --ink-tertiary: light-dark(#86868b, #8e8e93); /* decoration and disabled only, never readable text */
+  --ink-segment: light-dark(#636366, #aeaeb2); /* inactive segment on --fill: 4.90:1; dark 5.6:1 */
+  --ink-on-glass: light-dark(#515154, #c7c7cc); /* secondary text on glass: >= 5.77:1 over every program colour */
+  --on-ink: light-dark(#ffffff, #1d1d1f);
+  --separator: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
+  --hover: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.08));
+
+  /* ---- Glass: only for what floats over the viewport ---- */
+  --glass-bg: light-dark(rgba(255, 255, 255, 0.8), rgba(44, 44, 46, 0.78));
+  --glass-bg-solid: light-dark(rgba(255, 255, 255, 0.96), rgba(44, 44, 46, 0.96)); /* no backdrop-filter support */
+  --glass-filter: saturate(180%) blur(20px);
+  --glass-border: light-dark(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.08));
+
+  /* ---- Focus ---- */
+  --focus-ring: light-dark(#1d1d1f, #f5f5f7);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* ---- Status (metrics vs. limits) ---- */
+  --context-fill: light-dark(#dcdce0, #48484a); /* a context building's masses on the plan: neutral, whatever their program */
+  --context-stroke: #8e8e93;
+  /* the exterior circulation on the plan (Decision "Exterior circulation"; Practiko's circulation colours) */
+  --road: light-dark(#c7c7cc, #545458); /* a road drawn by hand (Practiko's aisle) */
+  --road-axis: light-dark(#86868b, #8e8e93); /* a road's centreline */
+  --road-lane: light-dark(#f5f5f7, #98989d); /* the line between two lanes of a road (Phase PE.2): a pavement marking, lighter than the paving */
+  --court: light-dark(#e8e8ed, #3a3a3c); /* a truck court */
+  --street: light-dark(#dcd9d0, #4a4740); /* the public street outside the site, an existing road (Practiko's sidewalk) */
+  --stall: light-dark(#ffffff, #2c2c2e); /* a car stall: the panel's colour on the road */
+  /* the structural grid on the plan (Phase G, Decision "Grid layout"): a drafting blue, as column lines are drawn */
+  --grid-line: light-dark(#5a7fb5, #7ea6dc); /* a bay line, its bubble, a building's end-bay line */
+  --grid-module: light-dark(rgba(90, 127, 181, 0.22), rgba(126, 166, 220, 0.24)); /* a module line between bay lines */
+  --guide: light-dark(#4f8a96, #86b9c4); /* a reference line (Phase AS.5): a thin dashed guide, quiet beside the grid's blue and the snap's pink */
+  --snap: light-dark(#c2185b, #ff5fa2); /* what the pointer snapped to: its sign, its guides (Decision "Snap first to what is drawn") */
+  --status-over: light-dark(#b3261e, #ff6961);
+  --status-within: light-dark(#1e7b34, #30d158);
+  --status-within-soft: light-dark(#e8f3eb, #1f3324); /* a "no issues" chip's ground (Home) */
+  /* Home's accents (Decision "Home"): earth for the sample, its tour and warnings, as the ground's cut; the grid's blue
+     for a picked row and the optimizer */
+  --earth: light-dark(#b0612b, #e0a06a);
+  --earth-soft: light-dark(#f6efe7, #3a2f25);
+  --earth-dot: light-dark(#e0a06a, #c98a55); /* the ground's profile and an issue's dot */
+  --grid-soft: light-dark(#ebf0f7, #26303d);
+  /* the ground's slope on the plan (Show's Terrain: Slope; modules/terrain/views/terrainDraw.ts SLOPE_CLASSES): flat and
+     green to steep and red, a sequence that also reads by lightness; drawn at 0.6 over the site's paper */
+  --slope-1: light-dark(#d9eed3, #23402a); /* 0–2 %: flat, builds as it is */
+  --slope-2: light-dark(#b5dca5, #2f5a32); /* 2–5 % */
+  --slope-3: light-dark(#f1dd8a, #6a5a1f); /* 5–10 %: platforms */
+  --slope-4: light-dark(#f0a868, #7a4a1c); /* 10–15 % */
+  --slope-5: light-dark(#d9604f, #8c2f26); /* over 15 %: steep */
+  /* the platforms' earthwork on the plan (Show's Terrain: Cut & fill; terrainDraw.ts EARTH_CLASSES): cut warm, fill
+     cool, deeper darker; drawn at 0.7 over the site's paper */
+  --cut-1: light-dark(#f2d6b8, #4f3822); /* 0.25–1 m */
+  --cut-2: light-dark(#e0a06a, #7d4f27); /* 1–3 m */
+  --cut-3: light-dark(#b0612b, #b36a30); /* over 3 m */
+  --fill-1: light-dark(#d2e2f3, #233a52); /* 0.25–1 m */
+  --fill-2: light-dark(#8db4df, #315a86); /* 1–3 m */
+  --fill-3: light-dark(#4a78b0, #4a7fbd); /* over 3 m */
+
+  /* ---- 3D scene: three.js reads these at runtime (views/scene/colors.ts), it does not understand var() ---- */
+  --scene-bg: light-dark(#fafafa, #242426); /* the viewport behind the model, as --panel-sunken */
+  --scene-edge: #ffffff; /* white edges on volumes, at 35 % */
+  --scene-outline: light-dark(#1d1d1f, #f5f5f7); /* selected: the core of the double outline, as --ink */
+  --scene-halo: light-dark(#ffffff, #1c1c1e); /* selected: the halo under the core, as --canvas */
+  --scene-no-program: light-dark(#e9e9e7, #48484a); /* a mass without a program */
+  --scene-context: light-dark(#c7c7cc, #545458); /* a context building's masses (Decision "Buildings layout") */
+  --scene-site: light-dark(#6e6e73, #aeaeb2); /* the site boundary on the ground */
+  --scene-grid-cell: light-dark(#d8d8dc, #3a3a3c);
+  --scene-grid-section: light-dark(#c7c7cc, #48484a);
+  --scene-terrain: light-dark(#e4e2dc, #3c3b38); /* the ground's surface (Show's Terrain), a warm grey as the street */
+  --scene-contour: light-dark(#a8a59c, #6a6862); /* a major contour on the ground's surface */
+  --scene-sky: #ffffff; /* hemisphere light, from above: the same light, so programs read the same */
+  --scene-ground-light: #d9d9d9; /* hemisphere light, from below */
+
+  /* ---- State graph (dev tool): one colour per kind of flow ---- */
+  --flow-call: light-dark(#0a64d6, #409cff); /* a view called the store; the verb that ran */
+  --flow-engine: light-dark(#7d3bd8, #b38aff); /* the engine ran (or was loaded by what ran) */
+  --flow-data: light-dark(#12805c, #34c79a); /* new data reached the views that read it */
+  --flow-reject: light-dark(#b3261e, #ff6961); /* the geometry rejected the edit */
+
+  /* ---- Radius ---- */
+  --radius-panel: 1.125rem;
+  --radius-glass: 0.875rem;
+  --radius-segment: 0.5625rem;
+  --radius-segment-pill: 0.4375rem;
+  --radius-control: 0.5rem;
+  --radius-pill: 999px;
+
+  /* ---- Depth ---- */
+  /* dark: a light hairline instead of a dark one, and deeper shadows, so a panel still lifts off the canvas */
+  --shadow-panel: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.06)), 0 8px 28px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.5));
+  --shadow-glass: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.06)), 0 4px 16px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
+  --shadow-control: 0 1px 2px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.5)), 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.08));
+  --shadow-sheet: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 24px 64px light-dark(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.6));
+
+  /* ---- Space (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --gutter: clamp(1rem, 0.5rem + 0.625vw, 1.5rem);
+  --panel-pad: 1rem;
+  --side-panel-w: clamp(18rem, 14rem + 6vw, 22rem); /* each side panel: Layers and properties (left), Summary (right) */
+  --side-rail-w: 2.75rem; /* the Summary's vertical rail of tab icons, added to its width */
+  --tool-strip-w: 2.75rem; /* the Tools strip, one column of icon buttons (two columns: twice this) */
+  --row-h: 1.75rem;
+
+  /* ---- Type: fluid from a 1280px laptop to a 2560px monitor ---- */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-title: clamp(1.375rem, 1rem + 0.46875vw, 1.75rem);
+  --text-headline: clamp(0.9375rem, 0.8125rem + 0.15625vw, 1.0625rem);
+  --text-body: clamp(0.8125rem, 0.6875rem + 0.15625vw, 0.9375rem);
+  --text-label: clamp(0.75rem, 0.6875rem + 0.078125vw, 0.8125rem);
+  --text-caption: clamp(0.6875rem, 0.625rem + 0.078125vw, 0.75rem);
+
+  /* ---- Motion ---- */
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-sheet: 350ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}

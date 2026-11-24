@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base look built on tokens.css, which main.tsx imports first. */
+
+@layer base {
+  html {
+    /* The whole UI is sized in rem: 80% makes the default view equal to the browser at 80% zoom. */
+    font-size: 80%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  button {
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+@layer components {
+  /* Opaque paper on the canvas: a hairline and a wide, faint shadow. */
+  .panel {
+    background: var(--panel);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
+  }
+
+  /* Translucent material, only for what floats over the viewport (ported from Plaza-Practiko). */
+  .glass {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-glass);
+    box-shadow: var(--shadow-glass);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: var(--glass-bg-solid);
+    }
+  }
+
+  /* A button that answers the press: it shrinks a little. */
+  .pressable {
+    transition:
+      transform var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .pressable:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* A row that slides with the finger, without a visible scrollbar (the KPI strip on a phone). */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The app's height. On a phone 100vh sits under the browser bar; dvh is the visible height. */
+  .h-app {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  /* Sheets slide in from their side on the iOS sheet curve; on a phone they come up from below. */
+  .sheet-in {
+    animation: sheet-in var(--dur-sheet) var(--ease-sheet);
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+  }
+
+  /* The left panel's sheet (Layers and properties) comes in from the left. */
+  .sheet-in-left {
+    animation: sheet-in-left var(--dur-sheet) var(--ease-sheet);
+  }
+
+  @keyframes sheet-in-left {
+    from {
+      transform: translateX(-24px);
+      opacity: 0;
+    }
+  }
+
+  /* Alt+drag copies (Decision "Alt+drag copies"): the plus cursor over everything while it lasts. */
+  .copying,
+  .copying * {
+    cursor: copy !important;
+  }
+
+  /* Notices come up from below. */
+  .sheet-up {
+    animation: sheet-up var(--dur-sheet) var(--ease-sheet);
+  }
+
+  @keyframes sheet-up {
+    from {
+      transform: translateY(32px);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 767.98px), (max-height: 519.98px) {
+    .sheet-bottom {
+      animation-name: sheet-up;
+    }
+  }
+}
