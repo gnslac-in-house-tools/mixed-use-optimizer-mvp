@@ -27,12 +27,14 @@ await espera(1500)
 await foto('01-proyecto-nuevo')
 
 // el cursor arriba a la derecha del centro: el rectángulo tecleado va hacia ese cuadrante
-const plan = await page.locator('[data-capture]').first().boundingBox()
-const cx = plan.x + plan.width / 2, cy = plan.y + plan.height / 2
+// el centro del plano (la zona que la herramienta captura, una vez tomada)
+let cx = 780, cy = 540
 async function dibuja(punto, medida) {
   await page.mouse.move(cx, cy)
   await page.keyboard.press('b')
-  await espera(200)
+  await espera(300)
+  const plan = await page.locator('[data-capture]').first().boundingBox()
+  if (plan) { cx = plan.x + plan.width / 2; cy = plan.y + plan.height / 2 }
   await page.mouse.move(cx + 200, cy - 150)
   await page.keyboard.type(punto)
   await page.keyboard.press('Enter')
@@ -42,6 +44,15 @@ async function dibuja(punto, medida) {
   await espera(800)
 }
 await dibuja('0,0', '32.4x16.2')
+// la torre de 30 m: la masa queda elegida; su Height en Properties
+await page.getByText('Properties', { exact: true }).first().click()
+await espera(500)
+const alto = page.getByLabel(/^Height/).first()
+console.log('campo Height:', await alto.count())
+await alto.fill('30')
+await alto.press('Enter')
+await espera(1500)
+await page.getByText('Layers', { exact: true }).first().click()
 // el programa del siguiente trazo: Núcleo
 await page.keyboard.press('Escape')
 const opciones = page.getByRole('button', { name: 'Massing options' })
@@ -55,7 +66,6 @@ await page.keyboard.press('Escape')
 await page.keyboard.press('Escape')
 await espera(1500)
 // encuadra
-await page.keyboard.press('f').catch(() => {})
 await espera(800)
 await foto('02-planta-unidades-columnas')
 
@@ -65,7 +75,7 @@ const estado = await page.evaluate(() => ({
   kpis: document.body.innerText.match(/(Área construida|Área vendible|Departamentos|Cajones requeridos|Margen)[^\n]*\n?[^\n]*/g)?.slice(0, 10) ?? [],
 }))
 
-await page.getByRole('button', { name: '3D', exact: true }).first().click().catch(() => {})
+await page.getByText('3D', { exact: true }).filter({ visible: true }).last().click()
 await espera(3000)
 await foto('03-3d')
 

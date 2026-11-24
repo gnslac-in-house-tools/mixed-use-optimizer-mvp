@@ -8,7 +8,7 @@ que viene de GIM se queda en inglés; lo nuevo se escribe en español.
 
 | # | Pieza | Estado |
 |---|---|---|
-| 1 | GIM como base, con la tipología «Uso mixto»: masa, retícula de 8.1 m en módulos de 2.7 m, niveles, plantas tipo y departamentos con los muros sobre la retícula, columnas y KPIs | En curso |
+| 1 | GIM como base, con la tipología «Uso mixto»: masa, retícula de 8.1 m en módulos de 2.7 m, niveles, plantas tipo y departamentos con los muros sobre la retícula, columnas y KPIs | Hecha |
 | 2 | Sótanos de estacionamiento con el motor de cajones de Praktico, regidos por la misma retícula | Pendiente |
 | 3 | Blocks habitacionales: catálogo de departamentos con editor (recintos, puertas, ventanas, pasillos y cotas fijas o movibles) | Pendiente |
 | 4 | El reconfigurador de plantas, que estira los blocks respetando lo fijo | Pendiente |
@@ -20,12 +20,37 @@ npm install
 npm run dev        # http://localhost:5180
 ```
 
+## Un proyecto de uso mixto
+
+1. En el Home, **New project** → *Project types* **Uso mixto** → **Create project**. Trae los programas Vivienda
+   (entrepiso 3.0 m), Comercio (4.5 m) y Núcleo, la retícula de 8.1 × 8.1 m en 3 módulos de 2.7 m y los cinco KPIs.
+2. Dibuja con **B** (o Dibujar): un arrastre, o las cotas tecleadas (`0,0` Enter y luego `32.4x16.2` Enter). En Uso
+   mixto cada trazo es una masa libre del edificio del nivel elegido, así que la torre, su podio y su núcleo quedan
+   juntos. El programa del siguiente trazo se elige en el ▾ del grupo Massing.
+3. La altura de la masa (Properties › Height) da los niveles: `floor(altura / entrepiso)` por masa. Un podio de
+   Comercio se dibuja en L1 y la torre en un nivel encima.
+4. Por edificio, el módulo residencial corre GFit y muestra:
+   - **en planta**, la planta tipo de las masas del nivel elegido, con las unidades por tipo (estudio, 1, 2 y 3 rec.)
+     y sus muros entre departamentos sobre los módulos de 2.7 m, el pasillo, el núcleo y las columnas de 0.5 m en cada
+     cruce de crujía;
+   - **en 3D**, una losa por nivel derivado y las columnas en toda la altura;
+   - **en el Resumen**, la sección «Uso mixto»: niveles por uso, unidades por tipo, la mezcla real contra la objetivo,
+     el cálculo (área, vendible, cajones, ingreso, costo, margen) y los avisos;
+   - **en la barra de KPIs**, Área construida, Área vendible, Departamentos, Cajones requeridos y Margen.
+5. Las Properties del edificio llevan el fondo de unidad, el ancho de pasillo, la mezcla objetivo y la semilla.
+
+Recorrido en el navegador (con `npm run dev` arriba): `node scripts/recorrido.mjs`. Deja capturas en `evidence/pieza-1/`.
+
 ## Verificar
 
 ```powershell
 npm run typecheck
 npm test
 ```
+
+Al cerrar la pieza 1: `tsc -b` limpio y 5734 tests en 493 archivos (GIM, los 155 de GFit con los 5 del parche de
+módulos, los 5 del catálogo y 32 del módulo residencial). En esta máquina, con la suite completa en paralelo, algún test
+de interfaz de GIM puede pasar de su límite de 5 s; solo, pasa.
 
 ## Estructura
 
