@@ -83,13 +83,26 @@ export function tRampa(contorno: Shape, boca: number, largo: number, calles: Pt[
     const dan = todas.filter((i) => lados[i] >= largo + boca - 1e-6)
     const dist = (i: number) => distanciaACalle(mayor[i], mayor[(i + 1) % mayor.length], calles)
     // la más cercana; si empatan, la más larga
-    k = (dan.length ? dan : todas).reduce((a, b) => { const d = dist(b) - dist(a); return d < -0.01 || (Math.abs(d) <= 0.01 && lados[b] > lados[a]) ? b : a })
+    // la más cercana; entre las que le quedan a 1 cm, la más larga
+    const pool = dan.length ? dan : todas
+    const min = Math.min(...pool.map(dist))
+    k = pool.filter((i) => dist(i) <= min + 0.01).reduce((a, b) => (lados[b] > lados[a] ? b : a))
   }
   const antes = lados.slice(0, k).reduce((s, l) => s + l, 0)
   const L = lados[k]
   // centrado; el motor corre la rampa hacia el lado con más largo libre, así que el punto no pasa de la mitad
   const s = Math.min(Math.max(0, (L - largo) / 2), L / 2)
   return { t: (antes + s) / total, cabe: L >= largo + 2 * boca - 1e-6, lado: L, sinCalle }
+}
+
+/** La boca que sigue al extremo alto de la rampa (sus vértices más altos), o null sin bocas. */
+export function bocaAltaDe(huella: Ring, alto: number[], bocas: Ring[]): Ring | null {
+  if (!bocas.length) return null
+  const tope = Math.max(...alto)
+  const arriba = huella.filter((_, i) => alto[i] >= tope - 1e-6)
+  const centro = (r: Ring): Pt => [r.reduce((s, q) => s + q[0], 0) / r.length, r.reduce((s, q) => s + q[1], 0) / r.length]
+  const cerca = (r: Ring) => { const c = centro(r); return Math.min(...arriba.map((q) => Math.hypot(c[0] - q[0], c[1] - q[1]))) }
+  return bocas.reduce((a, b) => (cerca(b) < cerca(a) ? b : a))
 }
 
 /** La distancia del punto medio de `ab` a la calle más cercana (polilíneas de su eje). */
@@ -162,7 +175,7 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
   const firma = JSON.stringify([
     buildingId,
     [...solidos, ...nucleos].map((m) => [m.id, usoDe(m), m.polygon, m.holes, m.span]),
-    g, usos, params, p.residential!.tipos, norma, p.site.existingRoads ?? [],
+    g, usos, params, p.residential!.tipos, norma, (p.site.existingRoads ?? []).map((r) => r.points),
   ])
   if (memo.has(firma)) return memo.get(firma)!
   const d = calcular(solidos, nucleos, usoDe, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId, norma)
@@ -232,18 +245,16 @@ function calcular(
       porSotano = lay.count
       // sin largo para las dos bocas, la rampa va entera y sus bocas (zona de maniobra) se recortan al sótano
       const [rp, ...bocas] = lay.ramps ?? []
-      const recorta = (b: Ring): Ring[] => (donde.cabe ? [b] : intersection([b], bas.shape))
-      const rampas = rp ? [rp, ...bocas.flatMap(recorta)] : []
+      // cada boca recortada una vez, para que `rampa.bocaAlta` sean los mismos anillos que `rampas`
+      const recortadas = bocas.map((b): Ring[] => (donde.cabe ? [b] : intersection([b], bas.shape)))
+      const rampas = rp ? [rp, ...recortadas.flat()] : []
       if (rp && !donde.cabe) avisoRampa = `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en su lado del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas`
       // el extremo que sube y la boca que lo sigue: por ahí sale el auto al nivel de arriba (en el S1, a la calle)
       const alto = lay.rampsHigh?.[0]
       let rampa: Estacionamiento['plano']['rampa'] = null
       if (rp && alto && alto.length === rp.length) {
-        const arriba = rp.filter((_, i) => alto[i] === 1)
-        const centro = (r: Ring): Pt => [r.reduce((s, q) => s + q[0], 0) / r.length, r.reduce((s, q) => s + q[1], 0) / r.length]
-        const cerca = (r: Ring) => Math.min(...arriba.map((q) => Math.hypot(centro(r)[0] - q[0], centro(r)[1] - q[1])))
-        const boca = bocas.length ? bocas.reduce((a, b) => (cerca(b) < cerca(a) ? b : a)) : null
-        rampa = { huella: rp, alto, bocaAlta: boca ? recorta(boca) : [] }
+        const boca = bocaAltaDe(rp, alto, bocas)
+        rampa = { huella: rp, alto, bocaAlta: boca ? recortadas[bocas.indexOf(boca)] : [] }
       }
       plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, rampa, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
     }

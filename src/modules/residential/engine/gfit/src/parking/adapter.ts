@@ -83,11 +83,11 @@ export function layoutBasement(outline: Shape, cores: Shape, o: { angle: 90 | 60
   return { ...(compare.circuit >= compare.grid * AUTO_CIRCUIT_MIN ? out(c, 'circuit', one) : out(g, 'grid', one)), compare }
 }
 
-/** each vertex's height over the ramp's rise (0 low end, 1 high end) */
-function highOf(rp: { puntos: { z: number }[] }): number[] {
-  const zs = rp.puntos.map((q) => Math.abs(q.z))
-  const top = Math.max(0, ...zs)
-  return zs.map((z) => (top > 0 ? Math.round((z / top) * 1000) / 1000 : 0))
+/** each vertex's height over the ramp's rise (0 low end, 1 high end); a ramp going down has its high end at z = 0 */
+export function highOf(rp: { puntos: { z: number }[] }): number[] {
+  const zs = rp.puntos.map((q) => q.z)
+  const lo = Math.min(...zs), rise = Math.max(...zs) - lo
+  return zs.map((z) => (rise > 0 ? Math.round(((z - lo) / rise) * 1000) / 1000 : 0))
 }
 
 function out(r: ResultadoCajones, used: 'grid' | 'circuit', one: boolean): BasementLayout {

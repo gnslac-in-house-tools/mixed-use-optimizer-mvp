@@ -12,7 +12,7 @@ import type { Shape } from '../engine/gfit/src/model/geom.ts'
 import { solidosDe, useDerivados } from './useDerivado.ts'
 import { usePiso } from './piso.ts'
 import { seeThrough, useDetail } from '../../../views/detail.ts'
-import { detalleSotano, rampas3d } from './sotano3d.ts'
+import { detalleSotano, rampas3d, rampasPlanas } from './sotano3d.ts'
 import type { PlanCatalogo } from '../engine/catalogo.ts'
 import { interiorDe } from '../engine/pieza4.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
@@ -95,7 +95,7 @@ export function Residencial3d() {
       const z0s = d.niveles.length ? Math.min(...d.niveles.map((l) => l.z)) : 0
       if (piso === 'sotano') {
         // el sótano elegido, con el detalle de Praktico (el primero; los demás, su losa)
-        for (const x of detalleSotano(e.plano, z0s - 3.3, muebles)) out.push({ ...x, key: `${buildingId}-${x.key}` })
+        for (const x of detalleSotano(e.plano, z0s - 3.3, muebles, e.sotanos)) out.push({ ...x, key: `${buildingId}-${x.key}` })
         for (let k = 1; k < e.sotanos; k++) piezas(e.plano.contorno).forEach((pz, j) => out.push({ key: `${buildingId}-sl${k}-${j}`, geometry: extrude(pz.outer, z0s - 3.3 * (k + 1) - 0.15, 0.15, pz.holes), color: SOTANO }))
       } else {
         for (let k = 0; k < e.sotanos; k++) {
@@ -106,7 +106,7 @@ export function Residencial3d() {
         // una rampa inclinada por sótano (la del S1 sale a la calle), las bocas del primero y los núcleos dibujados
         // bajando hasta el último
         for (const x of rampas3d(e.plano, z0s, e.sotanos)) out.push({ ...x, key: `${buildingId}-${x.key}` })
-        if (piso !== 'sotano') e.plano.rampas.forEach((r, j) => { if (r !== e.plano.rampa?.huella) out.push({ key: `${buildingId}-rp${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.02, 0.06), color: RAMPA }) })
+        if (piso !== 'sotano') rampasPlanas(e.plano, e.sotanos).forEach((r, j) => out.push({ key: `${buildingId}-rp${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), z0s - 3.3 + 0.02, 0.06), color: RAMPA }))
         const fondo = z0s - 3.3 * e.sotanos
         e.plano.nucleos.forEach((r, j) => out.push({ key: `${buildingId}-ns${j}`, geometry: extrude(r.map(([x, y]) => ({ x, y })), fondo, z0s - fondo), color: NUCLEO }))
       }

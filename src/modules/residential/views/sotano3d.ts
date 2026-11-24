@@ -31,6 +31,15 @@ function eje(r: Ring): { c: [number, number]; a: number } {
   return { c: [r.reduce((s, q) => s + q[0], 0) / r.length, r.reduce((s, q) => s + q[1], 0) / r.length], a }
 }
 
+/**
+ * Lo que de la rampa va plano en el piso del S1: sus bocas. La rampa misma va inclinada (rampas3d), y con un solo
+ * sótano la boca alta no se dibuja en el S1: ahí llegaría una rampa de un sótano de abajo que no hay.
+ */
+export function rampasPlanas(plano: Pick<Estacionamiento['plano'], 'rampas' | 'rampa'>, sotanos: number): Ring[] {
+  const rp = plano.rampa
+  return plano.rampas.filter((r) => r !== rp?.huella && !(sotanos < 2 && rp?.bocaAlta.includes(r)))
+}
+
 /** m: entrepiso de sótano y grueso de la losa de la rampa */
 const ENTREPISO = 3.3, GRUESO = 0.06
 
@@ -62,7 +71,7 @@ export function rampas3d(plano: Estacionamiento['plano'], z0s: number, sotanos: 
   return out
 }
 
-export function detalleSotano(plano: Estacionamiento['plano'], z: number, autos: boolean): { key: string; geometry: THREE.BufferGeometry; color: string }[] {
+export function detalleSotano(plano: Estacionamiento['plano'], z: number, autos: boolean, sotanos = 2): { key: string; geometry: THREE.BufferGeometry; color: string }[] {
   const grupos = new Map<string, THREE.BufferGeometry[]>()
   const add = (color: string, g: THREE.BufferGeometry) => grupos.set(color, [...(grupos.get(color) ?? []), g])
   for (const r of plano.contorno) if (r.length >= 3) add(LOSA, extrude(pts(r), z - 0.15, 0.15))
@@ -70,7 +79,7 @@ export function detalleSotano(plano: Estacionamiento['plano'], z: number, autos:
   for (const r of plano.cajones) for (let i = 0; i < r.length; i++) add(RAYA, extrude(tira(r[i], r[(i + 1) % r.length], 0.1), z + 0.012, 0.006))
   for (const r of plano.flechas) add(RAYA, extrude(pts(r), z + 0.012, 0.006))
   // las bocas, planas; la rampa misma va inclinada (rampas3d)
-  for (const r of plano.rampas) if (r !== plano.rampa?.huella) add(RAMPA, extrude(pts(r), z, 0.05))
+  for (const r of rampasPlanas(plano, sotanos)) add(RAMPA, extrude(pts(r), z, 0.05))
   if (autos) {
     plano.cajones.forEach((r, i) => {
       const { c, a } = eje(r)

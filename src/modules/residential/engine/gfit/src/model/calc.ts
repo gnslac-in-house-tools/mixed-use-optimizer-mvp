@@ -1,6 +1,6 @@
 // The calculator (spec §6.4): units, stalls by program, areas, revenue, cost and zoning, per building and option.
 import type { GeomObj, Ring } from '../host/protocol.ts'
-import { area, difference, union } from './geom.ts'
+import { area, difference, intersection, union } from './geom.ts'
 import type { Shape } from './geom.ts'
 import { massBuilding, parkingOutline } from './massing.ts'
 import type { Massed, MassLevel } from './massing.ts'
@@ -91,13 +91,14 @@ export interface ModelCtx {
   plantaBaja?: Map<string, Shape>
 }
 
-/** mixed-use-mvp patch: the street-level obstacles joined to the cores of every level num 1 (net and sell again). */
-function conPlantaBaja(m: Massed, obst: Shape | undefined, progs: State['progs']): Massed {
+/** mixed-use-mvp patch: the street-level obstacles joined to the cores of every level num 1. The net loses only the
+ *  obstacle's area on the plate outside the cores, so what massing already took off (a lobby, an automatic core) stays. */
+export function conPlantaBaja(m: Massed, obst: Shape | undefined, progs: State['progs']): Massed {
   if (!m.ok || !obst?.length) return m
   const levels = m.levels.map((l) => {
     if (l.num !== 1) return l
     const cores = union([l.cores, obst])
-    const net = l.lobby ? 0 : Math.max(0, area(difference(l.shape, cores)))
+    const net = l.lobby ? 0 : Math.max(0, l.net - area(difference(intersection(l.shape, obst), l.cores)))
     const eff = progs.find((q) => q.id === l.prog)?.eff ?? 100
     return { ...l, cores, net, sell: (net * eff) / 100 }
   })
