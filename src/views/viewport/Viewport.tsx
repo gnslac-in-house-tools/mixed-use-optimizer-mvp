@@ -22,6 +22,7 @@ import { useLooking } from './look.ts'
 import { LookBar } from './LookBar.tsx'
 import { HeightsBar } from '../../modules/terrain/views/HeightsLayer.tsx'
 import { BarraPisos } from '../../modules/residential/views/BarraPisos.tsx'
+import { PushPullLabel } from './PushPullLabel.tsx' // mixed-use-mvp
 import { ImportBar } from '../plan/site/ImportBar.tsx'
 import { useSiteImport } from '../plan/site/importState.ts'
 import { SurveyWindow } from '../plan/site/SurveyWindow.tsx'
@@ -119,6 +120,7 @@ export function Viewport() {
       <HeightsBar />
       {/* mixed-use-mvp: la barra de pisos de uso mixto (abajo a la izquierda; nada fuera de Uso mixto) */}
       {!looking && <BarraPisos />}
+      <PushPullLabel />
       <SurveyWindow />
 
       {/* top right: the levels rail; below 880 px the selection's card stands to its left (on a phone, at the bottom) */}

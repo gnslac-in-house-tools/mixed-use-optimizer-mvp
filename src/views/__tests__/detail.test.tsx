@@ -34,7 +34,9 @@ it('opens on Presentation, not remembered; Schematic: masses and roads; Ghosted:
   render(<App />)
   const kpis = s().derived.metrics
   const fill = () => Number(plan().querySelector('[data-mass="m1"]')!.getAttribute('fill-opacity'))
-  expect(DEFAULT_DETAIL).toBe('presentation')
+  // mixed-use-mvp: the app opens on Ghosted (the user); the rest of this test starts from Presentation
+  expect(DEFAULT_DETAIL).toBe('ghosted')
+  act(() => useDetail.getState().setDetail('presentation'))
   const all = () => [has('[data-layer="courts"]'), has('[data-layer="docks"]'), has('[data-label]'), has('[data-hatch]')]
   expect(all()).toEqual([true, true, true, true])
   const solid = fill()

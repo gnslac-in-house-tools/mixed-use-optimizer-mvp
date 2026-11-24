@@ -164,6 +164,13 @@ describe('derivar', () => {
     for (const c of e.plano.cajones) expect(area(intersection(toShape([c]), rampa))).toBeLessThan(0.01)
   })
 
+  it('(l3) el sótano trae una flecha de sentido por pasillo', () => {
+    const e = derivar(caso(), 'b1')!.estacionamiento
+    expect(e.plano.pasillos.length).toBeGreaterThan(0)
+    expect(e.plano.flechas.length).toBeGreaterThan(0)
+    expect(e.plano.flechas.length).toBeLessThanOrEqual(e.plano.pasillos.length * 2)
+  })
+
   it('(m) los sótanos fijados en el edificio mandan', () => {
     const p = caso()
     const q: Project = { ...p, residential: { ...p.residential!, edificios: { b1: { fondo: 8.1, pasillo: 1.8, mezcla: { studio: 30, br1: 45, br2: 25 }, semilla: 1, sotanos: 1 } } } }

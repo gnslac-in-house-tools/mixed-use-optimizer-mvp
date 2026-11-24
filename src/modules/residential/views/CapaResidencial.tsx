@@ -11,7 +11,11 @@ import { columnas, LADO_COLUMNA } from '../engine/columnas.ts'
 import type { Shape } from '../engine/gfit/src/model/geom.ts'
 import { solidosDe, useDerivado } from './useDerivado.ts'
 import { usePiso } from './piso.ts'
-import { ROOM_FILL, nombreRecinto } from '../engine/catalogo.ts'
+import './unidad.css'
+import { ROOM_FILL, nombreRecinto, type PlanCatalogo } from '../engine/catalogo.ts'
+import { interiorDe } from '../engine/pieza4.ts'
+import { useInteriors } from '../../../views/show/interiors.ts'
+import { MuebleSvg } from './PlanMini.tsx'
 
 const PASILLO = '#ECEAE5'
 const NUCLEO = '#8C8C8C'
@@ -31,7 +35,8 @@ export function CapaResidencial() {
   const building = buildingOfLevel(project, level)
   const d = useDerivado(building?.id)
   const piso = usePiso((s) => s.piso)
-  const interiores = usePiso((s) => s.interiores)
+  const programas = useInteriors((s) => s.interiors)
+  const muebles = useInteriors((s) => s.furniture)
   const dibujo = useMemo(() => {
     if (!d || !building) return null
     const aqui = new Set(project.masses.filter((m) => m.levelId === level).map((m) => m.id))
@@ -54,6 +59,18 @@ export function CapaResidencial() {
           {sotano.pasillos.map((r, i) => <path key={'p' + i} d={trazo([r])} fill={PASILLO_AUTOS} stroke="none" />)}
           {sotano.cajones.map((r, i) => <path key={'c' + i} data-cajon d={trazo([r])} fill={CAJON} stroke="#7A7D82" strokeWidth={0.75} vectorEffect="non-scaling-stroke" />)}
           {sotano.rampas.map((r, i) => <path key={'r' + i} data-rampa d={trazo([r])} fill={RAMPA} stroke="none" />)}
+          {sotano.flechas.map((r, i) => <path key={'f' + i} data-flecha d={trazo([r])} fill="#7A7D82" stroke="none" />)}
+          {/* como Praktico: un número por cajón, con halo */}
+          {sotano.cajones.map((r, i) => {
+            const cx = r.reduce((a, q) => a + q[0], 0) / r.length, cy = r.reduce((a, q) => a + q[1], 0) / r.length
+            return <text key={'n' + i} data-cajon-n x={cx} y={-cy} fontSize={0.75} textAnchor="middle" dominantBaseline="middle" fill="#55585C" stroke="#fff" strokeWidth={0.18} paintOrder="stroke">{i + 1}</text>
+          })}
+          {sotano.rampas.length > 0 && (() => {
+            const pts = sotano.rampas.flat()
+            const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1])
+            const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2
+            return <text data-rampa-rotulo x={cx} y={-cy} fontSize={1} textAnchor="middle" dominantBaseline="middle" fill="#6b4a0f" fontWeight={600}>Rampa ↑</text>
+          })()}
           {sotano.nucleos.map((r, i) => <path key={'n' + i} data-nucleo-sotano d={trazo([r])} fill={NUCLEO} stroke="none" />)}
         </g>
       )}
@@ -61,20 +78,33 @@ export function CapaResidencial() {
       {tipo?.layout?.units.map((u) => (
         <path key={u.id} d={trazo(u.shape)} data-tipo={u.type} fill={color.get(u.type) ?? '#ccc'} stroke="#ffffff" strokeWidth={1} vectorEffect="non-scaling-stroke" />
       ))}
-      {interiores && tipo?.layout?.units.map((u) =>
-        u.rooms.map((r, k) => {
-          const xs = r.shape.flatMap((q) => q.map((p) => p[0])), ys = r.shape.flatMap((q) => q.map((p) => p[1]))
-          const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2
-          const fs = Math.min(0.42, (Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys))) / 5)
-          return (
-            <g key={u.id + '-r' + k}>
-              <path data-recinto-unidad d={trazo(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} stroke="#8a8a8a" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
-              {fs > 0.12 && <text x={cx} y={-cy} fontSize={fs} textAnchor="middle" dominantBaseline="middle" fill="#3a3a3a">{nombreRecinto(r.kind, r.name)}</text>}
-            </g>
-          )
-        }),
-      )}
-      {interiores && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
+      {(programas || muebles) && tipo?.layout?.units.map((u) => {
+        // pieza 4: el plano de Mi biblioteca de su tipo, estirado al departamento; si no hay, el de GFit (amueblado)
+        const it = interiorDe(u, (project.residential?.catalogo ?? []) as PlanCatalogo[])
+        if (!it) return null
+        const m = it.marco
+        return (
+          <g key={u.id + '-int'} data-interior={it.fuente}>
+            {programas && it.recintos.map((r, k) => {
+              const xs = r.shape.flatMap((q) => q.map((p) => p[0])), ys = r.shape.flatMap((q) => q.map((p) => p[1]))
+              const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2
+              const fs = Math.min(0.42, (Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys))) / 5)
+              return (
+                <g key={u.id + '-r' + k}>
+                  <path data-recinto-unidad d={trazo(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} stroke="#8a8a8a" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
+                  {fs > 0.12 && <text x={cx} y={-cy} fontSize={fs} textAnchor="middle" dominantBaseline="middle" fill="#3a3a3a">{nombreRecinto(r.kind, r.name)}</text>}
+                </g>
+              )
+            })}
+            {muebles && (
+              <g transform={`matrix(${m.u[0]} ${-m.u[1]} ${m.v[0]} ${-m.v[1]} ${m.o[0]} ${-m.o[1]})`} className="plano-unidad" data-muebles>
+                {it.plan.muebles.map((f) => <MuebleSvg key={f.id} m={f} />)}
+              </g>
+            )}
+          </g>
+        )
+      })}
+      {programas && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
       {tipo && <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />}
       {cols.map((c, i) => (
         <rect key={i} data-columna x={c.x - h} y={-c.y - h} width={LADO_COLUMNA} height={LADO_COLUMNA} fill={COLUMNA} transform={angulo ? `rotate(${-angulo} ${c.x} ${-c.y})` : undefined} />

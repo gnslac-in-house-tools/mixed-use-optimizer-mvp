@@ -17,6 +17,7 @@ import type { Building, Zoning } from './gfit/src/model/state.ts'
 import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { layoutBasement } from './gfit/src/parking/adapter.ts'
+import { flechasPorPasillo } from './flechas.ts'
 import type { Shape } from './gfit/src/model/geom.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
 
@@ -44,7 +45,7 @@ export interface Estacionamiento {
   /** excavación más cajones (sin indirectos) */
   costo: number
   /** el acomodo de un sótano tipo: su contorno, sus cajones, sus pasillos, su rampa y los núcleos que lo atraviesan */
-  plano: { contorno: Shape; cajones: Ring[]; pasillos: Ring[]; rampas: Ring[]; nucleos: Ring[] }
+  plano: { contorno: Shape; cajones: Ring[]; pasillos: Ring[]; rampas: Ring[]; nucleos: Ring[]; flechas: Ring[] }
 }
 /** Sótanos como máximo cuando el edificio no fija los suyos. */
 export const SOTANOS_MAX = 5
@@ -159,7 +160,7 @@ function calcular(
     const a = (g.angle * Math.PI) / 180
     setUnitModule({ origin: [g.origin.x, g.origin.y], u: [Math.cos(a), Math.sin(a)], step: g.x / g.modules, bay: [g.x, g.y] })
   }
-  let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], nucleos: [] }
+  let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], nucleos: [], flechas: [] }
   let porSotano = 0, sotanos = 0
   try {
     // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
@@ -170,7 +171,7 @@ function calcular(
       const cores = nucleos.map((m) => ring(m.polygon))
       const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: 6, ramps: [{ t: 0.02, ancho: RAMPA }] })
       porSotano = lay.count
-      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas: lay.ramps ?? [], nucleos: cores }
+      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas: lay.ramps ?? [], nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
     totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {

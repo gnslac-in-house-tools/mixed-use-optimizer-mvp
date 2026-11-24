@@ -16,7 +16,6 @@ export function BarraPisos() {
   const d = useDerivado(buildingOfLevel(project, level)?.id)
   const piso = usePiso((s) => s.piso)
   const fija = usePiso((s) => s.set)
-  const interiores = usePiso((s) => s.interiores)
   // un piso o el sótano se ven por dentro: las masas pasan a Ghosted (translúcidas) para que se lean los departamentos
   const set = (p: Piso) => { fija(p); if (p !== null) useDetail.getState().setDetail('ghosted') }
   if (!d) return null
@@ -48,7 +47,6 @@ export function BarraPisos() {
           ))}
         </div>
         <button type="button" className={boton(false)} aria-label="Piso de arriba" onClick={() => mover(1)}>▲</button>
-        <button type="button" className={`${boton(interiores)} ml-1`} aria-pressed={interiores} title="Los recintos dentro de cada departamento" onClick={() => { usePiso.getState().alternarInteriores(); if (actual === null) set(d.niveles.findIndex((l) => (l.layout?.units.length ?? 0) > 0)) }}>Interiores</button>
       </div>
       <p className="px-1 text-caption text-ink-secondary" data-piso-info>{info}</p>
     </div>

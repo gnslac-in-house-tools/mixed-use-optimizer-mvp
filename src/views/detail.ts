@@ -23,7 +23,7 @@ export const DETAILS = [
 export type Detail = (typeof DETAILS)[number]['key']
 
 /** What the app opens with. */
-export const DEFAULT_DETAIL: Detail = 'presentation'
+export const DEFAULT_DETAIL: Detail = 'ghosted' // mixed-use-mvp: Ghosted by default (the user), so the interiors read
 
 export const useDetail = create<{ detail: Detail; setDetail(d: Detail): void }>()((set) => ({
   detail: DEFAULT_DETAIL,

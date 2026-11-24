@@ -27,6 +27,8 @@ import { dropOnMass, isMassDrop } from '../panels/massDrop.ts'
 import { isTypeDrag, TYPE_MIME } from '../../modules/warehouse/views/TypePalette.tsx'
 import { BlockFixtures3D } from '../../modules/warehouse/views/BlockFixtures3D.tsx'
 import { Residencial3d } from '../../modules/residential/views/Residencial3d.tsx' // mixed-use-mvp
+import { SectionClip } from './SectionClip.tsx' // mixed-use-mvp
+import { HeightHandle } from './HeightHandle.tsx' // mixed-use-mvp
 import { placeCopy } from '../../modules/warehouse/views/commands.ts'
 import { useSceneColors } from './colors.ts'
 import { sceneBox } from './geometry3d.ts'
@@ -312,10 +314,14 @@ function MainScene({ className, graph }: { className?: string; graph: boolean })
         <Masses colors={colors} ghost={graph} />
         {/* mixed-use-mvp: the residential module's slabs and columns */}
         <Residencial3d />
+        {/* mixed-use-mvp: the section cut over a storey's interiors (Programs · Furniture) */}
+        <SectionClip />
         {graph && <Graph3D colors={colors} />}
         {/* each level as a plane at its height (Show's Levels, Decision "Level planes") */}
         {planes && <LevelPlanes colors={colors} />}
         {!graph && <Gumball colors={colors} />}
+        {/* mixed-use-mvp: push-pull, the selected mass's height in whole storeys */}
+        {!graph && <HeightHandle colors={colors} />}
         <Controls box={box} framing={framingKey(project, opened)} />
       </Canvas>
     </div>

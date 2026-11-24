@@ -10,6 +10,9 @@ import { BarraPisos } from '../views/BarraPisos.tsx'
 import { CapaResidencial } from '../views/CapaResidencial.tsx'
 import { ResumenResidencial } from '../views/ResumenResidencial.tsx'
 import { usePiso } from '../views/piso.ts'
+import { useInteriors } from '../../../views/show/interiors.ts'
+import { InteriorsControls } from '../../../views/show/InteriorsControls.tsx'
+import { bibliotecaGFit, TIPOS } from '../engine/catalogo.ts'
 
 const G0: Grid = { x: 8.1, y: 8.1, modules: 3, origin: { x: 0, y: 0 }, angle: 0 }
 const rect = (x0: number, y0: number, x1: number, y1: number): Point[] => [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x1, y: y1 }, { x: x0, y: y1 }]
@@ -24,7 +27,8 @@ const caso = (): Project => ({
 beforeEach(() => {
   const p = caso()
   useApp.setState({ project: p, derived: derive(p), history: emptyHistory(), dragStart: null, selection: NO_SELECTION, level: 'l1', showAll: false, option: 'o1' })
-  usePiso.setState({ piso: null, interiores: false })
+  usePiso.setState({ piso: null })
+  useInteriors.setState({ interiors: false, furniture: false })
 })
 
 describe('pisos y estacionamiento de uso mixto', () => {
@@ -41,18 +45,43 @@ describe('pisos y estacionamiento de uso mixto', () => {
     expect(container.querySelectorAll('path[data-tipo]').length).toBe(d.niveles[3].layout!.units.length)
   })
 
-  it('Interiores dibuja los recintos de cada departamento del piso, con su nombre', () => {
+  it('Programs (barra inferior) dibuja los recintos de cada departamento del piso, con su nombre; Furniture, sus muebles', () => {
     const d = derivar(caso(), 'b1')!
     render(<BarraPisos />)
     const barra = screen.getByRole('toolbar', { name: 'Pisos de uso mixto' })
     fireEvent.click(within(barra).getByRole('button', { name: '4' }))
     const { container } = render(<svg><CapaResidencial /></svg>)
+    render(<InteriorsControls />)
+    const inferior = screen.getByRole('toolbar', { name: 'Interiors' })
     expect(container.querySelectorAll('path[data-recinto-unidad]').length).toBe(0)
-    fireEvent.click(within(barra).getByRole('button', { name: 'Interiores' }))
+    fireEvent.click(within(inferior).getByRole('button', { name: 'Programs' }))
     const n = d.niveles[3].layout!.units.reduce((s, u) => s + u.rooms.length, 0)
     expect(n).toBeGreaterThan(0)
     expect(container.querySelectorAll('path[data-recinto-unidad]').length).toBe(n)
     expect(container.querySelector('[data-capa="residencial"] text')).not.toBeNull()
+    expect(container.querySelectorAll('[data-muebles]').length).toBe(0)
+    fireEvent.click(within(inferior).getByRole('button', { name: 'Furniture' }))
+    expect(container.querySelectorAll('[data-muebles] .mueble').length).toBeGreaterThan(0)
+    // los muebles van también sin los recintos
+    fireEvent.click(within(inferior).getByRole('button', { name: 'Programs' }))
+    expect(container.querySelectorAll('path[data-recinto-unidad]').length).toBe(0)
+    expect(container.querySelectorAll('[data-muebles] .mueble').length).toBeGreaterThan(0)
+  })
+
+  it('pieza 4: con un plano de 2 rec. en Mi biblioteca, los 2 rec. del piso lo usan (con muebles); los demás, el de GFit', () => {
+    const p0 = caso()
+    const mio = { ...bibliotecaGFit(TIPOS, 8.1).find((x) => x.typeId === 'br2')!, id: 'C1', name: 'Mi 2 rec.' }
+    const p = { ...p0, residential: { ...p0.residential!, catalogo: [mio] } }
+    useApp.setState({ project: p, derived: derive(p) })
+    usePiso.setState({ piso: 3 })
+    useInteriors.setState({ interiors: true, furniture: true })
+    const d = derivar(p, 'b1')!
+    const br2 = d.niveles[3].layout!.units.filter((u) => u.type === 'br2').length
+    expect(br2).toBeGreaterThan(0)
+    const { container } = render(<svg><CapaResidencial /></svg>)
+    expect(container.querySelectorAll('[data-interior="mi-biblioteca"]').length).toBe(br2)
+    expect(container.querySelectorAll('[data-interior="gfit"]').length).toBe(d.niveles[3].layout!.units.length - br2)
+    expect(container.querySelectorAll('[data-interior="mi-biblioteca"] .mueble').length).toBeGreaterThan(0)
   })
 
   it('el sótano dibuja sus cajones en planta y la barra dice cuántos', () => {
@@ -65,6 +94,10 @@ describe('pisos y estacionamiento de uso mixto', () => {
     expect(container.querySelectorAll('path[data-tipo]').length).toBe(0)
     expect(container.querySelectorAll('[data-sotano] path[data-rampa]').length).toBe(d.estacionamiento.plano.rampas.length)
     expect(container.querySelectorAll('[data-sotano] path[data-nucleo-sotano]').length).toBe(1)
+    // como Praktico: un número por cajón, una flecha de sentido por pasillo y el rótulo de la rampa
+    expect(container.querySelectorAll('[data-sotano] text[data-cajon-n]').length).toBe(d.estacionamiento.porSotano)
+    expect(container.querySelectorAll('[data-sotano] path[data-flecha]').length).toBe(d.estacionamiento.plano.flechas.length)
+    expect(container.querySelector('[data-sotano] text[data-rampa-rotulo]')).toHaveTextContent('Rampa')
   })
 
   it('el Resumen trae los sótanos, los cajones y su costo', () => {

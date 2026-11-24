@@ -17,6 +17,7 @@ import { useUi } from '../layout/ui.ts'
 import { usePhone } from '../layout/media.ts'
 import { ViewTabs } from '../layout/ViewSwitch.tsx'
 import { DetailSelect } from '../show/ShowControls.tsx'
+import { InteriorsControls } from '../show/InteriorsControls.tsx' // mixed-use-mvp
 import { TerrainViewRow } from '../../modules/terrain/views/TerrainViewRow.tsx'
 import { CommandLine } from '../plan/command/CommandLine.tsx'
 import { SnapBar } from '../plan/SnapBar.tsx'
@@ -45,6 +46,7 @@ function DraftingTools() {
       <SnapBar disabled={!plan} />
       <span aria-hidden className="h-5 w-px shrink-0 bg-separator" />
       <TerrainViewRow />
+      <InteriorsControls />
       <DetailSelect />
       {!phone && (
         <>

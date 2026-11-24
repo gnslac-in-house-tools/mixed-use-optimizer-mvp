@@ -10,6 +10,7 @@ import { emptyHistory } from '../../state/history.ts'
 import { NO_SELECTION, useApp } from '../../state/store.ts'
 import { useGraph } from '../graph/graphState.ts'
 import { useUi } from '../layout/ui.ts'
+import { useDetail } from '../detail.ts'
 import { defaultHatch, hatchOf } from '../plan/hatches.tsx'
 import { labelFits } from '../plan/planStyle.ts'
 
@@ -46,6 +47,7 @@ describe('hatches and labels, pure', () => {
 describe('the plan', () => {
   it('the masses at 85 % with an ink outline and their hatch; a mass without a program grey and hatched', () => {
     act(() => s().apply((p) => ({ ...p, masses: p.masses.map((m) => (m.id === 'm3' ? { ...m, programId: null } : m)) })))
+    act(() => useDetail.getState().setDetail('presentation')) // mixed-use-mvp: the app opens on Ghosted
     render(<App />)
     expect(mass('m1')).toHaveAttribute('fill-opacity', '0.85')
     expect(mass('m1')).toHaveAttribute('stroke', 'var(--ink)')
