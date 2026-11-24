@@ -13,7 +13,7 @@ import type { LevelResult, Totals } from './gfit/src/model/calc.ts'
 import { massBuilding } from './gfit/src/model/massing.ts'
 import { PROGS0 } from './gfit/src/model/programs.ts'
 import { blankBuilding, fresh } from './gfit/src/model/state.ts'
-import type { Building } from './gfit/src/model/state.ts'
+import type { Building, Zoning } from './gfit/src/model/state.ts'
 import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
@@ -26,6 +26,8 @@ export interface Derivado {
   /** los nÃºcleos dibujados; sin ninguno, los automÃ¡ticos de GFit */
   nucleos: Polygon[]
   avisos: string[]
+  /** la zonificación con que corrió GFit (`far` es el índice permitido) */
+  zoning: Zoning
 }
 
 type Uso = 'vivienda' | 'comercio' | 'nucleo'
@@ -154,7 +156,7 @@ function calcular(
   for (const [x, ns] of remanente) add(`remanente de ${x} m en ${ns.length === 1 ? ns[0] : ns.length + ' niveles'}`)
   if (!totals.units && !avisos.length) add('Ninguna unidad cabe en la placa')
   const drawn = nucleos.map((m) => m.polygon)
-  return { totals, niveles, unidades, nucleos: drawn.length ? drawn : r.mass.cores.map(poly), avisos }
+  return { totals, niveles, unidades, nucleos: drawn.length ? drawn : r.mass.cores.map(poly), avisos, zoning: { ...s.zoning } }
 }
 
 export type { Point }
