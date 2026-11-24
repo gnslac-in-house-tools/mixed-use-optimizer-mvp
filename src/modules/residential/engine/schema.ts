@@ -1,6 +1,7 @@
 // Los datos del módulo residencial en el proyecto (`Project.residential`), como bodegas guarda `warehouseTypes`. Solo
 // importa zod: `model/schema.ts` lo importa para su línea de `ProjectSchema`, y así no hay ciclo.
 import { z } from 'zod'
+import { CalificacionSchema } from './calificacion/reglas.ts'
 
 const Id = z.string().min(1)
 
@@ -38,5 +39,7 @@ export const ResidentialSchema = z.object({
   tipos: z.array(TipoSchema),
   /** por id de edificio; un edificio sin los suyos usa los de `paramsDe` */
   edificios: z.record(Id, ParamsEdificioSchema),
+  /** las reglas de la calificación por palancas; sin ellas rigen `REGLAS_INICIO` */
+  calificacion: CalificacionSchema.optional(),
 })
 export type Residential = z.infer<typeof ResidentialSchema>
