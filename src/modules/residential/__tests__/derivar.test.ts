@@ -164,6 +164,24 @@ describe('derivar', () => {
     for (const c of e.plano.cajones) expect(area(intersection(toShape([c]), rampa))).toBeLessThan(0.01)
   })
 
+  it('(l2b) la rampa y sus bocas quedan dentro del contorno del sótano', () => {
+    const d = derivar(caso(), 'b1')!
+    const e = d.estacionamiento
+    for (const r of e.plano.rampas) expect(area(difference(toShape([r]), e.plano.contorno))).toBeLessThan(0.01)
+    // la torre de 32.4 no da para 22 m de rampa más dos bocas de 6: la rampa va entera y las bocas recortadas, con aviso
+    expect(area(toShape([e.plano.rampas[0]]))).toBeCloseTo(6 * 22, 0)
+    expect(d.avisos.some((a) => /rampa/i.test(a))).toBe(true)
+  })
+
+  it('(l2c) en una barra larga la rampa va centrada con sus dos bocas completas y sin aviso', () => {
+    const barra = rect(0, 0, 48.6, 16.2)
+    const d = derivar(proyecto([masa('vivienda', barra, 30), masa('nucleo', rect(0, 5.4, 8.1, 10.8), 30)]), 'b1')!
+    const e = d.estacionamiento
+    for (const r of e.plano.rampas) expect(area(difference(toShape([r]), e.plano.contorno))).toBeLessThan(0.01)
+    expect(area(toShape(e.plano.rampas))).toBeCloseTo(6 * (22 + 12), 0)
+    expect(d.avisos.some((a) => /rampa/i.test(a))).toBe(false)
+  })
+
   it('(l3) el sótano trae una flecha de sentido por pasillo', () => {
     const e = derivar(caso(), 'b1')!.estacionamiento
     expect(e.plano.pasillos.length).toBeGreaterThan(0)

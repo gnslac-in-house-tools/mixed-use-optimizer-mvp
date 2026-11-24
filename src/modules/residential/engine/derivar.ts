@@ -18,7 +18,8 @@ import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { layoutBasement } from './gfit/src/parking/adapter.ts'
 import { flechasPorPasillo } from './flechas.ts'
-import type { Shape } from './gfit/src/model/geom.ts'
+import { intersection, signedArea, type Shape } from './gfit/src/model/geom.ts'
+import { medidaDeRampa } from './gfit/src/parking/motores/cajones/rampas.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
 
 export interface Derivado {
@@ -51,9 +52,32 @@ export interface Estacionamiento {
 export const SOTANOS_MAX = 5
 /** m: el ancho de la rampa de cada edificio (doble sentido) */
 export const RAMPA = 6
+/** m: el pasillo de autos del sótano, que también es lo que mide cada boca de la rampa */
+const PASILLO_SOTANO = 6
+/** m: el entrepiso de sótano con que el motor de cajones mide la rampa (el de `layoutBasement`) */
+const ENTREPISO_SOTANO = 3.3
 
 type Uso = 'vivienda' | 'comercio' | 'nucleo'
 const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
+
+/**
+ * Dónde arranca la rampa (0..1 del perímetro, como lo lee el motor de cajones) y si cabe con sus bocas. La rampa
+ * paralela deja una boca de `boca` m antes del punto y otra después de su `largo`; el conjunto va centrado en el lado
+ * más largo del contorno mayor. Pegada a una esquina, la boca de arranque se saldría del sótano.
+ */
+export function tRampa(contorno: Shape, boca: number, largo: number): { t: number; cabe: boolean; lado: number } {
+  const mayor = contorno.filter((r) => signedArea(r) > 0).sort((a, b) => signedArea(b) - signedArea(a))[0]
+  if (!mayor) return { t: 0, cabe: false, lado: 0 }
+  const lados = mayor.map(([x, y], i) => { const [u, v] = mayor[(i + 1) % mayor.length]; return Math.hypot(u - x, v - y) })
+  const total = lados.reduce((s, l) => s + l, 0)
+  if (!(total > 0)) return { t: 0, cabe: false, lado: 0 }
+  const k = lados.indexOf(Math.max(...lados))
+  const antes = lados.slice(0, k).reduce((s, l) => s + l, 0)
+  const L = lados[k]
+  // centrado; el motor corre la rampa hacia el lado con más largo libre, así que el punto no pasa de la mitad
+  const s = Math.min(Math.max(0, (L - largo) / 2), L / 2)
+  return { t: (antes + s) / total, cabe: L >= largo + 2 * boca - 1e-6, lado: L }
+}
 const poly = (r: Ring): Polygon => r.map(([x, y]) => ({ x, y }))
 
 /** Los avisos de GFit que se muestran, en español; los demás pasan como vienen. */
@@ -167,16 +191,23 @@ function calcular(
   }
   let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], nucleos: [], flechas: [] }
   let porSotano = 0, sotanos = 0
+  let avisoRampa: string | null = null
   try {
     // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
     const uno = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: 1 }] }, s, { geom, sections, siteArea: null })
     const bas = uno.bs[0].mass.basements[0]
     if (uno.bs[0].ok && bas) {
-      // una rampa de doble sentido (6 m) que arranca en el primer vértice del contorno; los núcleos dibujados bajan
+      // una rampa de doble sentido (6 m) sobre el lado más largo, con su boca dentro; los núcleos dibujados bajan
       const cores = nucleos.map((m) => ring(m.polygon))
-      const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: 6, ramps: [{ t: 0.02, ancho: RAMPA }] })
+      const largo = medidaDeRampa({ t: 0, ancho: RAMPA, largo: null, paralela: true }, ENTREPISO_SOTANO).largo
+      const donde = tRampa(bas.shape, PASILLO_SOTANO, largo)
+      const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: PASILLO_SOTANO, ramps: [{ t: donde.t, ancho: RAMPA }] })
       porSotano = lay.count
-      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas: lay.ramps ?? [], nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
+      // sin largo para las dos bocas, la rampa va entera y sus bocas (zona de maniobra) se recortan al sótano
+      const [rp, ...bocas] = lay.ramps ?? []
+      const rampas = rp ? [rp, ...(donde.cabe ? bocas : bocas.flatMap((b) => intersection([b], bas.shape)))] : []
+      if (rp && !donde.cabe) avisoRampa = `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en el lado más largo del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas`
+      plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
     totals = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: sotanos }] }, s, {
@@ -187,7 +218,7 @@ function calcular(
     setUnitModule(null)
   }
   const r = totals.bs[0]
-  const avisos0: string[] = []
+  const avisos0: string[] = avisoRampa ? [avisoRampa] : []
   const niveles = r.levels
   const precioM2 = new Map(s.unitTypes.map((t) => [t.id, t.price]))
   const unidades = niveles.flatMap((l) => (l.layout?.units ?? []).map((unidad) => ({ nivel: l.num, unidad, precio: unidad.area * (precioM2.get(unidad.type) ?? 0) })))
