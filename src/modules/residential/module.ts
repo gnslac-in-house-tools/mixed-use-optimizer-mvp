@@ -4,6 +4,7 @@
 import type { Project } from '../../model/schema.ts'
 import type { Module } from '../types.ts'
 import { RESIDENTIAL_KPIS } from './kpis.ts'
+import { kpisCalificacion } from './kpisCalificacion.ts'
 
 /** El proyecto tiene alguna masa cuyo programa es de vivienda o de comercio. */
 export function tieneResidencial(p: Project): boolean {
@@ -19,7 +20,7 @@ export const residential: Module = {
   id: 'residential',
   label: 'Uso mixto',
   present: tieneResidencial,
-  kpis: () => RESIDENTIAL_KPIS,
+  kpis: (p) => [...RESIDENTIAL_KPIS, ...kpisCalificacion(p)],
   measures: [],
   params: [],
 }
