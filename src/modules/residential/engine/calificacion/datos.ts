@@ -83,9 +83,14 @@ export function calificacionDe(p: Project, optionId?: Id): Calificacion {
   if (!porOpcion) memo.set(p, (porOpcion = new Map()))
   let c = porOpcion.get(id)
   if (!c) {
-    const otras = conMasas(p).filter((x) => x !== id).map((x) => datosCalificacion(p, x))
-    porOpcion.set(id, (c = calificar(reglasDe(p), datosCalificacion(p, id), otras)))
+    const { enUso, otras } = datosDeOpcion(p, id)
+    porOpcion.set(id, (c = calificar(reglasDe(p), enUso, otras)))
   }
   return c
+}
+
+/** Los datos de la opción y los de las demás con masas residenciales (la mediana): lo que `calificar` lee. */
+export function datosDeOpcion(p: Project, id: Id): { enUso: Datos; otras: Datos[] } {
+  return { enUso: datosCalificacion(p, id), otras: conMasas(p).filter((x) => x !== id).map((x) => datosCalificacion(p, x)) }
 }
 

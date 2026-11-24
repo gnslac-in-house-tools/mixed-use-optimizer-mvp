@@ -208,7 +208,7 @@ const EXPECTED: Record<string, string[]> = {
   ],
   Site: ['import', 'draw', 'place-map', 'location', 'rules', 'terrain', 'grid-pivot', 'restore-grid'].map((x) => `site.${x}`),
   Design: [
-    ...['option.go.o1', 'option.new', 'option.duplicate', 'option.rename', 'option.delete', 'option.compare', 'brief', 'rules', 'levels', 'building.new', 'solve'].map((x) => `design.${x}`),
+    ...['option.go.o1', 'option.new', 'option.duplicate', 'option.rename', 'option.delete', 'option.compare', 'brief', 'rules', 'calificacion', 'levels', 'building.new', 'solve'].map((x) => `design.${x}`), // mixed-use-mvp: calificacion
     // the Rules window's own keys (AS.1 task 4): commands of its place
     ...['rule', 'solve', 'delete'].map((x) => `rules.${x}`),
   ],

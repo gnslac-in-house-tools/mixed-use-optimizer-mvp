@@ -39,6 +39,10 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/views/panels/SummaryPanel.tsx` | calificación: la rama `tab === 'calificacion'` → `<Calificacion />` | La pestaña dibuja el componente del módulo, como Overview dibuja `<ResumenResidencial />` |
 | `src/views/layout/__tests__/areas.test.tsx`, `src/views/layout/__tests__/frame.test.tsx` | calificación: las pestañas del riel del Resumen terminan en «Calificación» | La pestaña nueva está en `SUMMARY_TABS` |
 | `src/views/stats/KpiStrip.tsx` | calificación: con el módulo residencial, el interruptor «KPIs: Calificación · Proyecto» al inicio de la barra; los ids según el juego (`idsDeLaBarra`); la celda de un `calif-*` la dibuja `<CeldaCalificacion />`, cuyo clic abre la pestaña con la palanca | La calificación siempre a la vista (spec §4 y §7.5); la lógica vive en `modules/residential/views/calificacion/`, como la celda de Issues abre su pestaña |
+| `src/views/layout/Dialogs.tsx` | calificación: la rama `dialog === 'calificacion'` → `<VentanaReglas />` en el `Frame` de siempre, con el título «Reglas de calificación» | La ventana de reglas de la calificación (spec §6 y §7.3): se cierra con ✕, Esc o un clic afuera, como Brief y Rules |
+| `src/views/commands/design.ts` | calificación: `design.calificacion` «Reglas de calificación…» en el menú Design, tras Rules…; desactivado sin `project.residential` («Only with the Uso mixto typology») | La ventana de reglas se abre desde Design (spec §6 y §7.4) |
+| `src/views/commands/__tests__/viewSiteDesignTools.test.tsx`, `src/views/commands/__tests__/registry.test.ts` | calificación: el menú Design lleva `design.calificacion` «Reglas de calificación…» tras «Rules…» | El comando nuevo de Design |
+| `src/api/tools/index.ts` | calificación: `setCalificacion` en `LEFT_OUT`, con su razón | El verbo de la ventana de reglas vive en `modules/residential/actions.ts`; el agente queda fuera de esta pieza |
 
 ## GFit (`gfit-mixed-use-rhino/panel@267efea`, vía `C:\dev\mixed-use-optimizer\engine\gfit`)
 

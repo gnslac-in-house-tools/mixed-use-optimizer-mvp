@@ -55,6 +55,14 @@ const OPTION_COMMANDS: Command[] = [
 export const DESIGN_COMMANDS: Command[] = [
   { id: 'design.brief', label: 'Brief…', menu: ['Design'], separatorBefore: true, run: () => useUi.getState().openDialog('brief') },
   { id: 'design.rules', label: 'Rules…', menu: ['Design'], run: () => useUi.getState().openDialog('rules') },
+  // mixed-use-mvp (calificación): the residential module's rules window; greyed without the module's data
+  {
+    id: 'design.calificacion',
+    label: 'Reglas de calificación…',
+    menu: ['Design'],
+    run: () => useUi.getState().openDialog('calificacion'),
+    enabled: () => (useApp.getState().project.residential ? true : 'Only with the Uso mixto typology'),
+  },
   { id: 'design.levels', label: 'Levels…', menu: ['Design'], run: showLevelsOfBuilding },
   // a building of the option in view, with one level (the Buildings row of Layers has the same ＋)
   { id: 'design.building.new', label: 'New building', menu: ['Design'], run: () => newBuilding() },

@@ -16,6 +16,7 @@ import type { RuleKind } from '../../model/schema.ts'
 import { pluginWindowOf, PluginWindowView } from '../../plugins/index.ts'
 import { Brief } from '../brief/Brief.tsx'
 import { ProgramWindow } from '../../modules/warehouse/views/ProgramWindow.tsx'
+import { VentanaReglas } from '../../modules/residential/views/calificacion/VentanaReglas.tsx' // mixed-use-mvp
 import { Divider } from '../controls/Divider.tsx'
 import { trapTab } from '../controls/focus.ts'
 import { titleWith } from '../commands/shortcuts.ts'
@@ -37,6 +38,13 @@ export function Dialogs() {
     return (
       <Frame key={dialog} label={plugin.label}>
         <PluginWindowView windowKey={plugin.key} />
+      </Frame>
+    )
+  // mixed-use-mvp (calificación): the residential module's rules window, in the same frame
+  if (dialog === 'calificacion')
+    return (
+      <Frame key={dialog} label="Reglas de calificación">
+        <VentanaReglas />
       </Frame>
     )
   if (dialog !== 'brief' && dialog !== 'program' && dialog !== 'rules') return null

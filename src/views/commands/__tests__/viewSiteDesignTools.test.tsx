@@ -480,7 +480,8 @@ describe('Site', () => {
 
 describe('Design', () => {
   it('its commands, in the spec’s order', () => {
-    expect(labels(['Design'])).toEqual(['Options', 'Brief…', 'Rules…', 'Levels…', 'New building', 'Solve all'])
+    // mixed-use-mvp (calificación): the residential module's rules window follows Rules…
+    expect(labels(['Design'])).toEqual(['Options', 'Brief…', 'Rules…', 'Reglas de calificación…', 'Levels…', 'New building', 'Solve all'])
     expect(labels(['Design', 'Options'])).toEqual(['Option 1', 'New', 'Duplicate', 'Rename…', 'Delete', 'Compare…'])
   })
 
