@@ -137,6 +137,13 @@ describe('derivar', () => {
     expect(enModulos(enFachada(d, TORRE, g))).toBe(true)
   })
 
+  it('(k) una masa de Vivienda de un solo nivel en el suelo ya da departamentos (sin lobby)', () => {
+    const d = derivar(proyecto([masa('vivienda', TORRE, 3), masa('nucleo', NUCLEO, 3)]), 'b1')!
+    expect(d.niveles).toHaveLength(1)
+    expect(d.niveles[0].lobby).toBeFalsy()
+    expect(d.totals.units).toBeGreaterThan(0)
+  })
+
   it('sin masas de vivienda ni de comercio da null', () => {
     expect(derivar(proyecto([masa('nucleo', NUCLEO, 30)]), 'b1')).toBeNull()
     expect(derivar(newProject('mixed-use'), 'b1')).toBeNull()

@@ -67,7 +67,8 @@ export function cutBlocks(b: Building, geom: Map<string, GeomObj>, progs: Progra
   for (const x of assigned) {
     const p = progs.find((q) => q.id === x.prog)!
     const z0 = x.o!.bbox[2], z1 = x.o!.bbox[5]
-    const hs = heights(z0, z1, p, p.id === 'res' && Math.abs(z0 - ground) < 0.05 ? lobbyH : null)
+    // mixed-use-mvp patch: lobbyH 0 = no lobby (every residential plate takes units)
+    const hs = heights(z0, z1, p, p.id === 'res' && lobbyH > 0 && Math.abs(z0 - ground) < 0.05 ? lobbyH : null)
     const last = hs[hs.length - 1]
     if (last && !last.lobby && Math.abs(last.h - p.fh) > 0.01) issues.push(nameOf(x.id, x.k) + ': ' + (z1 - z0).toFixed(1) + ' m is not a multiple of ' + p.fh.toFixed(1) + ' m (last level ' + last.h.toFixed(1) + ' m)')
     for (const q of hs) { const rings = sec(x.id, q.z); raws.push({ k: x.k, id: x.id, p, z: q.z, h: q.h, lobby: q.lobby, rings: rings ?? [] }) }

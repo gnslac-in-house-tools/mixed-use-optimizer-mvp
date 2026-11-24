@@ -109,7 +109,8 @@ function calcular(
   for (const m of nucleos) geom.set(m.id, obj(m, 'curve', [ring(m.polygon)]))
   const b: Building = {
     ...blankBuilding(buildingId, 0),
-    mode: 'mass', typH: fhViv, lobbyH: fhViv,
+    // sin lobby: cada placa de vivienda lleva departamentos (una masa de un nivel ya da unidades)
+    mode: 'mass', typH: fhViv, lobbyH: 0,
     unitDepth: params.fondo, corridor: params.pasillo, mix: { ...params.mezcla }, seed: params.semilla,
     basements: 0, groundAt: null,
     links: { footprint: [], core: nucleos.map((m) => m.id), parking: [], mass: solidos.map((m) => m.id) },

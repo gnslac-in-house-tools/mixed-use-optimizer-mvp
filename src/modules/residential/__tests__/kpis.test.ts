@@ -26,7 +26,8 @@ describe('KPIs de uso mixto', () => {
     expect(valor('res-unidades', p)).toBe(t.units)
     expect(valor('res-cajones', p)).toBe(t.req)
     expect(t.revenue).toBeGreaterThan(0)
-    expect(valor('res-margen', p)).toBeCloseTo(((t.revenue - t.cost) / t.revenue) * 100, 6)
+    // los KPIs 'pct' de GIM son fracciones (0.6 se lee 60 %)
+    expect(valor('res-margen', p)).toBeCloseTo((t.revenue - t.cost) / t.revenue, 6)
   })
 
   it('sin masas, todos dan null', () => {

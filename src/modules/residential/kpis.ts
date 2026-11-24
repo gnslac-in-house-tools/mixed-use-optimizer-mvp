@@ -28,8 +28,8 @@ export const RESIDENTIAL_KPIS: KpiDef[] = [
     id: 'res-margen', label: 'Margen', unit: 'pct', area: 'massing', help: 'Ingreso menos costo (con terreno) entre el ingreso',
     read: (p, d) => {
       const s = suma(p, d, ['revenue', 'cost'])
-      // el costo de GFit ya trae el terreno (calcOption: r.cost += r.land)
-      return s && s.revenue ? ((s.revenue - s.cost) / s.revenue) * 100 : null
+      // el costo de GFit ya trae el terreno (calcOption: r.cost += r.land); una fracción, como todo KPI 'pct' de GIM
+      return s && s.revenue ? (s.revenue - s.cost) / s.revenue : null
     },
   },
 ]

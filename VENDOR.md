@@ -50,6 +50,7 @@ ya traía `mixed-use-optimizer`. Reemplaza la copia parcial (solo cuartos, con s
 | `src/layout/level.ts` | `setUnitModule({ origin, u, step } \| null)` y `avisosModulo()`. Con el módulo puesto: `widthsOf` da los múltiplos del módulo dentro de `[wMin, wMax]` (en la rejilla de 0.3 m de la banda; sin ninguno, el menor desde `wMin`, con aviso); cada tramo de banda se recorta a líneas de módulo en el eje de la retícula que sigue su fachada (lo recortado es el «remanente» del nivel, con aviso), y las unidades de punta ya no crecen sobre lo que sobra. Con `null`, GFit queda exactamente como antes | Los muros entre departamentos caen sobre los módulos de la retícula (cada 2.7 m). El solver de banda ya estira las unidades para llenar su tramo: con tramos y anchos en módulos, el estiramiento es 1 |
 | `src/layout/level.ts` | Los avisos del módulo que salen al resolver un nivel van también en su `issues` (`solveLevel` envuelve a `solveLevel0`); `moduloUnidad()` da el módulo puesto | Un nivel que sale del caché conserva sus avisos |
 | `src/layout/building.ts` | El módulo (`moduloUnidad()`) entra en la llave del caché de niveles | Si no, la misma placa sobre una retícula movida reutilizaba la planta vieja (test (j) de `derivar`) |
+| `src/model/blocks.ts` | `lobbyH` 0 quiere decir sin lobby (`cutBlocks`) | En Uso mixto cada placa de vivienda lleva departamentos: con lobby, una masa de un nivel en el suelo no daba ninguno (se vio en el recorrido) |
 
 ## Del MVP anterior (catálogo de unidades)
 
