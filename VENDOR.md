@@ -36,6 +36,8 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/state/actions/index.ts` | `residential` (`modules/residential/actions.ts`: `setParams`) en `actions` | Los verbos de un módulo entran por aquí, trazados, y así al historial de deshacer |
 | `src/views/plan/PlanSvg.tsx` | `<CapaResidencial />` sobre las masas, bajo sus etiquetas | La planta tipo, las unidades por tipo, el núcleo y las columnas |
 | `src/views/scene/Scene.tsx` | `<Residencial3d />` en la escena principal | Las losas por nivel derivado y las columnas |
+| `src/views/plan/PlanSvg.tsx` | `<InterioresNave />` junto a la capa residencial | Programs y Furniture en las naves: maniobras frente a los andenes, almacenaje y racks (`modules/warehouse/engine/interiores.ts`) |
+| `src/views/scene/Scene.tsx` | `<Naves3d />` junto a `<Residencial3d />` | Los racks de las naves en 3D, con Furniture y la masa vista por dentro |
 | `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
 | `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
 | `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |

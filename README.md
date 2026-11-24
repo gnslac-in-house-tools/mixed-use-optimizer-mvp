@@ -56,7 +56,7 @@ npm run dev        # http://localhost:5180
    fija una cota, que viaja entera con su muro; **Puerta** y **Ventana** se ponen con un clic; **Recinto** cambia el uso
    (también a Pasillo); el grafo de adyacencias se prende y se apaga; el 3D de la unidad va a la derecha.
 
-Recorridos en el navegador (con `npm run dev` arriba): `node scripts/recorrido.mjs` (pieza 1), `node scripts/recorrido-demo.mjs` (pisos, sótano, 3D) `node scripts/recorrido-editor.mjs` (editor) y `node scripts/recorrido-rampas.mjs` (rampas y calle). Dejan capturas en `evidence/`.
+Recorridos en el navegador (con `npm run dev` arriba): `node scripts/recorrido.mjs` (pieza 1), `node scripts/recorrido-demo.mjs` (pisos, sótano, 3D) `node scripts/recorrido-editor.mjs` (editor), `node scripts/recorrido-rampas.mjs` (rampas y calle) y `node scripts/recorrido-naves.mjs` (interiores de las naves). Dejan capturas en `evidence/`.
 
 ## Verificar
 
