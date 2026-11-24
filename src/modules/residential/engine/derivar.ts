@@ -18,7 +18,7 @@ import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { layoutBasement } from './gfit/src/parking/adapter.ts'
 import { flechasPorPasillo } from './flechas.ts'
-import { intersection, signedArea, type Shape } from './gfit/src/model/geom.ts'
+import { intersection, signedArea, type Pt, type Shape } from './gfit/src/model/geom.ts'
 import { medidaDeRampa } from './gfit/src/parking/motores/cajones/rampas.ts'
 import { ENTREPISO_COMERCIO, ENTREPISO_VIVIENDA } from './defaults.ts'
 
@@ -63,20 +63,42 @@ const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
 /**
  * Dónde arranca la rampa (0..1 del perímetro, como lo lee el motor de cajones) y si cabe con sus bocas. La rampa
  * paralela deja una boca de `boca` m antes del punto y otra después de su `largo`; el conjunto va centrado en el lado
- * más largo del contorno mayor. Pegada a una esquina, la boca de arranque se saldría del sótano.
+ * del contorno mayor que mira a la calle (la más cercana a alguna de `calles`, entre las que dan para la rampa y una
+ * boca) o, sin calles, en el más largo. Pegada a una esquina, la boca de arranque se saldría del sótano.
  */
-export function tRampa(contorno: Shape, boca: number, largo: number): { t: number; cabe: boolean; lado: number } {
+export function tRampa(contorno: Shape, boca: number, largo: number, calles: Pt[][] = []): { t: number; cabe: boolean; lado: number; sinCalle: boolean } {
+  const sinCalle = !calles.some((c) => c.length >= 2)
   const mayor = contorno.filter((r) => signedArea(r) > 0).sort((a, b) => signedArea(b) - signedArea(a))[0]
-  if (!mayor) return { t: 0, cabe: false, lado: 0 }
+  if (!mayor) return { t: 0, cabe: false, lado: 0, sinCalle }
   const lados = mayor.map(([x, y], i) => { const [u, v] = mayor[(i + 1) % mayor.length]; return Math.hypot(u - x, v - y) })
   const total = lados.reduce((s, l) => s + l, 0)
-  if (!(total > 0)) return { t: 0, cabe: false, lado: 0 }
-  const k = lados.indexOf(Math.max(...lados))
+  if (!(total > 0)) return { t: 0, cabe: false, lado: 0, sinCalle }
+  let k = lados.indexOf(Math.max(...lados))
+  if (!sinCalle) {
+    const todas = lados.map((_, i) => i)
+    const dan = todas.filter((i) => lados[i] >= largo + boca - 1e-6)
+    const dist = (i: number) => distanciaACalle(mayor[i], mayor[(i + 1) % mayor.length], calles)
+    // la más cercana; si empatan, la más larga
+    k = (dan.length ? dan : todas).reduce((a, b) => { const d = dist(b) - dist(a); return d < -0.01 || (Math.abs(d) <= 0.01 && lados[b] > lados[a]) ? b : a })
+  }
   const antes = lados.slice(0, k).reduce((s, l) => s + l, 0)
   const L = lados[k]
   // centrado; el motor corre la rampa hacia el lado con más largo libre, así que el punto no pasa de la mitad
   const s = Math.min(Math.max(0, (L - largo) / 2), L / 2)
-  return { t: (antes + s) / total, cabe: L >= largo + 2 * boca - 1e-6, lado: L }
+  return { t: (antes + s) / total, cabe: L >= largo + 2 * boca - 1e-6, lado: L, sinCalle }
+}
+
+/** La distancia del punto medio de `ab` a la calle más cercana (polilíneas de su eje). */
+export function distanciaACalle(a: Pt, b: Pt, calles: Pt[][]): number {
+  const m: Pt = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]
+  let best = Infinity
+  for (const c of calles) for (let i = 0; i + 1 < c.length; i++) {
+    const [p, q] = [c[i], c[i + 1]]
+    const dx = q[0] - p[0], dy = q[1] - p[1], l2 = dx * dx + dy * dy
+    const t = l2 > 0 ? Math.max(0, Math.min(1, ((m[0] - p[0]) * dx + (m[1] - p[1]) * dy) / l2)) : 0
+    best = Math.min(best, Math.hypot(m[0] - (p[0] + t * dx), m[1] - (p[1] + t * dy)))
+  }
+  return best
 }
 const poly = (r: Ring): Polygon => r.map(([x, y]) => ({ x, y }))
 
@@ -136,7 +158,7 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
   const firma = JSON.stringify([
     buildingId,
     [...solidos, ...nucleos].map((m) => [m.id, usoDe(m), m.polygon, m.holes, m.span]),
-    g, usos, params, p.residential!.tipos, norma,
+    g, usos, params, p.residential!.tipos, norma, p.site.existingRoads ?? [],
   ])
   if (memo.has(firma)) return memo.get(firma)!
   const d = calcular(solidos, nucleos, usoDe, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId, norma)
@@ -191,7 +213,7 @@ function calcular(
   }
   let plano: Estacionamiento['plano'] = { contorno: [], cajones: [], pasillos: [], rampas: [], nucleos: [], flechas: [] }
   let porSotano = 0, sotanos = 0
-  let avisoRampa: string | null = null
+  let avisoRampa: string | null = null, sinCalle = false
   try {
     // un sótano para tener su contorno; el motor de cajones lo acomoda (los núcleos dibujados son obstáculos)
     const uno = calcOption({ id: 'o', name: 'o', buildings: [{ ...b, basements: 1 }] }, s, { geom, sections, siteArea: null })
@@ -200,13 +222,14 @@ function calcular(
       // una rampa de doble sentido (6 m) sobre el lado más largo, con su boca dentro; los núcleos dibujados bajan
       const cores = nucleos.map((m) => ring(m.polygon))
       const largo = medidaDeRampa({ t: 0, ancho: RAMPA, largo: null, paralela: true }, ENTREPISO_SOTANO).largo
-      const donde = tRampa(bas.shape, PASILLO_SOTANO, largo)
+      const donde = tRampa(bas.shape, PASILLO_SOTANO, largo, (p.site.existingRoads ?? []).map((r) => r.points.map((q): Pt => [q.x, q.y])))
+      sinCalle = donde.sinCalle
       const lay = layoutBasement(bas.shape, cores, { angle: 90, aisle: PASILLO_SOTANO, ramps: [{ t: donde.t, ancho: RAMPA }] })
       porSotano = lay.count
       // sin largo para las dos bocas, la rampa va entera y sus bocas (zona de maniobra) se recortan al sótano
       const [rp, ...bocas] = lay.ramps ?? []
       const rampas = rp ? [rp, ...(donde.cabe ? bocas : bocas.flatMap((b) => intersection([b], bas.shape)))] : []
-      if (rp && !donde.cabe) avisoRampa = `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en el lado más largo del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas`
+      if (rp && !donde.cabe) avisoRampa = `La rampa (${largo.toFixed(1)} m) no cabe con sus dos bocas de ${PASILLO_SOTANO} m en su lado del sótano (${donde.lado.toFixed(1)} m): las bocas quedan más cortas`
       plano = { contorno: bas.shape, cajones: lay.stalls, pasillos: lay.aisles, rampas, nucleos: cores, flechas: flechasPorPasillo(lay.aisles, lay.arrows) }
     }
     sotanos = params.sotanos ?? (porSotano > 0 ? Math.min(SOTANOS_MAX, Math.ceil(uno.req / porSotano)) : 0)
@@ -219,6 +242,7 @@ function calcular(
   }
   const r = totals.bs[0]
   const avisos0: string[] = avisoRampa ? [avisoRampa] : []
+  if (sinCalle && sotanos > 0) avisos0.push('Dibuja la calle (Existing road) para orientar la entrada del estacionamiento')
   const niveles = r.levels
   const precioM2 = new Map(s.unitTypes.map((t) => [t.id, t.price]))
   const unidades = niveles.flatMap((l) => (l.layout?.units ?? []).map((unidad) => ({ nivel: l.num, unidad, precio: unidad.area * (precioM2.get(unidad.type) ?? 0) })))

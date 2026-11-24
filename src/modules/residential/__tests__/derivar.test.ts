@@ -182,6 +182,40 @@ describe('derivar', () => {
     expect(d.avisos.some((a) => /rampa/i.test(a))).toBe(false)
   })
 
+  describe('la rampa mira a la calle', () => {
+    const conCalle = (p: Project, ...calles: Point[][]): Project => ({
+      ...p, site: { ...p.site, existingRoads: calles.map((points, i) => ({ id: 'r' + i, points, stretches: points.slice(1).map(() => ({ left: 4, right: 4 })) })) },
+    })
+    const SUR = [{ x: -20, y: -10 }, { x: 60, y: -10 }]
+    const NORTE = [{ x: -20, y: 26 }, { x: 60, y: 26 }]
+    const ys = (d: Derivado) => d.estacionamiento.plano.rampas[0].map((q) => q[1])
+    const AVISO = 'Dibuja la calle (Existing road) para orientar la entrada del estacionamiento'
+
+    it('(r1) con la calle al sur, la rampa va en la orilla sur', () => {
+      expect(Math.max(...ys(derivar(conCalle(caso(), SUR), 'b1')!))).toBeLessThan(6.01)
+    })
+    it('(r2) con la calle al norte, en la orilla norte', () => {
+      expect(Math.min(...ys(derivar(conCalle(caso(), NORTE), 'b1')!))).toBeGreaterThan(16.2 - 6.01)
+    })
+    it('(r3) con la calle al oriente, en una orilla larga: la corta no da para la rampa y su boca', () => {
+      const r = derivar(conCalle(caso(), [{ x: 45, y: -20 }, { x: 45, y: 40 }]), 'b1')!.estacionamiento.plano.rampas[0]
+      const xs = r.map((q) => q[0])
+      expect(Math.max(...xs) - Math.min(...xs)).toBeCloseTo(22, 0)
+    })
+    it('(r4) con dos calles, gana la más cercana', () => {
+      const d = derivar(conCalle(caso(), [{ x: -20, y: -30 }, { x: 60, y: -30 }], [{ x: -20, y: 20 }, { x: 60, y: 20 }]), 'b1')!
+      expect(Math.min(...ys(d))).toBeGreaterThan(16.2 - 6.01)
+    })
+    it('(r5) dibujar la calle cambia la rampa (la caché no repite la vieja)', () => {
+      derivar(caso(), 'b1')
+      expect(Math.min(...ys(derivar(conCalle(caso(), NORTE), 'b1')!))).toBeGreaterThan(16.2 - 6.01)
+    })
+    it('(r6) sin calle, el aviso pide dibujarla; con calle, no', () => {
+      expect(derivar(caso(), 'b1')!.avisos).toContain(AVISO)
+      expect(derivar(conCalle(caso(), SUR), 'b1')!.avisos).not.toContain(AVISO)
+    })
+  })
+
   it('(l3) el sótano trae una flecha de sentido por pasillo', () => {
     const e = derivar(caso(), 'b1')!.estacionamiento
     expect(e.plano.pasillos.length).toBeGreaterThan(0)
