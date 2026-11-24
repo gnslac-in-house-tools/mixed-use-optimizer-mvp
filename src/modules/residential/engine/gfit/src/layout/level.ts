@@ -121,8 +121,10 @@ export function golpesColumna(ws: number[], g0: number, sign: 1 | -1, bay: numbe
   return n
 }
 
-/** The order of the widths (indices) that puts the most walls on column lines; the given order when none does better. */
-export function ordenColumnas(ws: number[], g0: number, sign: 1 | -1, bay: number): number[] {
+/** The order of the widths (indices) that puts the most walls on column lines; the given order when none does better,
+ *  or when the new order scores lower on `peso` (unit index, its centre from the run's first unit → the solver's bias
+ *  for it there: corner, core and stacking rules), so the rules the solver placed by still hold. */
+export function ordenColumnas(ws: number[], g0: number, sign: 1 | -1, bay: number, peso?: (k: number, xm: number) => number): number[] {
   const id = ws.map((_, k) => k)
   if (ws.length < 3 || ws.length > 12) return id
   // the distinct widths and how many of each; the best order by memo over what is left
@@ -151,7 +153,12 @@ export function ordenColumnas(ws: number[], g0: number, sign: 1 | -1, bay: numbe
   const b = mejor(cuenta, 0)
   if (b.n <= golpesColumna(ws, g0, sign, bay)) return id
   const libres = distintos.map((w) => ws.map((x, k) => (r2(x) === w ? k : -1)).filter((k) => k >= 0))
-  return b.seq.map((i) => libres[i].shift()!)
+  const orden = b.seq.map((i) => libres[i].shift()!)
+  if (peso) {
+    const nota = (o: number[]) => { let x = 0, f = 1; for (const k of o) { f *= peso(k, x + ws[k] / 2); x += ws[k] } return f }
+    if (nota(orden) < nota(id) * (1 - 1e-9)) return id
+  }
+  return orden
 }
 // ---- end of mixed-use-mvp patch ---------------------------------------------------------------------------------
 
@@ -341,7 +348,8 @@ function solveLevel0(i: LevelInput): LevelLayout {
               const junto = us.every((u, k) => k === 0 || Math.abs(us[k - 1].x + us[k - 1].w - u.x) < 1e-6)
               if (junto) {
                 const c = trimmed.col
-                const orden = ordenColumnas(us.map((u) => u.w), c.g0 + c.sign * (run.x0 + us[0].x), c.sign, c.bay)
+                // the solver's bias at each place (corner, core and stacking rules): a new order may not score lower
+                const orden = ordenColumnas(us.map((u) => u.w), c.g0 + c.sign * (run.x0 + us[0].x), c.sign, c.bay, (k, xm) => bias(us[k].t, us[0].x + xm))
                 let x = us[0].x
                 res.units = orden.map((k) => { const u = { ...us[k], x }; x += u.w; return u })
               }

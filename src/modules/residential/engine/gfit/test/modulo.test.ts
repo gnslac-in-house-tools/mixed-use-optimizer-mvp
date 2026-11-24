@@ -108,3 +108,27 @@ describe('ordenColumnas', () => {
     expect(corre([8.1, 8.1])).toBeGreaterThanOrEqual(corre())
   })
 })
+
+describe('ordenColumnas con las reglas del solver', () => {
+  test('un orden nuevo deja en su lugar la unidad que su regla pide ahí (la esquina)', () => {
+    const ws = [5.4, 8.1, 10.8]
+    // la regla: la unidad 0 (5.4) quiere la punta del tramo (x < 6); 5.4 | 10.8 | 8.1 la deja ahí y gana un muro
+    const peso = (k: number, xm: number) => (k === 0 && xm < 6 ? 10 : 1)
+    const orden = ordenColumnas(ws, 0, 1, 8.1, peso)
+    expect(orden[0]).toBe(0)
+    expect(golpesColumna(orden.map((k) => ws[k]), 0, 1, 8.1)).toBe(1)
+  })
+  test('si todo orden mejor saca a una unidad de su lugar, no reordena', () => {
+    const ws = [5.4, 8.1, 10.8]
+    // las reglas: la 0 quiere la punta y la 1 su lugar de hoy (centro en 9.45); los órdenes con un muro en columna
+    // sacan a una de las dos
+    const peso = (k: number, xm: number) => (k === 0 && xm < 3 ? 10 : 1) * (k === 1 && xm > 8 && xm < 11 ? 10 : 1)
+    expect(golpesColumna(ws, 0, 1, 8.1)).toBe(0)
+    expect(ordenColumnas(ws, 0, 1, 8.1, peso)).toEqual([0, 1, 2])
+  })
+  test('reordena si las reglas quedan igual', () => {
+    const ws = [5.4, 8.1, 10.8]
+    const orden = ordenColumnas(ws, 0, 1, 8.1, () => 1)
+    expect(golpesColumna(orden.map((k) => ws[k]), 0, 1, 8.1)).toBe(1)
+  })
+})
