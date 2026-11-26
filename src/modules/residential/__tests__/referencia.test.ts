@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { derive } from '../../../engine/derive.ts'
+import { massSpan } from '../../../engine/levels.ts'
 import { footprintPolygon } from '../../../engine/geom/footprint.ts'
 import { derivar } from '../engine/derivar.ts'
 import { DEPARTAMENTO } from '../engine/deptos.ts'
@@ -28,8 +29,10 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
     ])
   })
 
-  it('piso 2-3: dos barras de 105·105·105·85·85·85·105·105·105 y cuatro alas de 85 en el patio', () => {
-    expect(cuenta('Piso 2-3')).toEqual({ 'ref-105': 12, 'ref-85': 10 })
+  it('piso 2-3: dos barras de 105·105·105·85 | núcleo | 85·105·105·105, un pasillo a cada lado del núcleo y cuatro alas de 85', () => {
+    expect(cuenta('Piso 2-3')).toEqual({ 'ref-105': 12, 'ref-85': 8 })
+    const pasillos = p.masses.filter((m) => m.levelId === nivel('Piso 2-3').id && m.programId === 'circulacion')
+    expect(pasillos.length).toBe(4)
   })
 
   it('piso 4: las barras con dos esquinas de 150 junto a cada núcleo, sus alas y sus pasillos', () => {
@@ -42,11 +45,12 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
     expect(cuenta('Piso 5')).toEqual({ 'ref-105': 8, 'ref-85': 8 })
   })
 
-  it('el piso 4 tiene dos núcleos con su detalle: escalera, elevador, ducto y vestíbulo', () => {
+  it('dos núcleos que suben por todo el edificio (del piso 1 al tope del 5), con su detalle', () => {
     const nucleos = p.masses.filter((m) => m.programId === 'nucleo')
     expect(nucleos.length).toBe(2)
     for (const n of nucleos) {
-      expect(n.levelId).toBe(nivel('Piso 4').id)
+      expect(n.levelId).toBe(nivel('Piso 1').id)
+      expect(massSpan(p, n)).toEqual([0, 16.5])
       const kinds = n.nucleo!.elementos.map((e) => e.kind)
       expect(kinds).toEqual(expect.arrayContaining(['escalera', 'elevador', 'ducto', 'vestibulo']))
     }
@@ -86,8 +90,20 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
     }
   })
 
+  it('ningún departamento ni pasillo se mete en un núcleo, en ningún piso', () => {
+    const caja = (pts: { x: number; y: number }[]) => ({ x0: Math.min(...pts.map((q) => q.x)), x1: Math.max(...pts.map((q) => q.x)), y0: Math.min(...pts.map((q) => q.y)), y1: Math.max(...pts.map((q) => q.y)) })
+    const nucleos = p.masses.filter((m) => m.programId === 'nucleo').map((m) => caja(footprintPolygon(m.footprint)))
+    for (const m of p.masses.filter((x) => x.depto || x.programId === 'circulacion')) {
+      const b = caja(footprintPolygon(m.footprint))
+      for (const n of nucleos) {
+        const t = Math.max(0, Math.min(b.x1, n.x1) - Math.max(b.x0, n.x0)) * Math.max(0, Math.min(b.y1, n.y1) - Math.max(b.y0, n.y0))
+        expect(t).toBeLessThan(1e-6)
+      }
+    }
+  })
+
   it('el piso 1 es comercio bajo las dos barras', () => {
-    const com = p.masses.filter((m) => m.levelId === nivel('Piso 1').id)
+    const com = p.masses.filter((m) => m.levelId === nivel('Piso 1').id && m.programId !== 'nucleo')
     expect(com.length).toBe(2)
     expect(com.every((m) => m.programId === 'comercio')).toBe(true)
   })
@@ -106,17 +122,17 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
       }
   })
 
-  it('GFit cuenta los departamentos dibujados, piso por piso (80 en total, 4 de 150)', () => {
+  it('GFit cuenta los departamentos dibujados, piso por piso (76 en total, 4 de 150)', () => {
     const d = derivar(p, 'b1')!
     expect(d).not.toBeNull()
-    expect(d.unidades.length).toBe(22 * 2 + 20 + 16)
+    expect(d.unidades.length).toBe(20 * 2 + 20 + 16)
     expect(d.unidades.filter((u) => u.unidad.type === 't150').length).toBe(4)
   })
 
   it('todos los departamentos son del programa Departamento y nombran un plano de su Mi biblioteca', () => {
     const cat = new Set((p.residential!.catalogo ?? []).map((c) => c.id))
     const deptos = p.masses.filter((m) => m.depto)
-    expect(deptos.length).toBe(22 + 20 + 16)
+    expect(deptos.length).toBe(20 + 20 + 16)
     expect(deptos.every((m) => m.programId === DEPARTAMENTO && cat.has(m.depto!.plan))).toBe(true)
   })
 })

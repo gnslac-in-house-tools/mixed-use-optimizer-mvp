@@ -3,9 +3,10 @@
 // necesita archivo. Medidas del plano a 16.4 px/m; las barras toman el largo de sus tipologías (112.38 m).
 //
 //   Piso 1     comercio bajo las dos barras
-//   Piso 2-3   dos barras (105·105·105·85·85·85·105·105·105) y cuatro alas de 85 en el patio
+//   Piso 2-3   barras de 105·105·105·85 | núcleo | 85·105·105·105, pasillos junto al núcleo y cuatro alas de 85
 //   Piso 4     barras de 105·105·105·150 | núcleo | 150·105·105·105, sus alas y los pasillos que las ligan
 //   Piso 5     dos U: barras de 105·105·85 y sus alas
+//   Núcleos    dos, del piso 1 al tope del 5 (en el plano del compañero solo se ven en el 4)
 //
 // En planta: x a lo largo de las barras (de poniente a oriente), y hacia el norte; la barra sur va de y = 0 a 7.9, la
 // norte de 22.1 a 30, y las alas en el patio entre ellas. Cada barra mira hacia afuera (su fachada); sus departamentos
@@ -110,27 +111,37 @@ export function proyectoReferencia(): Project {
   p = addMass(p, { programId: 'comercio', footprint: { kind: 'contour', contour: rect(0, 0, LARGO, FONDO) }, levelId: 'l1' }).project
   p = addMass(p, { programId: 'comercio', footprint: { kind: 'contour', contour: rect(0, NORTE, LARGO, TOPE) }, levelId: 'l1' }).project
 
-  // Piso 2-3: barras completas (la mitad oriente en espejo) y las alas
-  const completa = [P('ref-105'), P('ref-105'), P('ref-105'), P('ref-85'), P('ref-85'), P('ref-85'), P('ref-105', true), P('ref-105', true), P('ref-105', true)]
-  barra(completa, 0, 'sur', l23)
-  barra(completa, 0, 'norte', l23)
+  // dónde van los núcleos: entre las dos 150 del piso 4 (los mismos en todos los pisos)
+  const W150 = ancho('ref-150')
+  const lado4 = 3 * W105 + W150
+
+  // Piso 2-3: 105·105·105·85 | núcleo | 85·105·105·105 (la mitad oriente en espejo), un pasillo a cada lado del
+  // núcleo y las alas
+  const lado23 = 3 * W105 + W85
+  for (const lado of ['sur', 'norte'] as const) {
+    barra([P('ref-105'), P('ref-105'), P('ref-105'), P('ref-85')], 0, lado, l23)
+    barra([P('ref-85', true), P('ref-105', true), P('ref-105', true), P('ref-105', true)], LARGO - lado23, lado, l23)
+  }
+  for (const [x0, x1] of [[lado23, lado4], [LARGO - lado4, LARGO - lado23]])
+    for (const [y0, y1] of [[0, FONDO], [NORTE, TOPE]])
+      p = addMass(p, { programId: CIRCULACION, footprint: { kind: 'contour', contour: rect(x0, y0, x1, y1) }, levelId: l23 }).project
   alas(l23)
 
   // Piso 4: 105·105·105·150 | núcleo | 150·105·105·105; la 150 da su esquina al patio, del lado de las 105
-  const W150 = ancho('ref-150')
-  const lado4 = 3 * W105 + W150
   // al sur la 150 poniente va en espejo (su ala corta junto al núcleo); al norte, la oriente
   barra([P('ref-105'), P('ref-105'), P('ref-105'), P('ref-150', true)], 0, 'sur', l4)
   barra([P('ref-150'), P('ref-105', true), P('ref-105', true), P('ref-105', true)], LARGO - lado4, 'sur', l4)
   barra([P('ref-105'), P('ref-105'), P('ref-105'), P('ref-150')], 0, 'norte', l4)
   barra([P('ref-150', true), P('ref-105', true), P('ref-105', true), P('ref-105', true)], LARGO - lado4, 'norte', l4)
   alas(l4)
-  // los núcleos entre las dos 150 de cada barra, con su detalle; su marco empieza en la fachada (al norte, girado)
+  // los núcleos entre las dos 150 de cada barra, del piso 1 al tope del 5, con su detalle; su marco empieza en la
+  // fachada (al norte, girado)
   const anchoNucleo = LARGO - 2 * lado4
+  const alto = 4.5 + 2 * 3 + 3 + 3
   for (const sur of [true, false]) {
     const [x0, x1] = [lado4, LARGO - lado4]
     const contour = sur ? rect(x0, 0, x1, FONDO) : rect(x1, TOPE, x0, NORTE)
-    const r = addMass(p, { programId: 'nucleo', footprint: { kind: 'contour', contour }, levelId: l4 })
+    const r = addMass(p, { programId: 'nucleo', footprint: { kind: 'contour', contour }, levelId: 'l1', height: alto })
     p = updateMass(r.project, r.id, { nucleo: { elementos: nucleoReferencia(anchoNucleo, FONDO) } })
   }
   // los pasillos que ligan las alas de adentro con las barras (frente a la tercera 105 de cada lado)
