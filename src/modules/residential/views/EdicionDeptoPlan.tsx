@@ -12,24 +12,11 @@ import { deptoColocado } from '../engine/deptos.ts'
 import { editarDepto } from '../engine/edicionDepto.ts'
 import { agregarPuerta, agregarVentana, ejesMovibles, girarMueble, moverEje, moverMueble, quitarPuerta, quitarVentana, type Eje } from '../engine/editor.ts'
 import { contornoDe } from '../engine/tipologias.ts'
+import { tramoMuro } from '../engine/edicion3d.ts'
 import { useEdicionDepto } from './edicionDepto.ts'
 
 const paso = (v: number) => Math.round(v / 0.05) * 0.05
 const ACENTO = '#2F6FED'
-
-/** Lo que abarca el muro del eje `e` en `c`: de la menor a la mayor coordenada de los lados de recinto sobre él. */
-function tramo(plan: PlanCatalogo, e: Eje, c: number): [number, number] | null {
-  const vs: number[] = []
-  for (const r of plan.rooms) {
-    const s = r.shape
-    s.forEach((a, i) => {
-      const b = s[(i + 1) % s.length]
-      const [ca, cb, oa, ob] = e === 'x' ? [a[0], b[0], a[1], b[1]] : [a[1], b[1], a[0], b[0]]
-      if (Math.abs(ca - c) < 1e-3 && Math.abs(cb - c) < 1e-3) vs.push(oa, ob)
-    })
-  }
-  return vs.length ? [Math.min(...vs), Math.max(...vs)] : null
-}
 
 type Arrastre = { tipo: 'muro'; eje: Eje; de: number; a: number } | { tipo: 'mueble'; id: string; x: number; y: number }
 
@@ -103,7 +90,7 @@ export function EdicionDeptoPlan({ toWorld, px }: { toWorld: (e: { clientX: numb
       {modo === 'muros' &&
         (['x', 'y'] as Eje[]).flatMap((e) =>
           mov[e].map((cc) => {
-            const t = tramo(plan, e, cc)
+            const t = tramoMuro(plan, e, cc)
             if (!t) return null
             const en = arr?.tipo === 'muro' && arr.eje === e && Math.abs(arr.de - cc) < 1e-3 ? arr.a : cc
             const pts: [number, number][] = e === 'x' ? [[en, t[0]], [en, t[1]]] : [[t[0], en], [t[1], en]]

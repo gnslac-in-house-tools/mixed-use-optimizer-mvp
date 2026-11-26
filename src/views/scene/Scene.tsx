@@ -27,6 +27,7 @@ import { dropOnMass, isMassDrop } from '../panels/massDrop.ts'
 import { isTypeDrag, TYPE_MIME } from '../../modules/warehouse/views/TypePalette.tsx'
 import { BlockFixtures3D } from '../../modules/warehouse/views/BlockFixtures3D.tsx'
 import { Residencial3d } from '../../modules/residential/views/Residencial3d.tsx' // mixed-use-mvp
+import { EdicionDepto3d } from '../../modules/residential/views/EdicionDepto3d.tsx' // mixed-use-mvp
 import { Naves3d } from '../../modules/warehouse/views/Naves3d.tsx' // mixed-use-mvp
 import { SectionClip } from './SectionClip.tsx' // mixed-use-mvp
 import { HeightHandle } from './HeightHandle.tsx' // mixed-use-mvp
@@ -315,6 +316,7 @@ function MainScene({ className, graph }: { className?: string; graph: boolean })
         <Masses colors={colors} ghost={graph} />
         {/* mixed-use-mvp: the residential module's slabs and columns */}
         <Residencial3d />
+        {!graph && <EdicionDepto3d />}
         {/* mixed-use-mvp: the warehouses' racks (Furniture) */}
         <Naves3d />
         {/* mixed-use-mvp: the section cut over a storey's interiors (Programs · Furniture) */}
