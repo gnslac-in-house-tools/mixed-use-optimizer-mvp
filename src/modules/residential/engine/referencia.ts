@@ -16,7 +16,7 @@ import { addMass, updateMass } from '../../../state/actions/masses.ts'
 import { newProject } from '../../../typologies/index.ts'
 import type { PlanCatalogo } from './catalogo.ts'
 import { CIRCULACION, colocarDepto, conProgramasDepto } from './deptos.ts'
-import { elementosAuto } from './nucleoDetalle.ts'
+import type { ElementoNucleo } from './nucleoDetalle.ts'
 import { agregarTipologias } from './tipologias.ts'
 
 export const REFERENCIA_ID = 'referencia'
@@ -35,6 +35,27 @@ const rect = (x0: number, y0: number, x1: number, y1: number): Contour => ({
 })
 
 type Pieza = { plan: string; espejo?: boolean }
+
+/**
+ * El núcleo del plano en su marco (W a lo largo de la barra, D a lo hondo; y = 0 la fachada): la escalera contra la
+ * fachada, dos elevadores contra el otro muro con la puerta al vestíbulo (girados 270°), el ducto tras ellos y el
+ * vestíbulo entre escalera y elevadores, que sale al patio a todo lo ancho.
+ */
+export function nucleoReferencia(W: number, D: number): ElementoNucleo[] {
+  const r3 = (n: number) => Math.round(n * 1000) / 1000
+  const el = (id: string, kind: ElementoNucleo['kind'], x0: number, y0: number, x1: number, y1: number, rot: ElementoNucleo['rot'] = 0): ElementoNucleo =>
+    ({ id, kind, x: r3((x0 + x1) / 2), y: r3((y0 + y1) / 2), w: r3(x1 - x0), d: r3(y1 - y0), rot })
+  const esc = 2.6, hondo = Math.min(5.6, D - 1.8), lado = 2.2
+  const xe = W - lado
+  return [
+    el('escalera', 'escalera', 0, 0, esc, hondo),
+    el('elevador1', 'elevador', xe, 0, W, lado, 270),
+    el('elevador2', 'elevador', xe, lado, W, 2 * lado, 270),
+    el('ducto', 'ducto', xe, 2 * lado, W, hondo),
+    el('vestibulo', 'vestibulo', esc, 0, xe, hondo),
+    el('vestibulo2', 'vestibulo', 0, hondo, W, D),
+  ]
+}
 
 export function proyectoReferencia(): Project {
   let p: Project = { ...agregarTipologias(newProject('mixed-use', REFERENCIA_NOMBRE)), id: REFERENCIA_ID }
@@ -104,10 +125,13 @@ export function proyectoReferencia(): Project {
   barra([P('ref-105'), P('ref-105'), P('ref-105'), P('ref-150')], 0, 'norte', l4)
   barra([P('ref-150', true), P('ref-105', true), P('ref-105', true), P('ref-105', true)], LARGO - lado4, 'norte', l4)
   alas(l4)
-  // los núcleos entre las dos 150 de cada barra, con su detalle
-  for (const [y0, y1] of [[0, FONDO], [NORTE, TOPE]]) {
-    const r = addMass(p, { programId: 'nucleo', footprint: { kind: 'contour', contour: rect(lado4, y0, LARGO - lado4, y1) }, levelId: l4 })
-    p = updateMass(r.project, r.id, { nucleo: { elementos: elementosAuto(LARGO - 2 * lado4, FONDO) } })
+  // los núcleos entre las dos 150 de cada barra, con su detalle; su marco empieza en la fachada (al norte, girado)
+  const anchoNucleo = LARGO - 2 * lado4
+  for (const sur of [true, false]) {
+    const [x0, x1] = [lado4, LARGO - lado4]
+    const contour = sur ? rect(x0, 0, x1, FONDO) : rect(x1, TOPE, x0, NORTE)
+    const r = addMass(p, { programId: 'nucleo', footprint: { kind: 'contour', contour }, levelId: l4 })
+    p = updateMass(r.project, r.id, { nucleo: { elementos: nucleoReferencia(anchoNucleo, FONDO) } })
   }
   // los pasillos que ligan las alas de adentro con las barras (frente a la tercera 105 de cada lado)
   for (const [x0, x1] of [[2 * W105, 3 * W105], [LARGO - 3 * W105, LARGO - 2 * W105]])

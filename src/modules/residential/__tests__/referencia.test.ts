@@ -3,6 +3,7 @@ import { derive } from '../../../engine/derive.ts'
 import { footprintPolygon } from '../../../engine/geom/footprint.ts'
 import { derivar } from '../engine/derivar.ts'
 import { DEPARTAMENTO } from '../engine/deptos.ts'
+import { esquinas, nucleoColocado } from '../engine/nucleoDetalle.ts'
 import { proyectoReferencia, REFERENCIA_ID } from '../engine/referencia.ts'
 
 const p = proyectoReferencia()
@@ -48,6 +49,40 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
       expect(n.levelId).toBe(nivel('Piso 4').id)
       const kinds = n.nucleo!.elementos.map((e) => e.kind)
       expect(kinds).toEqual(expect.arrayContaining(['escalera', 'elevador', 'ducto', 'vestibulo']))
+    }
+  })
+
+  it('cada núcleo: una escalera, dos elevadores, un ducto y su vestíbulo, sin encimarse y dentro del núcleo', () => {
+    for (const n of p.masses.filter((m) => m.programId === 'nucleo')) {
+      const c = nucleoColocado(n, footprintPolygon(n.footprint))!
+      const es = c.elementos
+      expect(es.filter((e) => e.kind === 'escalera').length).toBe(1)
+      expect(es.filter((e) => e.kind === 'elevador').length).toBe(2)
+      expect(es.filter((e) => e.kind === 'ducto').length).toBe(1)
+      const cajas = es.map((e) => { const q = esquinas(e); return { x0: q[0][0], y0: q[0][1], x1: q[2][0], y1: q[2][1] } })
+      for (const b of cajas) {
+        expect(b.x0).toBeGreaterThanOrEqual(-1e-6)
+        expect(b.y0).toBeGreaterThanOrEqual(-1e-6)
+        expect(b.x1).toBeLessThanOrEqual(c.W + 1e-6)
+        expect(b.y1).toBeLessThanOrEqual(c.D + 1e-6)
+      }
+      for (let i = 0; i < cajas.length; i++)
+        for (let j = i + 1; j < cajas.length; j++) {
+          const a = cajas[i], b = cajas[j]
+          const traslape = Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0))
+          expect(traslape).toBeLessThan(1e-6)
+        }
+    }
+  })
+
+  it('el marco de cada núcleo empieza en su fachada: la escalera da a la calle, el vestíbulo al patio', () => {
+    for (const n of p.masses.filter((m) => m.programId === 'nucleo')) {
+      const c = nucleoColocado(n, footprintPolygon(n.footprint))!
+      const esc = c.elementos.find((e) => e.kind === 'escalera')!
+      const [, yMundo] = c.aMundo(esc.x, esc.y)
+      // la barra sur mira al sur (su fachada en y = 0), la norte al norte: la escalera, cerca de la fachada
+      const fachada = yMundo < 15 ? 0 : 30
+      expect(Math.abs(yMundo - fachada)).toBeLessThan(4)
     }
   })
 
