@@ -11,6 +11,7 @@ export const UsoSchema = z.object({
   entrepiso: z.number().positive(),
 })
 export type Uso = z.infer<typeof UsoSchema>
+export type Tipo = z.infer<typeof TipoSchema>
 
 /** Un tipo de departamento, con la forma del `UnitType` de GFit. */
 export const TipoSchema = z.object({
@@ -55,6 +56,8 @@ export const PlanCatalogoSchema = z.object({
   puertas: z.array(z.object({ eje: z.enum(['x', 'y']), x: z.number(), y: z.number(), ancho: z.number().positive() })).optional(),
   ventanas: z.array(z.object({ x: z.number(), ancho: z.number().positive() })).optional(),
   fijas: z.object({ x: z.array(z.number().int()), y: z.array(z.number().int()) }).optional(),
+  /** el contorno en su marco cuando no es el rectángulo w × d (una L); sin él, el rectángulo */
+  contorno: z.array(PuntoSchema).optional(),
 })
 
 export const ResidentialSchema = z.object({

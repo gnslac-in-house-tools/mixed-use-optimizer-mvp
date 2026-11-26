@@ -14,6 +14,7 @@ import { useApp } from '../../../state/store.ts'
 import { ROOM_FILL, type PlanCatalogo, type Ring } from '../engine/catalogo.ts'
 import { agregarPuerta, agregarVentana, alternarFija, cambiarRecinto, cotas, ejes, grafo, moverEje, quitarPuerta, quitarVentana, USOS_RECINTO, type Eje } from '../engine/editor.ts'
 import { useEditorUnidad } from './editorUnidad.ts'
+import { contornoDe } from '../engine/tipologias.ts'
 import { MuebleSvg } from './PlanMini.tsx'
 import { ALTO_MURO, Unidad3d } from './Unidad3d.tsx'
 
@@ -102,7 +103,7 @@ function Planta({ plan, modo, verGrafo, verMuebles, sel, setSel }: { plan: PlanC
       onPointerLeave={suelta}
       onClick={clic}
     >
-      <rect x={0} y={-vista.d} width={vista.w} height={vista.d} className="pm-outline" />
+      <path d={ringD(contornoDe(vista))} className="pm-outline" />
       {vista.rooms.map((r, k) => (
         <path
           key={k}

@@ -9,6 +9,7 @@ import { CATALOGO, ROOM_FILL, huella } from '../engine/catalogo.ts'
 import { cajasMuro, MEDIO_MURO, type Caja } from '../engine/muros3d.ts'
 import { extruir, type Punto } from './geometria3d.ts'
 import { MAT_ARISTA, MAT_MUEBLE, modeloMueble } from './muebles3d.ts'
+import { fachadaDe } from '../engine/tipologias.ts'
 
 export const ALTO_MURO = 2.6
 const LOSA = 0.08
@@ -49,7 +50,8 @@ export function Unidad3d({ plan, alto = ALTO_MURO, muebles = true, detalle = tru
   const { muros, vidrios } = useMemo(() => {
     const caja = (c: Caja) => extruir([{ x: c.x0, y: c.y0 }, { x: c.x1, y: c.y0 }, { x: c.x1, y: c.y1 }, { x: c.x0, y: c.y1 }], c.z0, c.z1 - c.z0)
     const { cajas, vidrios: vs } = cajasMuro(plan, alto, LOSA)
-    const todo = [{ x0: 0, x1: plan.w, y0: -0.02, y1: 0.02, z0: LOSA, z1: Math.max(alto, 2.4) }]
+    const [f0, f1] = fachadaDe(plan)
+    const todo = [{ x0: f0, x1: f1, y0: -0.02, y1: 0.02, z0: LOSA, z1: Math.max(alto, 2.4) }]
     return { muros: cajas.map(caja), vidrios: (plan.ventanas?.length ? vs : todo).map(caja) }
   }, [plan, alto])
 

@@ -49,6 +49,7 @@ export function estirar(p: PlanCatalogo, w: number, d: number): PlanCatalogo {
     ...p, w: r3(w), d: r3(d), rooms,
     ...(p.puertas ? { puertas: p.puertas.map((q) => ({ ...q, x: m.x(q.x), y: m.y(q.y) })) } : {}),
     ...(p.ventanas ? { ventanas: p.ventanas.map((v) => ({ ...v, x: m.x(v.x) })) } : {}),
+    ...(p.contorno ? { contorno: p.contorno.map(([x, y]) => [m.x(x), m.y(y)] as [number, number]) } : {}),
     muebles: amueblar(rooms, p.reglas).muebles,
   }
 }

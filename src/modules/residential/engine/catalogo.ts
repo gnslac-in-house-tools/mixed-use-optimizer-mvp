@@ -45,6 +45,8 @@ export interface PlanCatalogo {
   puertas?: Puerta[]
   ventanas?: Ventana[]
   fijas?: { x: number[]; y: number[] }
+  /** el contorno en su marco cuando no es el rectángulo w × d (una L, tipologias.ts); sin él, el rectángulo */
+  contorno?: Ring
 }
 /** Una puerta en un muro interior: el eje del muro (x: un muro a x constante) y su centro. */
 export interface Puerta { eje: 'x' | 'y'; x: number; y: number; ancho: number }

@@ -10,8 +10,9 @@ import { bibliotecaGFit, copiaDe, TIPOS, UNIT_COLORS, type PlanCatalogo } from '
 import { paramsDe } from '../engine/defaults.ts'
 import { useEditorUnidad } from './editorUnidad.ts'
 import { PlanMini } from './PlanMini.tsx'
+import { areaPlan } from '../engine/tipologias.ts'
 
-const area = (p: PlanCatalogo) => p.w * p.d
+const area = (p: PlanCatalogo) => areaPlan(p)
 
 function Tarjeta({ p, accion, onAccion, onBorrar }: { p: PlanCatalogo; accion: string; onAccion: () => void; onBorrar?: () => void }) {
   return (

@@ -2,6 +2,7 @@
 // color, muebles como bloques grises con una línea o dos que dicen qué son, y la fachada abajo.
 import type { Mueble, PlanCatalogo, Ring } from '../engine/catalogo.ts'
 import { CATALOGO, ROOM_FILL } from '../engine/catalogo.ts'
+import { contornoDe, fachadaDe } from '../engine/tipologias.ts'
 
 const ringD = (r: Ring) => r.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('') + 'Z'
 
@@ -52,10 +53,10 @@ export function PlanoUnidad({ p, muebles = true }: { p: PlanCatalogo; muebles?: 
   return (
     <svg className="plano-unidad h-full max-h-full w-full max-w-full" viewBox={`${-pad} ${-(p.d + pad)} ${p.w + 2 * pad} ${p.d + 2 * pad}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Planta de ${p.name}`}>
       <g transform="scale(1,-1)">
-        <rect x={0} y={0} width={p.w} height={p.d} className="pm-outline" />
+        <path d={ringD(contornoDe(p))} className="pm-outline" />
         {p.rooms.map((r, k) => <path key={k} d={ringD(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} className="pm-room" />)}
         {muebles && p.muebles.map((f) => <MuebleSvg key={f.id} m={f} />)}
-        <line x1={0} y1={0} x2={p.w} y2={0} className="pm-facade" />
+        <line x1={fachadaDe(p)[0]} y1={0} x2={fachadaDe(p)[1]} y2={0} className="pm-facade" />
       </g>
       {p.rooms.map((r, k) => {
         const [x, y, w] = centro(r.shape)
@@ -80,10 +81,10 @@ export function PlanMini({ p, h = 76, muebles = true }: { p: PlanCatalogo; h?: n
   return (
     <svg className="plan-mini" viewBox={`${-pad} ${-(p.d + pad)} ${p.w + 2 * pad} ${p.d + 2 * pad}`} style={{ height: h }} preserveAspectRatio="xMidYMid meet" aria-hidden>
       <g transform="scale(1,-1)">
-        <rect x={0} y={0} width={p.w} height={p.d} className="pm-outline" />
+        <path d={ringD(contornoDe(p))} className="pm-outline" />
         {p.rooms.map((r, k) => <path key={k} d={ringD(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} className="pm-room" />)}
         {muebles && p.muebles.map((f) => <MuebleSvg key={f.id} m={f} />)}
-        <line x1={0} y1={0} x2={p.w} y2={0} className="pm-facade" />
+        <line x1={fachadaDe(p)[0]} y1={0} x2={fachadaDe(p)[1]} y2={0} className="pm-facade" />
       </g>
     </svg>
   )
