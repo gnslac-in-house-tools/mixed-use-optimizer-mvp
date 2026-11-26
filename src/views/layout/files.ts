@@ -13,6 +13,7 @@ import { siteOf } from '../../io/terrains.ts'
 import { upToDate } from '../../modules/warehouse/views/blockLibrary.ts'
 import { demoProject } from '../../state/demo.ts'
 import { SAMPLE_ID, sampleProject } from '../../state/sample.ts'
+import { proyectoReferencia, REFERENCIA_ID } from '../../modules/residential/engine/referencia.ts'
 import { useApp } from '../../state/store.ts'
 import { newProject, newProjectId, TYPOLOGIES } from '../../typologies/index.ts'
 import { leaveBlockEditor, useBlockEditor } from '../home/blockEditor.ts'
@@ -105,6 +106,19 @@ export function openSample({ fresh = false, tour = false, option = null as Id | 
     },
     { option: option ?? c?.option ?? null, migrated: notes.length > 0 },
   )
+}
+
+/**
+ * mixed-use-mvp: el proyecto de referencia (las barras del compañero). `fresh`: como sale del código (lo que se abre al
+ * entrar sin dirección, para ver siempre la última versión); si no, como este navegador lo guardó. Abre en el Piso 4.
+ */
+export function openReferencia({ fresh = false } = {}): void {
+  const c = fresh ? null : readBrowserCopy(REFERENCIA_ID)
+  replaceProject(c?.project ?? proyectoReferencia(), '', () => {
+    if (c) useSaving.setState({ kept: useApp.getState().project, savedAt: c.savedAt })
+    const piso4 = useApp.getState().project.buildings[0].levels.find((l) => l.name === 'Piso 4')
+    if (piso4) useApp.getState().setLevel(piso4.id)
+  }, { option: c?.option ?? null })
 }
 
 /** The sample as it comes again: what this browser kept of it is forgotten. */

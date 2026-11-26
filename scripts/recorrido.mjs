@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 
 const require = createRequire('C:/dev/mixed-use-optimizer/package.json')
 const { chromium } = require('playwright')
-const URL = process.env.URL ?? 'http://localhost:5180/'
+const URL = process.env.URL ?? 'http://localhost:5180/#/'
 const OUT = 'evidence/pieza-1'
 mkdirSync(OUT, { recursive: true })
 

@@ -14,7 +14,7 @@ const errores = []
 page.on('pageerror', (e) => errores.push(String(e)))
 page.on('console', (m) => { if (m.type() === 'error') errores.push(m.text()) })
 const espera = (ms) => page.waitForTimeout(ms)
-await page.goto(process.env.URL ?? 'http://localhost:5180/', { waitUntil: 'networkidle' })
+await page.goto(process.env.URL ?? 'http://localhost:5180/#/', { waitUntil: 'networkidle' })
 // el ejemplo «Industrial park»: sus naves ya traen andenes
 await page.getByRole('button', { name: 'Open' }).last().click()
 await espera(2500)

@@ -15,7 +15,9 @@ import { followSample } from './views/home/sample.ts'
 import { seedStarters } from './views/home/starters.ts'
 import { followBlockEditor } from './views/home/blockEditor.ts'
 import { startScreen, useScreen } from './views/home/screen.ts'
-import { openKept, openSample } from './views/layout/files.ts'
+import { openKept, openReferencia, openSample } from './views/layout/files.ts'
+import { direccionInicial } from './io/route.ts'
+import { REFERENCIA_ID } from './modules/residential/engine/referencia.ts'
 import { returnFromSpeckle } from './views/layout/speckleReturn.ts'
 import { useTour } from './views/tour/tour.ts'
 import { useIdioma } from './i18n/idioma.ts' // mixed-use-mvp
@@ -37,7 +39,18 @@ void returnFromSpeckle()
 followSample()
 // the block editor from Home (Phase BL.4): its window closing goes back Home
 followBlockEditor()
+// mixed-use-mvp: sin dirección (el link de Pages, localhost) se abre el proyecto de referencia como sale del código, sin
+// pasar por Home; Home sigue en su botón y en `#/`
+const directo = direccionInicial(window.location.hash, REFERENCIA_ID)
+if (directo) {
+  window.history.replaceState(null, '', directo)
+  openReferencia({ fresh: true })
+}
 startScreen((id) => {
+  if (id === REFERENCIA_ID) {
+    openReferencia()
+    return true
+  }
   if (id !== SAMPLE_ID) return openKept(id)
   openSample()
   return true

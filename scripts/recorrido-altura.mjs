@@ -14,7 +14,7 @@ const errores = []
 page.on('pageerror', (e) => errores.push(String(e)))
 page.on('console', (m) => { if (m.type() === 'error') errores.push(m.text()) })
 const espera = (ms) => page.waitForTimeout(ms)
-await page.goto('http://localhost:5180/', { waitUntil: 'networkidle' })
+await page.goto('http://localhost:5180/#/', { waitUntil: 'networkidle' })
 await page.getByRole('button', { name: 'New project' }).click()
 await page.getByRole('button', { name: 'Uso mixto' }).click()
 await page.getByRole('button', { name: 'Create project' }).click()

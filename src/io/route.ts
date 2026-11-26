@@ -19,3 +19,11 @@ export function projectInAddress(): Id | null {
   const r = parseRoute(window.location.hash)
   return r.kind === 'project' ? r.id : null
 }
+
+/**
+ * mixed-use-mvp: al entrar sin dirección (el link de Pages, localhost) se abre un proyecto en lugar de Home: la
+ * dirección que toma (`#/p/<id>`), o null si ya trae una (`#/` es Home a propósito).
+ */
+export function direccionInicial(hash: string, id: Id): string | null {
+  return hash === '' || hash === '#' ? routeHash({ kind: 'project', id }) : null
+}
