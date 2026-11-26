@@ -28,7 +28,7 @@ for (const n of ['Tipología 105 m²', 'Tipología 85 m²', 'Tipología 150 m² 
   await espera(700)
 }
 await page.keyboard.press('Escape')
-await page.keyboard.press('f').catch(() => {})
+await page.keyboard.press('Escape')
 await espera(1500)
 await page.screenshot({ path: `${OUT}/01-colocados.png` })
 // el de 105: elegirlo en la planta, ver sus manijas de muros y mover uno
@@ -36,15 +36,15 @@ await page.screenshot({ path: `${OUT}/01-colocados.png` })
 const svgPlan = await page.locator('[data-mass]').first().boundingBox()
 if (svgPlan) {
   await page.mouse.move(svgPlan.x + svgPlan.width, svgPlan.y + svgPlan.height / 2)
-  for (let i = 0; i < 6; i++) { await page.mouse.wheel(0, -300); await espera(120) }
+  for (let i = 0; i < 2; i++) { await page.mouse.wheel(0, -200); await espera(150) }
 }
 await espera(600)
 const caja = await page.locator('[data-mass]').first().boundingBox()
-if (caja) await page.mouse.click(caja.x + caja.width * 0.2, caja.y + caja.height * 0.5)
+if (caja) await page.mouse.click(caja.x + caja.width * 0.15, caja.y + caja.height * 0.3)
 await espera(800)
 await page.screenshot({ path: `${OUT}/02-elegido.png` })
 const muro = page.locator('[data-muro-depto^="x:"]').first()
-const mb = await muro.boundingBox()
+const mb = await muro.boundingBox({ timeout: 3000 }).catch(() => null)
 if (mb) {
   await page.mouse.move(mb.x + mb.width / 2, mb.y + mb.height / 2)
   await page.mouse.down()

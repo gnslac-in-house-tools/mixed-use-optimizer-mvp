@@ -93,7 +93,7 @@ export function CapaResidencial() {
               return (
                 <g key={u.id + '-r' + k}>
                   <path data-recinto-unidad d={trazo(r.shape)} fill={ROOM_FILL[r.kind] ?? '#eee'} stroke="#8a8a8a" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
-                  {fs > 0.12 && <text x={cx} y={-cy} fontSize={fs} textAnchor="middle" dominantBaseline="middle" fill="#3a3a3a">{nombreRecinto(r.kind, r.name)}</text>}
+                  {fs > 0.12 && <text x={cx} y={-cy} fontSize={fs} textAnchor="middle" dominantBaseline="middle" fill="#3a3a3a">{it.fuente === 'depto' ? r.name : nombreRecinto(r.kind, r.name)}</text>}
                 </g>
               )
             })}
