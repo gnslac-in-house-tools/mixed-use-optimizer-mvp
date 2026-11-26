@@ -112,6 +112,7 @@ import { SiteToolLayer } from './site/SiteToolLayer.tsx'
 import { CutFill, PlatformMarks, TerrainLayer } from '../../modules/terrain/views/TerrainLayer.tsx'
 import { CapaResidencial } from '../../modules/residential/views/CapaResidencial.tsx' // mixed-use-mvp
 import { EdicionDeptoPlan } from '../../modules/residential/views/EdicionDeptoPlan.tsx' // mixed-use-mvp
+import { EdicionNucleoPlan } from '../../modules/residential/views/EdicionNucleoPlan.tsx' // mixed-use-mvp
 import { etiquetaOculta } from '../../modules/residential/views/etiquetas.ts' // mixed-use-mvp
 import { useInteriors } from '../show/interiors.ts' // mixed-use-mvp
 import { InterioresNave } from '../../modules/warehouse/views/InterioresNave.tsx' // mixed-use-mvp
@@ -540,6 +541,7 @@ export function PlanSvg() {
             {!toolActive && !deaf && <MassHandles drag={drag} scale={camera.scale} />}
             {/* mixed-use-mvp: el departamento elegido se edita por dentro (muros, muebles, puertas, ventanas) */}
             {!toolActive && !deaf && !showAll && <EdicionDeptoPlan toWorld={camera.toWorld} px={px} />}
+            {!toolActive && !deaf && !showAll && <EdicionNucleoPlan toWorld={camera.toWorld} px={px} />}
             {!toolActive && !deaf && !showAll && <GroupTurn drag={drag} scale={camera.scale} />}
             {!showAll && !toolActive && !deaf && !graphOn && <DockMarks px={px} drag={drag} />}
             {!showAll && !toolActive && !deaf && !graphOn && <DoorSlots px={px} />}

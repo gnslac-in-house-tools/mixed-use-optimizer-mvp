@@ -55,6 +55,7 @@ import { LayerProperties, useLayerRowPicked } from '../layers/LayerProperties.ts
 import { LotProperties } from '../../modules/parking/views/LotProperties.tsx'
 import { t as tr } from '../../i18n/idioma.ts' // mixed-use-mvp
 import { PropiedadesDepto } from '../../modules/residential/views/PropiedadesDepto.tsx' // mixed-use-mvp
+import { PropiedadesNucleo } from '../../modules/residential/views/PropiedadesNucleo.tsx' // mixed-use-mvp
 
 export function Properties({ surface }: { surface: 'panel' | 'glass' }) {
   // what is picked, of any kind, through the bridge: the first of each kind is the one shown (the masses: one, or several together)
@@ -319,6 +320,7 @@ function MassProperties({ id, muted, answersRename }: { id: Id; muted: string; a
       )}
       {!copyOf && <HoleSection id={id} locked={locked} muted={muted} />}
       <PropiedadesDepto id={id} />
+      <PropiedadesNucleo id={id} />
 
       <Actions
         items={[
