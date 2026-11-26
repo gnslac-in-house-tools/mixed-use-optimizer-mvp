@@ -79,6 +79,17 @@ export function esquinas(e: ElementoNucleo): [number, number][] {
   return [[e.x - w / 2, e.y - d / 2], [e.x + w / 2, e.y - d / 2], [e.x + w / 2, e.y + d / 2], [e.x - w / 2, e.y + d / 2]]
 }
 
+/** Un punto del marco del elemento (u a lo largo de su `w`, v a lo hondo de su `d`, desde su esquina) en el del núcleo. */
+export function enNucleo(e: ElementoNucleo, u: number, v: number): [number, number] {
+  const lu = u - e.w / 2, lv = v - e.d / 2
+  switch (e.rot) {
+    case 90: return [e.x - lv, e.y + lu]
+    case 180: return [e.x - lu, e.y - lv]
+    case 270: return [e.x + lv, e.y - lu]
+    default: return [e.x + lu, e.y + lv]
+  }
+}
+
 /** Los elementos de un núcleo cambiados (se vuelven propios de su masa). */
 function conElementos(p: Project, massId: Id, cambia: (es: ElementoNucleo[], c: NucleoColocado) => ElementoNucleo[]): Project {
   const m = p.masses.find((x) => x.id === massId)

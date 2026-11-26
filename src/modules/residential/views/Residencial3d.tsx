@@ -17,6 +17,9 @@ import type { PlanCatalogo } from '../engine/catalogo.ts'
 import { interiorParaUnidad } from '../engine/deptos.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
 import { Unidad3d } from './Unidad3d.tsx'
+import { nucleoColocado } from '../engine/nucleoDetalle.ts'
+import { pisosEn, prismasNucleo, type Parte } from '../engine/nucleo3d.ts'
+import { usoDe } from './useDerivado.ts'
 
 const LOSA = 0.2
 const COLUMNA = '#6b6e72'
@@ -24,6 +27,8 @@ const SOTANO = '#9EA2A8'
 const CAJON = '#F2F2F2'
 const RAMPA = '#E8B04B'
 const NUCLEO = '#8C8C8C'
+/** los colores de las partes de un núcleo con detalle */
+const PARTE: Record<Parte, string> = { cubo: '#9A9DA3', cabina: '#C9A227', ducto: '#B5B8BD', escalon: '#D6D3CC', descanso: '#C8C4BB' }
 /** m que cada departamento se mete de su contorno, para que sus muros se lean */
 const MURO = 0.3
 
@@ -90,6 +95,20 @@ export function Residencial3d() {
           out.push({ key: `${buildingId}-u${i}-${u.id}`, geometry: extrude(pts, l.z + LOSA, Math.max(0.5, l.h - LOSA - 0.3)), color: colorTipo.get(u.type) ?? '#ccc' })
         }
       })
+      // los núcleos con su detalle (cubos de elevador con su cabina, ductos, escaleras piso por piso), vistos por dentro
+      // o con un piso elegido (hasta ese piso)
+      if (piso !== 'sotano' && (piso !== null || porDentro)) {
+        const levels = project.buildings.find((b) => b.id === buildingId)?.levels ?? []
+        const tope = typeof piso === 'number' ? d.niveles[piso]?.z : undefined
+        for (const m of project.masses) {
+          const dm = derived.masses[m.id]
+          if (!dm || dm.buildingId !== buildingId || usoDe(project, m.id) !== 'nucleo') continue
+          const c = nucleoColocado(m, dm.polygon)
+          if (!c) continue
+          const pisos = pisosEn(levels, dm.span[0], dm.span[1]).filter((q) => tope === undefined || q.z <= tope + 1e-6)
+          prismasNucleo(c, pisos).forEach((x, k) => out.push({ key: `${buildingId}-nd-${m.id}-${k}`, geometry: extrude(x.pts, x.z0, x.alto), color: PARTE[x.parte] }))
+        }
+      }
       // los sótanos bajo el suelo, translúcidos, y los cajones del primero
       const e = d.estacionamiento
       const z0s = d.niveles.length ? Math.min(...d.niveles.map((l) => l.z)) : 0

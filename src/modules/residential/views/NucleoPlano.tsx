@@ -2,7 +2,7 @@
 // PlanSvg (x, −y). La escalera: dos tramos con sus huellas (cada 28 cm), el descanso y la flecha de subida; el
 // elevador: su cubo con la cruz de la cabina y la puerta; el ducto: achurado; el vestíbulo: su piso y su nombre.
 import type { ReactNode } from 'react'
-import { esquinas, NOMBRES, type ElementoNucleo, type NucleoColocado } from '../engine/nucleoDetalle.ts'
+import { enNucleo, esquinas, NOMBRES, type ElementoNucleo, type NucleoColocado } from '../engine/nucleoDetalle.ts'
 
 const MURO = '#3A3A3A'
 const PISO = '#F4F3EF'
@@ -18,17 +18,6 @@ export function NucleoSvg({ c, contorno }: { c: NucleoColocado; contorno?: boole
       {c.elementos.map((e) => <Elemento key={e.id} e={e} linea={linea} w={w} />)}
     </g>
   )
-}
-
-/** Un punto del marco del elemento (u a lo largo de su `w`, v a lo hondo de su `d`, desde su esquina) en el del núcleo. */
-function enNucleo(e: ElementoNucleo, u: number, v: number): [number, number] {
-  const lu = u - e.w / 2, lv = v - e.d / 2
-  switch (e.rot) {
-    case 90: return [e.x - lv, e.y + lu]
-    case 180: return [e.x - lu, e.y - lv]
-    case 270: return [e.x + lv, e.y - lu]
-    default: return [e.x + lu, e.y + lv]
-  }
 }
 
 function Elemento({ e, linea, w }: { e: ElementoNucleo; linea: (pts: [number, number][]) => string; w: (x: number, y: number) => string }) {
