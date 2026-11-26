@@ -5,10 +5,12 @@
 // (SectionClip in the scene), so that storey's plan reads from above; outside Schematic only, where blocks stay solid.
 import { create } from 'zustand'
 
-type Toggle = 'interiors' | 'furniture'
-export const useInteriors = create<{ interiors: boolean; furniture: boolean; clipZ: number | null; toggle: (k: Toggle) => void; setClip: (z: number | null) => void }>((set) => ({
+type Toggle = 'interiors' | 'furniture' | 'documentation'
+/** `documentation`: the plan as an architectural sheet (poché walls, door swings, rooms by use with name and area). */
+export const useInteriors = create<{ interiors: boolean; furniture: boolean; documentation: boolean; clipZ: number | null; toggle: (k: Toggle) => void; setClip: (z: number | null) => void }>((set) => ({
   interiors: true,
   furniture: true,
+  documentation: false,
   clipZ: null,
   toggle: (k) => set((s) => ({ ...s, [k]: !s[k] })),
   setClip: (clipZ) => set({ clipZ }),

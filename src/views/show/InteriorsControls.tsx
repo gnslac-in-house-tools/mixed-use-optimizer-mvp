@@ -16,6 +16,9 @@ export function InteriorsControls() {
         <ToggleChip pressed={s.furniture} title={tr("Furniture and equipment inside the masses")} onClick={() => s.toggle('furniture')}>
           {tr("Furniture")}
         </ToggleChip>
+        <ToggleChip pressed={s.documentation} title={tr("Documentation: the plan as an architectural sheet (walls, doors, rooms with name and area)")} onClick={() => s.toggle('documentation')}>
+          {tr("Documentation")}
+        </ToggleChip>
       </ChipTrack>
     </div>
   )

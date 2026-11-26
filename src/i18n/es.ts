@@ -297,6 +297,8 @@ export const ES: Record<string, string> = {
   Full: 'Completo',
   'Full screen': 'Pantalla completa',
   Furniture: 'Mobiliario',
+  Documentation: 'Documentación',
+  'Documentation: the plan as an architectural sheet (walls, doors, rooms with name and area)': 'Documentación: la planta como lámina de arquitectura (muros, puertas, recintos con nombre y área)',
 
   // G
   'GFA by building': 'Área construida por edificio',

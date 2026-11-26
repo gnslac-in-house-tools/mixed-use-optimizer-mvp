@@ -18,6 +18,7 @@ import { ROOM_FILL, nombreRecinto, type PlanCatalogo } from '../engine/catalogo.
 import { interiorParaUnidad } from '../engine/deptos.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
 import { MuebleSvg } from './PlanMini.tsx'
+import { DocumentacionDepto } from './DocumentacionPlano.tsx'
 
 const PASILLO = '#ECEAE5'
 const NUCLEO = '#8C8C8C'
@@ -39,6 +40,7 @@ export function CapaResidencial() {
   const piso = usePiso((s) => s.piso)
   const programas = useInteriors((s) => s.interiors)
   const muebles = useInteriors((s) => s.furniture)
+  const doc = useInteriors((s) => s.documentation)
   const dibujo = useMemo(() => {
     if (!d || !building) return null
     const aqui = new Set(project.masses.filter((m) => m.levelId === level).map((m) => m.id))
@@ -90,7 +92,12 @@ export function CapaResidencial() {
       {tipo?.layout?.units.map((u) => (
         <path key={u.id} d={trazo(u.shape)} data-tipo={u.type} fill={color.get(u.type) ?? '#ccc'} stroke="#ffffff" strokeWidth={1} vectorEffect="non-scaling-stroke" />
       ))}
-      {(programas || muebles) && tipo?.layout?.units.map((u) => {
+      {/* la vista de documentación: cada departamento como lámina (poché, puertas, recintos con nombre y área) */}
+      {doc && tipo?.layout?.units.map((u) => {
+        const it = interiorParaUnidad(project, derived.masses, u, (project.residential?.catalogo ?? []) as PlanCatalogo[])
+        return it ? <DocumentacionDepto key={u.id + '-doc'} plan={it.plan} marco={it.marco} recintos={it.plan.rooms.map((r) => ({ kind: r.kind, name: it.fuente === 'depto' ? r.name : nombreRecinto(r.kind, r.name) }))} muebles={muebles} /> : null
+      })}
+      {!doc && (programas || muebles) && tipo?.layout?.units.map((u) => {
         // pieza 4: el plano de Mi biblioteca de su tipo, estirado al departamento; si no hay, el de GFit (amueblado)
         const it = interiorParaUnidad(project, derived.masses, u, (project.residential?.catalogo ?? []) as PlanCatalogo[])
         if (!it) return null
@@ -116,7 +123,7 @@ export function CapaResidencial() {
           </g>
         )
       })}
-      {programas && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
+      {!doc && programas && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
       {/* los núcleos dibujados con su detalle (escaleras, elevadores, ductos, vestíbulo); sin ninguno, el automático de GFit */}
       {tipo && (nucleosAqui.length ? nucleosAqui.map(({ id, c }) => <NucleoSvg key={id} c={c} />) : <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />)}
       {/* en el nivel de calle, la rampa del S1 y su boca alta (por ahí sale el auto) */}
