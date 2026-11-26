@@ -204,6 +204,7 @@ export function copyMass(p: Project, source: Mass, d: Point, levelId: Id = sourc
     ...(source.doorFlips && { doorFlips: source.doorFlips }),
     // mixed-use-mvp: un departamento sigue siendo copia de su plano
     ...(source.depto && { depto: source.depto }),
+    ...(source.nucleo && { nucleo: source.nucleo }),
   }
   return Object.keys(own).length === 0 ? r : { project: updateMass(r.project, r.id, own), id: r.id }
 }

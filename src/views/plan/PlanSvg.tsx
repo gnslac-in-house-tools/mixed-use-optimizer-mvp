@@ -112,6 +112,8 @@ import { SiteToolLayer } from './site/SiteToolLayer.tsx'
 import { CutFill, PlatformMarks, TerrainLayer } from '../../modules/terrain/views/TerrainLayer.tsx'
 import { CapaResidencial } from '../../modules/residential/views/CapaResidencial.tsx' // mixed-use-mvp
 import { EdicionDeptoPlan } from '../../modules/residential/views/EdicionDeptoPlan.tsx' // mixed-use-mvp
+import { etiquetaOculta } from '../../modules/residential/views/etiquetas.ts' // mixed-use-mvp
+import { useInteriors } from '../show/interiors.ts' // mixed-use-mvp
 import { InterioresNave } from '../../modules/warehouse/views/InterioresNave.tsx' // mixed-use-mvp
 import { useSiteTool } from './site/siteTools.ts'
 import { importBounds, useSiteImport } from './site/importState.ts'
@@ -216,6 +218,7 @@ export function PlanSvg() {
   // Detail (Phase S.2): courts, parking, docks and labels from Design on; the programs' hatches in Presentation
   const detail = useDetail((s) => s.detail)
   const labels = !useHidden(LABELS) && drawsAll(detail)
+  const programas = useInteriors((s) => s.interiors) // mixed-use-mvp
   // the site's outline and its buildable line: an eye each (the site's paper under them stays)
   const boundaryShown = !useHidden(BOUNDARY)
   const buildableShown = !useHidden(BUILDABLE)
@@ -486,7 +489,7 @@ export function PlanSvg() {
               const fits = labelFits(b.maxX - b.minX, b.maxY - b.minY, px, [m.name, area])
               return (
                 <g key={m.id} pointerEvents="none">
-                  {labels && fits && (
+                  {labels && fits && !etiquetaOculta(project, m.id, programas) && (
                     // two lines, the name in bold, on a halo of paper (Practiko's labels)
                     <text
                       x={c.x}

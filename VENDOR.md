@@ -51,6 +51,8 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/state/actions/masses.ts` | `copyMass` copia `depto`; `mirrored` alterna `depto.espejo` | Una copia sigue ligada a su plano; reflejado, el interior va en espejo (la huella ya empieza en la imagen del vértice 1) |
 | `src/views/panels/Properties.tsx` | `<PropiedadesDepto id />` tras los huecos de la masa | El plano, Reflejar, Abrir en el editor y Volver al tipo de un departamento |
 | `src/api/tools/index.ts` | `fijarAcomodo`, `colocarDepto`, `reflejarDepto`, `cambiarPlanDepto`, `volverAlTipo`, `agregarTipologias` en `LEFT_OUT` | Verbos de los Blocks residenciales; el agente queda fuera |
+| `src/model/schema.ts`, `src/state/actions/masses.ts` | `Mass.nucleo?: { elementos }` (escaleras, elevadores, ductos, vestíbulo); `copyMass` lo copia | El núcleo con detalle, que se mueve con su masa |
+| `src/views/plan/PlanSvg.tsx` | `<EdicionDeptoPlan />` tras `MassHandles`; la etiqueta de una masa residencial se oculta con Programs (`etiquetaOculta`) | Editar el departamento elegido por dentro; la etiqueta tapaba el núcleo y los recintos |
 | `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
 | `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
 | `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |

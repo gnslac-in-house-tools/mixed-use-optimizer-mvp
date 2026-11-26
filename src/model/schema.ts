@@ -782,6 +782,17 @@ export const MassSchema = z.object({
   // si su interior va en espejo y su variante (el plano propio de esta unidad, editado solo para ella). Su lugar, su
   // giro y su tamaño se leen de su huella (modules/residential/engine/deptos.ts). Absent: no es un departamento.
   depto: z.object({ plan: z.string(), espejo: z.boolean().optional(), variante: PlanCatalogoSchema.optional() }).optional(),
+  // mixed-use-mvp: el detalle de un núcleo (escaleras, elevadores, ductos, vestíbulo), cada elemento en el marco de su
+  // huella: centro (x, y), medida a lo largo (w) y a lo hondo (d) y giro (modules/residential/engine/nucleoDetalle.ts).
+  // Absent: se acomodan solos por su tamaño.
+  nucleo: z.object({
+    elementos: z.array(z.object({
+      id: z.string(),
+      kind: z.enum(['escalera', 'elevador', 'ducto', 'vestibulo']),
+      x: z.number(), y: z.number(), w: z.number().positive(), d: z.number().positive(),
+      rot: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)]),
+    })),
+  }).optional(),
 })
 export type Mass = z.infer<typeof MassSchema>
 

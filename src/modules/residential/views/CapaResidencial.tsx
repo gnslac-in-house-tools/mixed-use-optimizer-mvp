@@ -9,7 +9,9 @@ import { useApp } from '../../../state/store.ts'
 import { useShown } from '../../../views/viewport/look.ts'
 import { columnas, LADO_COLUMNA } from '../engine/columnas.ts'
 import type { Shape } from '../engine/gfit/src/model/geom.ts'
-import { solidosDe, useDerivado } from './useDerivado.ts'
+import { solidosDe, useDerivado, usoDe } from './useDerivado.ts'
+import { nucleoColocado } from '../engine/nucleoDetalle.ts'
+import { NucleoSvg } from './NucleoPlano.tsx'
 import { usePiso } from './piso.ts'
 import './unidad.css'
 import { ROOM_FILL, nombreRecinto, type PlanCatalogo } from '../engine/catalogo.ts'
@@ -51,6 +53,15 @@ export function CapaResidencial() {
   }, [d, building, project, level, derived, piso])
   if (!dibujo) return null
   const { tipo, sotano, cols, color, angulo, rampaCalle } = dibujo
+  // los núcleos del edificio que atraviesan la planta que se ve
+  const nucleosAqui = tipo && building
+    ? project.masses.flatMap((m) => {
+        const dm = derived.masses[m.id]
+        if (!dm || dm.buildingId !== building.id || usoDe(project, m.id) !== 'nucleo' || dm.span[0] > tipo.z + 0.01 || dm.span[1] < tipo.z + 0.01) return []
+        const c = nucleoColocado(m, dm.polygon)
+        return c ? [{ id: m.id, c }] : []
+      })
+    : []
   const h = LADO_COLUMNA / 2
   return (
     <g pointerEvents="none" data-capa="residencial">
@@ -106,7 +117,8 @@ export function CapaResidencial() {
         )
       })}
       {programas && tipo?.layout?.units.map((u) => <path key={u.id + '-c'} d={trazo(u.shape)} fill="none" stroke={color.get(u.type) ?? '#888'} strokeWidth={3} vectorEffect="non-scaling-stroke" />)}
-      {tipo && <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />}
+      {/* los núcleos dibujados con su detalle (escaleras, elevadores, ductos, vestíbulo); sin ninguno, el automático de GFit */}
+      {tipo && (nucleosAqui.length ? nucleosAqui.map(({ id, c }) => <NucleoSvg key={id} c={c} />) : <path d={trazo(tipo.cores)} fill={NUCLEO} stroke="none" />)}
       {/* en el nivel de calle, la rampa del S1 y su boca alta (por ahí sale el auto) */}
       {tipo?.num === 1 && rampaCalle && (
         <g data-rampa-calle-grupo>
