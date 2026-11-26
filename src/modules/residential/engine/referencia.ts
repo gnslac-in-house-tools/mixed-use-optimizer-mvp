@@ -19,6 +19,7 @@ import type { PlanCatalogo } from './catalogo.ts'
 import { CIRCULACION, colocarDepto, conProgramasDepto } from './deptos.ts'
 import type { ElementoNucleo } from './nucleoDetalle.ts'
 import { agregarTipologias } from './tipologias.ts'
+import { paramsDe } from './defaults.ts'
 
 export const REFERENCIA_ID = 'referencia'
 export const REFERENCIA_NOMBRE = 'Referencia · Barras de departamentos'
@@ -156,6 +157,11 @@ export function proyectoReferencia(): Project {
   barra([P('ref-85', true), P('ref-105', true), P('ref-105', true)], LARGO - u, 'sur', l5)
   barra([P('ref-85', true), P('ref-105', true), P('ref-105', true)], LARGO - u, 'norte', l5)
   alas(l5)
+
+  // la mezcla objetivo del edificio: la de sus tres tipologías como las trae el plano (no la de inicio de GFit, de
+  // estudios y 1-2 recámaras, con la que el ajuste a la mezcla daría 0)
+  const r = p.residential!
+  p = { ...p, residential: { ...r, edificios: { ...r.edificios, b1: { ...paramsDe(p, 'b1'), mezcla: { t105: 58, t85: 37, t150: 5 } } } } }
 
   // el terreno: el edificio con 10 m alrededor
   p = { ...p, site: { ...p.site, boundary: rect(-10, -10, LARGO + 10, TOPE + 10) } }

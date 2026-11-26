@@ -167,9 +167,10 @@ export function predioDe(p: Project, optionId: Id | null | undefined): number | 
 /**
  * Las placas que dan los departamentos y pasillos dibujados: los de un mismo nivel y altura van a un solo sólido de
  * GFit (`deptos:<nivel>:<z>`), cuyo corte son sus pedazos unidos (aunque no se toquen: un piso, una planta), con los
- * departamentos de esa placa, su masa y su huella.
+ * departamentos de esa placa, su masa y su huella. Los núcleos dibujados que cruzan todo el piso de una placa van en
+ * ella: son área construida de ese piso (no dan departamentos).
  */
-function gruposDibujados(p: Project, ms: DerivedMass[]): { solidos: DerivedMass[]; anillos: Map<string, Ring[]>; deptos: Map<string, { m: Mass; poly: Point[] }[]> } {
+function gruposDibujados(p: Project, ms: DerivedMass[], nucleos: DerivedMass[] = []): { solidos: DerivedMass[]; anillos: Map<string, Ring[]>; deptos: Map<string, { m: Mass; poly: Point[] }[]> } {
   const solidos: DerivedMass[] = []
   const anillos = new Map<string, Ring[]>()
   const deptos = new Map<string, { m: Mass; poly: Point[] }[]>()
@@ -180,7 +181,9 @@ function gruposDibujados(p: Project, ms: DerivedMass[]): { solidos: DerivedMass[
     grupos.set(k, [...(grupos.get(k) ?? []), m])
   }
   for (const xs of grupos.values()) {
-    const piezas = unionPieces(xs.map((m) => m.polygon)).filter((r) => r[0] && r[0].length >= 3)
+    const [a, b] = xs[0].span
+    const cruzan = nucleos.filter((n) => n.span[0] <= a + 1e-6 && n.span[1] >= b - 1e-6).map((n) => n.polygon)
+    const piezas = unionPieces([...xs.map((m) => m.polygon), ...cruzan]).filter((r) => r[0] && r[0].length >= 3)
     if (!piezas.length) continue
     const id = `deptos:${xs[0].levelId}:${xs[0].span[0]}`
     const todos = piezas.flatMap((r) => r[0])
@@ -206,7 +209,7 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
   const del = Object.values(massingDe(p, optionId).masses).filter((m) => m.buildingId === buildingId && !m.context && m.polygon.length >= 3)
   // los departamentos y pasillos dibujados (spec 2026-11-26-blocks-residenciales): los de un nivel se unen en una placa
   // de vivienda (un bloque de GFit por pedazo) cuyos departamentos son los dibujados, no los que acomodaría GFit
-  const dibujados = gruposDibujados(p, del.filter((m) => usoDe(m) === 'depto' || usoDe(m) === 'circulacion'))
+  const dibujados = gruposDibujados(p, del.filter((m) => usoDe(m) === 'depto' || usoDe(m) === 'circulacion'), del.filter((m) => usoDe(m) === 'nucleo'))
   const solidos = [...del.filter((m) => usoDe(m) === 'vivienda' || usoDe(m) === 'comercio'), ...dibujados.solidos]
   if (!solidos.length) return null
   const usoDeVivienda = usoDe

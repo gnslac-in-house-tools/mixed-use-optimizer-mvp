@@ -31,12 +31,22 @@ function figures(masses: DerivedMass[], project: Project) {
 
   const floorAreaByLevel: Record<string, number> = {}
   let gfa = 0
-  for (const id of new Set(shaped.map((m) => m.levelId))) {
+  // mixed-use-mvp: a mass taller than its level (a core through the building) is also on each floor of the levels it
+  // crosses, when it covers at least half of that floor
+  // (only a nested program's: a core; any other mass taller than its level is one floor, as GIM had it)
+  const crosses = (m: DerivedMass, z: number, h: number) => m.nested === true && m.span[0] <= z + 1e-6 && m.span[1] >= z + h / 2
+  const reported = new Set(shaped.map((m) => m.levelId))
+  for (const l of levels.values())
+    if (!reported.has(l.id) && shaped.some((m) => m.built && m.levelId !== l.id && crosses(m, l.elevation, l.height))) reported.add(l.id)
+  for (const id of reported) {
     const l = levels.get(id)
     if (!l) continue
-    const a = unionArea(shaped.filter((m) => m.built && m.levelId === id).map(rings))
-    floorAreaByLevel[id] = a
-    gfa += a * l.repeat
+    for (let k = 0; k < l.repeat; k++) {
+      const z = l.elevation + k * l.height
+      const a = unionArea(shaped.filter((m) => m.built && (m.levelId === id || crosses(m, z, l.height))).map(rings))
+      if (k === 0) floorAreaByLevel[id] = a
+      gfa += a
+    }
   }
 
   const own = new Map(project.masses.map((m) => [m.id, m]))
@@ -98,6 +108,16 @@ export function measure(site: DerivedSite, masses: DerivedMass[], project: Proje
   }
   for (const [key, byLevel] of onLevel)
     for (const [levelId, polygons] of byLevel) areaByProgram[key] = (areaByProgram[key] ?? 0) + unionArea(polygons) * (levels.get(levelId)?.repeat ?? 1)
+  // mixed-use-mvp: a mass taller than its level is also its program's floor on each floor of the levels it crosses
+  for (const m of masses) {
+    if (m.polygon.length < 3 || m.nested !== true) continue
+    const key = programOf.get(m.id) ?? 'none'
+    for (const l of levels.values())
+      for (let k = 0; l.id !== m.levelId && k < l.repeat; k++) {
+        const z = l.elevation + k * l.height
+        if (m.span[0] <= z + 1e-6 && m.span[1] >= z + l.height / 2) areaByProgram[key] = (areaByProgram[key] ?? 0) + m.area
+      }
+  }
   // a block's zones of another program (Decision "Block shape"): their floor that program's, taken from the block's own;
   // the zone one of that program's masses, once a copy
   for (const m of masses) {

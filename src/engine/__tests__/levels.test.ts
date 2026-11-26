@@ -29,7 +29,7 @@ function project(masses: Mass[]): Project {
       ]),
       rules: { setback: 0, maxCoverage: null },
     },
-    programs: [{ id: 'w', name: 'W', color: '#000', built: true }],
+    programs: [{ id: 'w', name: 'W', color: '#000', built: true }, { id: 'k', name: 'Core', color: '#888', built: true, nested: true }],
     buildings: [{ id: 'b', name: 'Building 1', color: '#000', levelHeight: 6, levels: LEVELS }],
     options: [{ id: 'o1', name: 'Option 1', buildingIds: ['b'] }],
     masses,
@@ -57,6 +57,18 @@ describe('levels in the engine', () => {
     expect(stacked.issues).toEqual([])
     const same = derive(project([box('A', 'l1', 100, 100), box('B', 'l1', 100, 60)]))
     expect(same.issues.map((i) => i.code)).toEqual(['overlap'])
+  })
+
+  it('mixed-use-mvp: a core (a nested program) taller than its level counts on each floor of the levels it crosses', () => {
+    // A core 10 × 10 on L1, 18 m tall (to the top of L2 ×3); B 60 × 50 on L2, away from it
+    const core: Mass = { ...box('K', 'l1', 20, 10, 10), programId: 'k', height: 18 }
+    const d = derive(project([core, box('B', 'l2', 150, 60)]))
+    expect(d.metrics.floorAreaByLevel).toEqual({ l1: 100, l2: 3000 + 100 })
+    expect(d.metrics.gfa).toBeCloseTo(100 + 3 * (3000 + 100), 6)
+    expect(d.metrics.areaByProgram.k).toBeCloseTo(4 * 100, 6)
+    // one that only reaches into the next floor (less than half of it) does not count there
+    const short = derive(project([{ ...box('K', 'l1', 20, 10, 10), programId: 'k', height: 7 }]))
+    expect(short.metrics.gfa).toBeCloseTo(100, 6)
   })
 
   it('coverage is the projection of the levels above ground; GFA counts each floor × N, basements included', () => {

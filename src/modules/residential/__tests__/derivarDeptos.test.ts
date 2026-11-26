@@ -66,6 +66,17 @@ describe('derivar con departamentos dibujados', () => {
     expect(d.unidades.length).toBe(6)
   })
 
+  it('un núcleo dibujado que cruza los pisos de departamentos cuenta en el área construida de cada piso', () => {
+    const sin = derivar(barra(false), 'b1')!
+    const verts = [{ x: -6, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 7.9 }, { x: -6, y: 7.9 }].map((q) => ({ ...q, r: 0 }))
+    const r = addMass(barra(false), { programId: 'nucleo', footprint: { kind: 'contour', contour: { vertices: verts } }, height: 9 })
+    const con = derivar(r.project, 'b1')!
+    expect(con.totals.gfa - sin.totals.gfa).toBeCloseTo(3 * 6 * 7.9, 3)
+    // no da departamentos ni área vendible
+    expect(con.unidades.length).toBe(sin.unidades.length)
+    expect(con.totals.nsa).toBeCloseTo(sin.totals.nsa, 6)
+  })
+
   it('una planta de departamentos dibujados no recibe núcleo automático de GFit', () => {
     const d = derivar(barra(false), 'b1')!
     expect(d.niveles.every((l) => l.cores.length === 0)).toBe(true)

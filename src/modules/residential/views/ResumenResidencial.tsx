@@ -4,6 +4,7 @@ import type { Id } from '../../../model/schema.ts'
 import { useShown } from '../../../views/viewport/look.ts'
 import { paramsDe } from '../engine/defaults.ts'
 import type { Derivado } from '../engine/derivar.ts'
+import { nivelesPorUso } from '../engine/niveles.ts'
 import { useDerivados } from './useDerivado.ts'
 
 const n0 = (v: number) => Math.round(v).toLocaleString('es-MX')
@@ -27,9 +28,7 @@ function Edificio({ buildingId, d, titulo }: { buildingId: Id; d: Derivado; titu
   const tipos = project.residential!.tipos
   const objetivo = paramsDe(project, buildingId).mezcla
   const t = d.totals
-  const viv = d.niveles.filter((l) => l.prog === 'res' && !l.lobby).length
-  const lobby = d.niveles.filter((l) => l.lobby).length
-  const com = d.niveles.filter((l) => l.prog === 'ret').length
+  const { vivienda: viv, lobby, comercio: com } = nivelesPorUso(d)
   const total = t.units || 1
   const sumaObj = Object.values(objetivo).reduce((a, b) => a + b, 0) || 1
   const margen = t.revenue ? ((t.revenue - t.cost) / t.revenue) * 100 : null

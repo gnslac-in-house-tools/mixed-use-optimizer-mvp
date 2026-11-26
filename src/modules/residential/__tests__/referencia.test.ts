@@ -6,6 +6,9 @@ import { derivar } from '../engine/derivar.ts'
 import { DEPARTAMENTO } from '../engine/deptos.ts'
 import { esquinas, nucleoColocado } from '../engine/nucleoDetalle.ts'
 import { proyectoReferencia, REFERENCIA_ID } from '../engine/referencia.ts'
+import { areaPlan } from '../engine/tipologias.ts'
+import { datosCalificacion } from '../engine/calificacion/datos.ts'
+import { nivelesPorUso } from '../engine/niveles.ts'
 
 const p = proyectoReferencia()
 const nivel = (nombre: string) => p.buildings[0].levels.find((l) => l.name === nombre)!
@@ -134,5 +137,63 @@ describe('el proyecto de referencia (barras de departamentos del compañero)', (
     const deptos = p.masses.filter((m) => m.depto)
     expect(deptos.length).toBe(20 + 20 + 16)
     expect(deptos.every((m) => m.programId === DEPARTAMENTO && cat.has(m.depto!.plan))).toBe(true)
+  })
+})
+
+describe('las métricas de la referencia responden a lo que tiene el edificio', () => {
+  const d = derivar(p, 'b1')!
+  const cat = p.residential!.catalogo!
+  const area = (id: string) => areaPlan(cat.find((c) => c.id === id)!)
+  const rep = (lid: string) => p.buildings[0].levels.find((l) => l.id === lid)!.repeat
+  const deptos = p.masses.filter((m) => m.depto)
+
+  it('niveles por uso: 1 de comercio y 4 de vivienda (pisos distintos, no uno por masa)', () => {
+    expect(nivelesPorUso(d)).toEqual({ vivienda: 4, lobby: 0, comercio: 1 })
+  })
+
+  it('unidades por tipo: cada departamento dibujado × los pisos de su nivel', () => {
+    const tipos = p.residential!.tipos.map((t) => t.id)
+    const esperado: Record<string, number> = {}
+    for (const m of deptos) { const t = cat.find((c) => c.id === m.depto!.plan)!.typeId; esperado[t] = (esperado[t] ?? 0) + rep(m.levelId) }
+    tipos.forEach((t, k) => expect(d.totals.counts[k] ?? 0).toBe(esperado[t] ?? 0))
+    expect(d.totals.units).toBe(76)
+  })
+
+  it('área construida: la de GIM (cada piso, con los núcleos que lo cruzan) es la de GFit', () => {
+    const g = derive(p).metrics
+    expect(d.totals.gfa).toBeCloseTo(g.gfa, 3)
+    // comercio + cada piso de departamentos, pasillos y los dos núcleos
+    const piso = (lid: string) => g.floorAreaByLevel[lid]
+    const ls = p.buildings[0].levels
+    expect(g.gfa).toBeCloseTo(ls.reduce((s, l) => s + piso(l.id) * l.repeat, 0), 3)
+    const nucleo = p.masses.filter((m) => m.programId === 'nucleo').reduce((s, m) => s + derive(p).masses[m.id].area, 0)
+    expect(g.areaByProgram.nucleo).toBeCloseTo(nucleo * 5, 3)
+  })
+
+  it('área vendible: la de los departamentos (sus planos) más la rentable del comercio', () => {
+    const deptosNsa = deptos.reduce((s, m) => s + area(m.depto!.plan) * rep(m.levelId), 0)
+    expect(d.unidades.reduce((s, u) => s + u.unidad.area, 0)).toBeCloseTo(deptosNsa, 3)
+    expect(d.totals.nsa).toBeGreaterThan(deptosNsa)
+  })
+
+  it('cajones: los que pide cada tipo por unidad más los del comercio', () => {
+    const porTipo = new Map(p.residential!.tipos.map((t) => [t.id, t.stalls]))
+    const deVivienda = d.unidades.reduce((s, u) => s + (porTipo.get(u.unidad.type) ?? 0), 0)
+    expect(d.totals.req).toBeGreaterThanOrEqual(Math.ceil(deVivienda - 1e-9))
+  })
+
+  it('la mezcla objetivo de la referencia es la de sus tres tipologías: el ajuste a la mezcla no es 0', () => {
+    const datos = datosCalificacion(p, 'o1')
+    expect(datos.ajuste_mezcla).toBeGreaterThan(0.9)
+  })
+
+  it('los datos de la calificación son los del edificio', () => {
+    const datos = datosCalificacion(p, 'o1')
+    expect(datos.unidades).toBe(d.totals.units)
+    expect(datos.m2_brutos).toBeCloseTo(d.totals.gfa, 3)
+    expect(datos.m2_vendibles).toBeCloseTo(d.totals.nsa, 3)
+    expect(datos.ingreso).toBeCloseTo(d.totals.revenue, 3)
+    expect(datos.costo).toBeCloseTo(d.totals.cost, 3)
+    expect(datos.sotanos).toBe(d.estacionamiento.sotanos)
   })
 })
