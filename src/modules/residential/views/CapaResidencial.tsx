@@ -13,7 +13,7 @@ import { solidosDe, useDerivado } from './useDerivado.ts'
 import { usePiso } from './piso.ts'
 import './unidad.css'
 import { ROOM_FILL, nombreRecinto, type PlanCatalogo } from '../engine/catalogo.ts'
-import { interiorDe } from '../engine/pieza4.ts'
+import { interiorParaUnidad } from '../engine/deptos.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
 import { MuebleSvg } from './PlanMini.tsx'
 
@@ -42,7 +42,7 @@ export function CapaResidencial() {
     const aqui = new Set(project.masses.filter((m) => m.levelId === level).map((m) => m.id))
     // el piso elegido en la barra de pisos; sin ninguno, la planta tipo de las masas del nivel elegido
     const sotano = piso === 'sotano' && d.estacionamiento.sotanos > 0 ? d.estacionamiento.plano : null
-    const tipo = sotano ? null : typeof piso === 'number' && d.niveles[piso] ? d.niveles[piso] : (d.niveles.find((l) => l.block && aqui.has(l.block) && (l.layout?.units.length ?? 0) > 0) ?? null)
+    const tipo = sotano ? null : typeof piso === 'number' && d.niveles[piso] ? d.niveles[piso] : (d.niveles.find((l) => l.block && (aqui.has(l.block) || l.block.startsWith(`deptos:${level}:`)) && (l.layout?.units.length ?? 0) > 0) ?? null)
     const g = gridOf(project, derived.option)
     const cols: Point[] = g ? columnas(g, solidosDe(project, derived.masses, building.id), d.nucleos) : []
     const color = new Map(project.residential!.tipos.map((t) => [t.id, t.color]))
@@ -81,7 +81,7 @@ export function CapaResidencial() {
       ))}
       {(programas || muebles) && tipo?.layout?.units.map((u) => {
         // pieza 4: el plano de Mi biblioteca de su tipo, estirado al departamento; si no hay, el de GFit (amueblado)
-        const it = interiorDe(u, (project.residential?.catalogo ?? []) as PlanCatalogo[])
+        const it = interiorParaUnidad(project, derived.masses, u, (project.residential?.catalogo ?? []) as PlanCatalogo[])
         if (!it) return null
         const m = it.marco
         return (

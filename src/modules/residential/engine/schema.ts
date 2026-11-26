@@ -7,7 +7,7 @@ const Id = z.string().min(1)
 
 /** Qué es cada programa para el motor de GFit: vivienda o comercio (dan niveles) o núcleo; y su altura de entrepiso. */
 export const UsoSchema = z.object({
-  uso: z.enum(['vivienda', 'comercio', 'nucleo']),
+  uso: z.enum(['vivienda', 'comercio', 'nucleo', 'depto', 'circulacion']),
   entrepiso: z.number().positive(),
 })
 export type Uso = z.infer<typeof UsoSchema>

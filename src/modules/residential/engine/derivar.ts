@@ -2,7 +2,7 @@
 // mixed-use-optimizer/engine/adapter.ts). Las masas de Vivienda y Comercio son los sólidos del modo `mass` de GFit
 // (prismas: su corte a cualquier altura de su `span` es su polígono con sus huecos); las de Núcleo, sus núcleos. La
 // retícula de la opción pone el módulo de las unidades (`setUnitModule`, el parche de GFit). Puro y memoizado.
-import type { Grid, Id, Point, Polygon, Project } from '../../../model/schema.ts'
+import type { Grid, Id, Mass, Point, Polygon, Project } from '../../../model/schema.ts'
 import type { DerivedMass, MassingDerived } from '../../../engine/types.ts'
 import { deriveMassing } from '../../../engine/derive.ts'
 import { gridOf } from '../../../engine/grid/index.ts'
@@ -15,6 +15,11 @@ import { PROGS0 } from './gfit/src/model/programs.ts'
 import { blankBuilding, fresh } from './gfit/src/model/state.ts'
 import type { Building, Zoning } from './gfit/src/model/state.ts'
 import { avisosModulo, setUnitModule } from './gfit/src/layout/level.ts'
+import { setLevelOverride } from './gfit/src/layout/building.ts'
+import { setBlocksWithoutAutoCore } from './gfit/src/model/blocks.ts'
+import { unidadDeDepto } from './deptos.ts'
+import { unionPieces } from '../../../engine/geom/boolean.ts'
+import { signedArea as signedAreaPts } from '../../../engine/geom/polygon.ts'
 import type { PlacedUnit } from './gfit/src/layout/level.ts'
 import { layoutBasement } from './gfit/src/parking/adapter.ts'
 import { flechasPorPasillo } from './flechas.ts'
@@ -63,7 +68,7 @@ const PASILLO_SOTANO = 6
 /** m: el entrepiso de sótano con que el motor de cajones mide la rampa (el de `layoutBasement`) */
 export const ENTREPISO_SOTANO = 3.3
 
-type Uso = 'vivienda' | 'comercio' | 'nucleo'
+type Uso = 'vivienda' | 'comercio' | 'nucleo' | 'depto' | 'circulacion'
 const ring = (poly: Polygon): Ring => poly.map((q) => [q.x, q.y])
 
 /**
@@ -159,6 +164,37 @@ export function predioDe(p: Project, optionId: Id | null | undefined): number | 
   return site.polygon ? site.area : null
 }
 
+/**
+ * Las placas que dan los departamentos y pasillos dibujados: los de un mismo nivel y altura van a un solo sólido de
+ * GFit (`deptos:<nivel>:<z>`), cuyo corte son sus pedazos unidos (aunque no se toquen: un piso, una planta), con los
+ * departamentos de esa placa, su masa y su huella.
+ */
+function gruposDibujados(p: Project, ms: DerivedMass[]): { solidos: DerivedMass[]; anillos: Map<string, Ring[]>; deptos: Map<string, { m: Mass; poly: Point[] }[]> } {
+  const solidos: DerivedMass[] = []
+  const anillos = new Map<string, Ring[]>()
+  const deptos = new Map<string, { m: Mass; poly: Point[] }[]>()
+  const masas = new Map(p.masses.map((m) => [m.id, m]))
+  const grupos = new Map<string, DerivedMass[]>()
+  for (const m of ms) {
+    const k = `${m.levelId}|${m.span[0]}|${m.span[1]}`
+    grupos.set(k, [...(grupos.get(k) ?? []), m])
+  }
+  for (const xs of grupos.values()) {
+    const piezas = unionPieces(xs.map((m) => m.polygon)).filter((r) => r[0] && r[0].length >= 3)
+    if (!piezas.length) continue
+    const id = `deptos:${xs[0].levelId}:${xs[0].span[0]}`
+    const todos = piezas.flatMap((r) => r[0])
+    const [x0, x1] = [Math.min(...todos.map((q) => q.x)), Math.max(...todos.map((q) => q.x))]
+    const [y0, y1] = [Math.min(...todos.map((q) => q.y)), Math.max(...todos.map((q) => q.y))]
+    const caja = [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x1, y: y1 }, { x: x0, y: y1 }]
+    const area = piezas.reduce((a, r) => a + Math.abs(signedAreaPts(r[0])) - r.slice(1).reduce((b, h) => b + Math.abs(signedAreaPts(h)), 0), 0)
+    solidos.push({ ...xs[0], id, name: 'Departamentos', polygon: caja, holes: [], corridors: [], area })
+    anillos.set(id, piezas.flatMap((r) => r.map(ring)))
+    deptos.set(id, xs.filter((m) => masas.get(m.id)?.depto).map((m) => ({ m: masas.get(m.id)!, poly: m.polygon })))
+  }
+  return { solidos, anillos, deptos }
+}
+
 export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Derivado | null {
   const usos = p.residential?.usos
   if (!usos) return null
@@ -168,8 +204,13 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
     return id ? usos[id]?.uso : undefined
   }
   const del = Object.values(massingDe(p, optionId).masses).filter((m) => m.buildingId === buildingId && !m.context && m.polygon.length >= 3)
-  const solidos = del.filter((m) => usoDe(m) === 'vivienda' || usoDe(m) === 'comercio')
+  // los departamentos y pasillos dibujados (spec 2026-11-26-blocks-residenciales): los de un nivel se unen en una placa
+  // de vivienda (un bloque de GFit por pedazo) cuyos departamentos son los dibujados, no los que acomodaría GFit
+  const dibujados = gruposDibujados(p, del.filter((m) => usoDe(m) === 'depto' || usoDe(m) === 'circulacion'))
+  const solidos = [...del.filter((m) => usoDe(m) === 'vivienda' || usoDe(m) === 'comercio'), ...dibujados.solidos]
   if (!solidos.length) return null
+  const usoDeVivienda = usoDe
+  const usoFinal = (m: DerivedMass): Uso | undefined => (dibujados.deptos.has(m.id) ? 'vivienda' : usoDeVivienda(m))
   const nucleos = del.filter((m) => usoDe(m) === 'nucleo')
   const g = gridOf(p, optionId)
   const params = paramsDe(p, buildingId)
@@ -181,9 +222,24 @@ export function derivar(p: Project, buildingId: Id, optionId?: Id | null): Deriv
     buildingId,
     [...solidos, ...nucleos].map((m) => [m.id, usoDe(m), m.polygon, m.holes, m.span]),
     g, usos, params, p.residential!.tipos, norma, (p.site.existingRoads ?? []).map((r) => r.points),
+    [...dibujados.deptos.values()].map((xs) => xs.map(({ m, poly }) => [m.id, m.depto, poly])), dibujados.deptos.size ? p.residential!.catalogo : null,
   ])
   if (memo.has(firma)) return memo.get(firma)!
-  const d = calcular(solidos, nucleos, usoDe, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId, norma)
+  // cada nivel de una placa dibujada toma sus departamentos (el parche setLevelOverride de GFit)
+  setLevelOverride((lv) => {
+    const xs = lv.block ? dibujados.deptos.get(lv.block) : undefined
+    if (!xs) return undefined
+    const units = xs.flatMap(({ m, poly }) => unidadDeDepto(p, m, poly) ?? [])
+    return { units, unitA: units.reduce((a, u) => a + u.area, 0), leftover: 0, issues: [], attempts: 0 }
+  })
+  setBlocksWithoutAutoCore(new Set(dibujados.deptos.keys()))
+  let d: Derivado
+  try {
+    d = calcular(solidos, nucleos, usoFinal, g, params, p, entrepiso('vivienda', ENTREPISO_VIVIENDA), entrepiso('comercio', ENTREPISO_COMERCIO), buildingId, norma, dibujados.anillos)
+  } finally {
+    setLevelOverride(null)
+    setBlocksWithoutAutoCore(null)
+  }
   if (memo.size >= MAX) memo.delete(memo.keys().next().value!)
   memo.set(firma, d)
   return d
@@ -193,6 +249,7 @@ function calcular(
   solidos: DerivedMass[], nucleos: DerivedMass[], usoDe: (m: DerivedMass) => Uso | undefined, g: Grid | null,
   params: ReturnType<typeof paramsDe>, p: Project, fhViv: number, fhCom: number, buildingId: Id,
   norma: { far: number; height: number; cov: number; predio: number | null },
+  anillos: Map<string, Ring[]> = new Map(),
 ): Derivado {
   const s = fresh()
   s.progs = PROGS0().map((x) => (x.id === 'res' ? { ...x, fh: fhViv } : x.id === 'ret' ? { ...x, fh: fhCom } : x))
@@ -207,7 +264,7 @@ function calcular(
   }
   const corte = new Map<string, Ring[]>()
   for (const m of solidos) {
-    const rings = [ring(m.polygon), ...m.holes.map(ring)]
+    const rings = anillos.get(m.id) ?? [ring(m.polygon), ...m.holes.map(ring)]
     corte.set(m.id, rings)
     geom.set(m.id, obj(m, 'brep', rings))
   }

@@ -14,8 +14,10 @@ const cambia = (b: Id, parcial: Partial<ParamsEdificio>) => useApp.getState().ap
 export function PropiedadesResidencial({ buildingId }: { buildingId: Id }) {
   const { offered } = useModule('residential')
   const project = useApp((s) => s.project)
+  const level = useApp((s) => s.level)
   if (!offered || !project.residential) return null
   const pr = paramsDe(project, buildingId)
+  const nivel = project.buildings.find((b) => b.id === buildingId)?.levels.find((l) => l.id === level)
   const suma = Object.values(pr.mezcla).reduce((a, b) => a + b, 0)
   return (
     <section aria-label="Uso mixto del edificio" className="flex flex-col gap-2">
@@ -35,6 +37,17 @@ export function PropiedadesResidencial({ buildingId }: { buildingId: Id }) {
       <NumberField key={`${buildingId}-tope`} label="Precio tope" unit="$" min={0} decimals={0} value={pr.tope} onCommit={(v) => cambia(buildingId, { tope: v })} />
       <NumberField key={`${buildingId}-terreno`} label="Terreno" unit="$" min={0} decimals={0} value={pr.terreno} onCommit={(v) => cambia(buildingId, { terreno: v })} />
       <NumberField key={`${buildingId}-semilla`} label="Semilla" min={0} decimals={0} value={pr.semilla} onCommit={(v) => cambia(buildingId, { semilla: Math.round(v) })} />
+      {/* los departamentos de GFit del nivel activo pasan a ser masas que se editan (spec 2026-11-26-blocks-residenciales) */}
+      {nivel && (
+        <button
+          type="button"
+          className="pressable self-start rounded-control bg-fill px-2 py-1 text-label text-ink hover:bg-hover"
+          title="Los departamentos que GFit acomoda en la vivienda de este nivel pasan a ser masas que se mueven y editan"
+          onClick={() => useApp.getState().apply((p) => actions.fijarAcomodo(p, buildingId, nivel.id))}
+        >
+          Fijar acomodo de {nivel.name}
+        </button>
+      )}
       {/* el POT es del proyecto; aquí también, junto a lo demás de Uso mixto */}
       <PotResidencial />
     </section>

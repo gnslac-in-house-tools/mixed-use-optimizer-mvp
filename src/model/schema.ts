@@ -10,7 +10,7 @@
 //
 // Units: metres and degrees. Plan coordinates: x to the east, y to the north.
 import { z } from 'zod'
-import { ResidentialSchema } from '../modules/residential/engine/schema.ts'
+import { PlanCatalogoSchema, ResidentialSchema } from '../modules/residential/engine/schema.ts'
 
 export const IdSchema = z.string().min(1)
 export type Id = z.infer<typeof IdSchema>
@@ -778,6 +778,10 @@ export const MassSchema = z.object({
   // copies.ts `onWall`): x m along the footprint's wall from its start, y m out of it, so a block's own x = 0 (its reference line's start) moves
   // by the wall's thickness; a copy's masses are made again whenever its type or place changes, so it is never stale.
   blockCourts: z.array(z.object({ t: T, depth: z.number().positive().optional(), id: IdSchema.optional(), shape: ContourSchema.optional() })).optional(),
+  // mixed-use-mvp: un departamento (spec 2026-11-26-blocks-residenciales): el plano de Mi biblioteca del que es copia,
+  // si su interior va en espejo y su variante (el plano propio de esta unidad, editado solo para ella). Su lugar, su
+  // giro y su tamaño se leen de su huella (modules/residential/engine/deptos.ts). Absent: no es un departamento.
+  depto: z.object({ plan: z.string(), espejo: z.boolean().optional(), variante: PlanCatalogoSchema.optional() }).optional(),
 })
 export type Mass = z.infer<typeof MassSchema>
 

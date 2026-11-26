@@ -111,6 +111,7 @@ import { MapLayer, useMapShown } from './site/MapLayer.tsx'
 import { SiteToolLayer } from './site/SiteToolLayer.tsx'
 import { CutFill, PlatformMarks, TerrainLayer } from '../../modules/terrain/views/TerrainLayer.tsx'
 import { CapaResidencial } from '../../modules/residential/views/CapaResidencial.tsx' // mixed-use-mvp
+import { EdicionDeptoPlan } from '../../modules/residential/views/EdicionDeptoPlan.tsx' // mixed-use-mvp
 import { InterioresNave } from '../../modules/warehouse/views/InterioresNave.tsx' // mixed-use-mvp
 import { useSiteTool } from './site/siteTools.ts'
 import { importBounds, useSiteImport } from './site/importState.ts'
@@ -534,6 +535,8 @@ export function PlanSvg() {
             {/* the outlines the shape engine edits (the picked mass and its holes, a placed block): one set of handles; Transform's rotation handle over them (D.1 task 5) */}
             {!toolActive && !deaf && <SiteShapeHandles drag={drag} scale={camera.scale} toWorld={camera.toWorld} />}
             {!toolActive && !deaf && <MassHandles drag={drag} scale={camera.scale} />}
+            {/* mixed-use-mvp: el departamento elegido se edita por dentro (muros, muebles, puertas, ventanas) */}
+            {!toolActive && !deaf && !showAll && <EdicionDeptoPlan toWorld={camera.toWorld} px={px} />}
             {!toolActive && !deaf && !showAll && <GroupTurn drag={drag} scale={camera.scale} />}
             {!showAll && !toolActive && !deaf && !graphOn && <DockMarks px={px} drag={drag} />}
             {!showAll && !toolActive && !deaf && !graphOn && <DoorSlots px={px} />}

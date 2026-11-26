@@ -14,7 +14,7 @@ import { usePiso } from './piso.ts'
 import { seeThrough, useDetail } from '../../../views/detail.ts'
 import { detalleSotano, rampas3d, rampasPlanas } from './sotano3d.ts'
 import type { PlanCatalogo } from '../engine/catalogo.ts'
-import { interiorDe } from '../engine/pieza4.ts'
+import { interiorParaUnidad } from '../engine/deptos.ts'
 import { useInteriors } from '../../../views/show/interiors.ts'
 import { Unidad3d } from './Unidad3d.tsx'
 
@@ -74,7 +74,7 @@ export function Residencial3d() {
           // Programs o Furniture en el piso elegido: la unidad del editor (recintos, muros con huecos, muebles) en su
           // marco, con el plano de Mi biblioteca de su tipo o el de GFit
           if ((programas || muebles) && piso === i) {
-            const it = interiorDe(u, catalogo)
+            const it = interiorParaUnidad(project, derived.masses, u, catalogo)
             if (it) {
               const { o, u: e1, v } = it.marco
               // del marco de la unidad (x, altura, −y) al de la escena (X, z, −Y)

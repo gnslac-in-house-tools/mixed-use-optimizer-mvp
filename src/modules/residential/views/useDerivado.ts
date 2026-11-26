@@ -7,16 +7,18 @@ import { isOffered } from '../../catalog.ts'
 import { useShown } from '../../../views/viewport/look.ts'
 import { derivar, type Derivado } from '../engine/derivar.ts'
 
-export type Uso = 'vivienda' | 'comercio' | 'nucleo'
+export type Uso = 'vivienda' | 'comercio' | 'nucleo' | 'depto' | 'circulacion'
 
 export function usoDe(p: Project, massId: Id): Uso | undefined {
   const prog = p.masses.find((m) => m.id === massId)?.programId
   return prog ? p.residential?.usos[prog]?.uso : undefined
 }
 
-/** Las masas derivadas de un edificio que dan niveles (vivienda o comercio). */
+const DA_NIVELES = new Set<Uso>(['vivienda', 'comercio', 'depto', 'circulacion'])
+
+/** Las masas derivadas de un edificio que dan niveles (vivienda, comercio, departamentos y pasillos dibujados). */
 export function solidosDe(p: Project, masses: Record<Id, DerivedMass>, buildingId: Id): DerivedMass[] {
-  return Object.values(masses).filter((m) => m.buildingId === buildingId && !m.context && (usoDe(p, m.id) === 'vivienda' || usoDe(p, m.id) === 'comercio'))
+  return Object.values(masses).filter((m) => m.buildingId === buildingId && !m.context && DA_NIVELES.has(usoDe(p, m.id) as Uso))
 }
 
 export function useDerivado(buildingId: Id | null | undefined): Derivado | null {

@@ -67,6 +67,12 @@ export const LEFT_OUT: Record<string, string> = {
   guardarPlan: 'A department plan of the residential module’s library (mixed-use MVP, piece 3): edited in the Departamento window; the agent is out of this piece',
   borrarPlan: 'Deletes a department plan from the residential module’s library (mixed-use MVP, piece 3): from the Departamentos tab; the agent is out of this piece',
   setPot: 'The residential module’s POT (mixed-use MVP): set in the site’s Properties; the agent is out of this piece',
+  fijarAcomodo: 'Turns the residential module’s GFit layout of a level into drawn department masses (mixed-use MVP, Blocks residenciales): set from the building’s Properties; the agent is out of this piece',
+  colocarDepto: 'Places a department of the residential library on a level (mixed-use MVP, Blocks residenciales): from the Departamentos tab; the agent is out of this piece',
+  reflejarDepto: 'Mirrors a drawn department in place (mixed-use MVP, Blocks residenciales): from its Properties; the agent is out of this piece',
+  cambiarPlanDepto: 'Changes the plan a drawn department copies (mixed-use MVP, Blocks residenciales): from its Properties; the agent is out of this piece',
+  volverAlTipo: 'Drops a drawn department’s own variant (mixed-use MVP, Blocks residenciales): from its Properties; the agent is out of this piece',
+  agregarTipologias: 'Adds the reference typologies to the residential library (mixed-use MVP, Blocks residenciales): from the Departamentos tab; the agent is out of this piece',
   setProjectUnits: 'Project data’s Units (Decision "Project units"): only CAD exports read it, and the agent has no export tool yet',
   // the streets (Decision "Streets"): addStreet, setStreetType, moveStreet, moveStreetNode and removeStreet are tools
   // (ST.3, the road tools'); these are the plan's gestures, and the types the Brief's until ST.9

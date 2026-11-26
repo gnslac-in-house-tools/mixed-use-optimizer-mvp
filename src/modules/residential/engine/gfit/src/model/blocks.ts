@@ -9,6 +9,11 @@ import type { MassLevel, Massed } from './massing.ts'
 import type { Program } from './programs.ts'
 import type { Building } from './state.ts'
 
+// mixed-use-optimizer patch (VENDOR.md): the blocks a host draws its units on itself (a plan laid out by hand) get no
+// automatic core: their cores, if any, are the drawn ones. While set; nothing else changes.
+let sinNucleoAuto: Set<string> | null = null
+export function setBlocksWithoutAutoCore(ids: Set<string> | null) { sinNucleoAuto = ids }
+
 const r2 = (v: number) => Math.round(v * 100) / 100
 const band = (z: number) => Math.round(z * 20) / 20
 const lname = (n: number) => 'L' + String(n).padStart(2, '0')
@@ -129,7 +134,7 @@ export function cutBlocks(b: Building, geom: Map<string, GeomObj>, progs: Progra
     taken.set(kz, before)
     const plateA = Math.max(0, area(shape))
     if (plateA < 0.01) continue
-    const cores = b.links.core.length ? coresAt(r.z) : autoCore(shape)
+    const cores = b.links.core.length ? coresAt(r.z) : sinNucleoAuto?.has(r.id) ? [] : autoCore(shape)
     if (r.p.id === 'res' && cores.length && coreSolids.length) resCore = true
     levels.push({ num, name, elev: r2(r.z - ground), z: r.z, h: r.h, prog: r.p.id, col: r.p.col, shape, plateA, net: 0, sell: 0, block: r.id, cores, lobby: r.lobby, below: num < 0 })
   }

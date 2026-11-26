@@ -47,6 +47,10 @@ confidenciales), `.env` (llaves), `CLAUDE.md`, `DAILY-NOTES.md` ni `README.md`.
 | `src/views/commands/__tests__/registry.test.ts`, `viewSiteDesignTools.test.tsx`, `src/views/layout/__tests__/{theme,workspace}.test.tsx` | El menú View trae Language | El submenú del idioma |
 | `src/io/exportModel.ts`, `export3dm.ts`, `exportPlan.ts`, `exportSpeckle.ts` (y el nuevo `src/io/exportResidencial.ts`) | `ExportModel.residential`: plantas, núcleos, departamentos con recámaras y sótanos con cajones y rampa de cada edificio residencial. El .3dm los escribe en `Residencial::<Edificio>::…` con User Text; el DXF dibuja la planta tipo en `A-FLOR-UNIT`, `A-FLOR-UNIT-IDEN`, `A-FLOR-ROOM` y `A-FLOR-CORE`; Speckle agrega la colección «Residencial» | Que lo que calcula Uso mixto llegue a Rhino, a CAD y a Speckle, no solo las masas |
 | `src/io/__tests__/exportPlan.test.ts` | La paleta de capas incluye las cuatro `A-FLOR-*` de la planta tipo residencial | La tabla de capas del DXF creció |
+| `src/model/schema.ts` | `Mass.depto?: { plan, espejo?, variante? }` (importa `PlanCatalogoSchema` del módulo) | Blocks residenciales: un departamento es una masa ligada a un plano de Mi biblioteca; va en la masa para que copiar, reflejar y deshacer lo lleven |
+| `src/state/actions/masses.ts` | `copyMass` copia `depto`; `mirrored` alterna `depto.espejo` | Una copia sigue ligada a su plano; reflejado, el interior va en espejo (la huella ya empieza en la imagen del vértice 1) |
+| `src/views/panels/Properties.tsx` | `<PropiedadesDepto id />` tras los huecos de la masa | El plano, Reflejar, Abrir en el editor y Volver al tipo de un departamento |
+| `src/api/tools/index.ts` | `fijarAcomodo`, `colocarDepto`, `reflejarDepto`, `cambiarPlanDepto`, `volverAlTipo`, `agregarTipologias` en `LEFT_OUT` | Verbos de los Blocks residenciales; el agente queda fuera |
 | `src/views/stats/Overview.tsx` | `<ResumenResidencial />` al final del Resumen | La sección «Uso mixto» |
 | `src/views/panels/BuildingProperties.tsx` | `<PropiedadesResidencial buildingId />` | Fondo, pasillo, mezcla y semilla del edificio |
 | `src/api/tools/index.ts` | `setParams` en `LEFT_OUT`, con su razón | GIM exige que cada verbo sea una herramienta del agente o se excluya; el agente queda fuera de esta pieza |
@@ -85,6 +89,7 @@ ya traía `mixed-use-optimizer`. Reemplaza la copia parcial (solo cuartos, con s
 | `src/model/calc.ts` | `ModelCtx.plantaBaja`: obstáculos del nivel de calle (num 1) por edificio, que se suman a sus núcleos (las unidades los esquivan; el área neta pierde solo la parte del obstáculo fuera de los núcleos, así que el lobby y el núcleo automático siguen descontados; la placa, la huella y los sótanos no cambian) | La rampa del S1 sale a la calle por la planta baja |
 | `src/layout/building.ts` | El módulo (`moduloUnidad()`) entra en la llave del caché de niveles | Si no, la misma placa sobre una retícula movida reutilizaba la planta vieja (test (j) de `derivar`) |
 | `src/model/blocks.ts` | `lobbyH` 0 quiere decir sin lobby (`cutBlocks`) | En Uso mixto cada placa de vivienda lleva departamentos: con lobby, una masa de un nivel en el suelo no daba ninguno (se vio en el recorrido) |
+| `src/model/blocks.ts` | `setBlocksWithoutAutoCore(ids)`: los bloques de esa lista no reciben núcleo automático | Una planta de departamentos dibujados (Blocks residenciales) solo lleva los núcleos dibujados |
 
 ## Del MVP anterior (catálogo de unidades)
 

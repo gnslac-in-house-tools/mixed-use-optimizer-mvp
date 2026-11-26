@@ -202,6 +202,8 @@ export function copyMass(p: Project, source: Mass, d: Point, levelId: Id = sourc
     // its doors on the grid (Phase G.3): its own pattern and exceptions
     ...(source.doorPattern && { doorPattern: source.doorPattern }),
     ...(source.doorFlips && { doorFlips: source.doorFlips }),
+    // mixed-use-mvp: un departamento sigue siendo copia de su plano
+    ...(source.depto && { depto: source.depto }),
   }
   return Object.keys(own).length === 0 ? r : { project: updateMass(r.project, r.id, own), id: r.id }
 }
@@ -374,6 +376,8 @@ function mirrored(m: Mass, a: Point, b: Point, grid: Grid | null, programDocks: 
   }
   const out: Mass = { ...m, footprint }
   if (m.holes) out.holes = reflectHoles(m.holes, a, b)
+  // mixed-use-mvp: reflejado, el interior de un departamento va en espejo (su huella empieza en la imagen de su vértice 1)
+  if (m.depto) out.depto = { ...m.depto, espejo: !m.depto.espejo }
   if (m.docks) out.docks = m.docks.map(t)
   if (m.courts) out.courts = m.courts.map((c) => ({ ...c, t: t(c.t) }))
   if (m.blockCourts) out.blockCourts = m.blockCourts.map((c) => ({ ...c, t: t(c.t) }))

@@ -48,6 +48,8 @@ const reamueblar = (p: PlanCatalogo): PlanCatalogo => ({ ...p, muebles: amueblar
 /** Mueve el muro del eje `e` que está en `de` hacia `a`. Los tramos fijos a sus lados viajan con él; los movibles de
  *  las puntas del grupo no bajan de MIN_TRAMO; un grupo que toca la orilla de la unidad no se mueve. */
 export function moverEje(p: PlanCatalogo, e: Eje, de: number, a: number): PlanCatalogo {
+  // un muro sobre un quiebre del contorno (la L) es parte de la huella: no se mueve desde adentro
+  if (p.contorno?.some((q) => Math.abs(coord(q as [number, number], e) - de) < EPS)) return p
   const L = lineas(p, e)
   const k = L.findIndex((c) => Math.abs(c - de) < EPS)
   if (k <= 0 || k >= L.length - 1) return p
@@ -139,4 +141,21 @@ export function grafo(p: PlanCatalogo): { nodos: { x: number; y: number; nombre:
     if (comparte) aristas.push({ a: i, b: j, puerta })
   }
   return { nodos, aristas }
+}
+
+/** Los muros interiores que se pueden arrastrar: los de `ejes` que no caen sobre un quiebre del contorno. */
+export function ejesMovibles(p: PlanCatalogo): { x: number[]; y: number[] } {
+  const e = ejes(p)
+  const libre = (k: Eje) => e[k].filter((c) => !p.contorno?.some((q) => Math.abs(coord(q as [number, number], k) - c) < EPS))
+  return { x: libre('x'), y: libre('y') }
+}
+
+/** Mueve un mueble a (x, y) del marco de la unidad. */
+export function moverMueble(p: PlanCatalogo, id: string, x: number, y: number): PlanCatalogo {
+  return { ...p, muebles: p.muebles.map((m) => (m.id === id ? { ...m, x: r3(x), y: r3(y) } : m)) }
+}
+
+/** Gira un mueble 90° a la izquierda. */
+export function girarMueble(p: PlanCatalogo, id: string): PlanCatalogo {
+  return { ...p, muebles: p.muebles.map((m) => (m.id === id ? { ...m, rot: ((m.rot + 90) % 360) as typeof m.rot } : m)) }
 }
